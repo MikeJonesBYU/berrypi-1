@@ -1,40 +1,48 @@
 import socket
 import threading
+import utilities
+from utilities import d
 
 class ThreadedServer(object):
     def __init__(self, host, port):
         self.host = host
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.bind((self.host, self.port))
 
     def listen(self):
-        self.sock.listen(5)
+        self.sock.listen(256)
         while True:
             client, address = self.sock.accept()
             client.settimeout(60)
             threading.Thread(target = self.listenToClient,args = (client,address)).start()
 
     def listenToClient(self, client, address):
-        size = 1024
+        size = 64
+        d.print ("someone is connecting:")
         while True:
             try:
                 data = client.recv(size)
                 if data:
                     # Set the response to echo back the recieved data
-                    print ("received: "+ data)
+                    print ("received: "+ data.decode("utf-8") )
                     response = data
-                    client.send(response)
                 else:
-                    raise error('Client disconnected')
-            except:
+                    print ("client at "+ address.__str__() + " closed")
+                    client.close()
+                    break
+            except Exception as e:
+                print ("some kind of excceptoin")
+                print (type(e))
                 client.close()
                 return False
+        print ("out of receive loop")
+
 
 if __name__ == "__main__":
     while True:
-        port_num = 1234
+        port_num = utilities.__port_number__
         try:
             port_num = int(port_num)
             break

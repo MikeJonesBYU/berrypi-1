@@ -30,8 +30,7 @@ class ThreadedServer(object):
         d.dprint("berry name is " + berryInfo['name'])
         # open a tcp connection and send my address.
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # s.connect((berryInfo['ipaddress'],utilities.__port_number__))
-        s.connect(('localhost',utilities.__initialization_port__))
+        s.connect((berryInfo['ipaddress'],utilities.__port_number__))
         s.send(b'hello berry!')
         d.dprint("send a message back")
         s.close()

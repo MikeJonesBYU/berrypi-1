@@ -1,4 +1,4 @@
-__server_address__ = 'localhost'
+__server_address__ = '10.24.66.223'
 __port_number__ = 1234
 __verbose__ = True
 

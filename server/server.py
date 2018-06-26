@@ -20,7 +20,7 @@ class ThreadedServer(object):
 
     def listenToClient(self, client, address):
         size = 64
-        d.print ("someone is connecting:")
+        d.dprint ("someone is connecting:")
         while True:
             try:
                 data = client.recv(size)

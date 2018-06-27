@@ -15,30 +15,8 @@ def find_a_server (berry):
     sock.sendto(asJson.encode('utf-8'), ('255.255.255.255', utilities.__initialization_port__))
     sock.close()
     # wait for a tcp connection from the server.
-    tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    tcpsock.bind(('',utilities.__initialization_port__))
-    tcpsock.listen(1)
-    client,address = tcpsock.accept()
-    client.settimeout(60)
-    d.dprint("someone is connecting:")
-    while True:
-        try:
-            data = client.recv(512)
-            if data:
-                # Set the response to echo back the recieved data
-                print("received: " + data.decode("utf-8"))
-                response = data
-            else:
-                print("client at " + address.__str__() + " closed")
-                client.close()
-                tcpsock.close()
-                break
-        except Exception as e:
-            print("some kind of excceptoin")
-            print(type(e))
-            client.close()
-            return False
-    print("out of receive loop")
+    response = utilities.BlockingRecieveFromTCP(utilities.__initialization_port__)
+    d.dprint("server replied with " + response)
 
 if __name__ == "__main__":
     # listen for a reply on the same port.  tcp for replies.

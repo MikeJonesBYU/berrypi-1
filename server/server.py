@@ -29,8 +29,8 @@ class ThreadedServer(object):
         berryInfo = json.loads(data.decode("utf-8"))
         d.dprint("berry name is " + berryInfo['name'])
         # open a tcp connection and send my address.
-        returnMessage = utilities.getMyIPAddress()
-        utilities.sendWithTCP (returnMessage,berryInfo['ipaddress'],utilities.__initialization_port__)
+        responseObject = {'ipaddress': utilities.getMyIPAddress()}
+        utilities.sendWithTCP (json.dumps(responseObject),berryInfo['ipaddress'],utilities.__initialization_port__)
 
     def listen(self):
         self.sock.listen(256)

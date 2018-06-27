@@ -29,7 +29,7 @@ def BlockingRecieveFromTCP (port):
     tcpsock.listen(1)
     client, address = tcpsock.accept()
     client.settimeout(60)
-    d.dprint("someone is connecting:")
+    d.dprint("someone is connecting")
     message = ""
     while True:
         try:

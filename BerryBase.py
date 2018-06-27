@@ -20,7 +20,13 @@ class BerryBase ():
             self.type = "invalid"
         self.name = name
         self.guid = guid
-        self.ipaddress = socket.gethostbyname(socket.gethostname())
+        self.getMyIPAddress()
+
+    def getMyIPAddress (self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        self.ipaddress = s.getsockname()[0]
+        s.close()
 
     def convertToJSON (self):
         asObject = {'guid': self.guid,

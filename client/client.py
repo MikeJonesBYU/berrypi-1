@@ -31,6 +31,7 @@ def find_a_server (berry):
             else:
                 print("client at " + address.__str__() + " closed")
                 client.close()
+                tcpsock.close()
                 break
         except Exception as e:
             print("some kind of excceptoin")

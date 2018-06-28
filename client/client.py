@@ -17,7 +17,8 @@ def find_a_server (berry):
     sock.close()
     # wait for a tcp connection from the server.
     response = utilities.BlockingRecieveFromTCP(utilities.__initialization_port__)
-    serverResponse = json.loads(response)
+    d.dprint ("response from server "+response.__str__())
+    serverResponse = json.loads(response.decode("utf-8"))
     server_ip_address = serverResponse['ipaddress']
     d.dprint("server is at "+ server_ip_address)
 

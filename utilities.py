@@ -1,4 +1,5 @@
 import socket
+from uuid import getnode
 
 __server_address__ = 'localhost' #'10.24.66.223'
 __port_number__ = 1234
@@ -13,6 +14,8 @@ def getMyIPAddress():
     s.close()
     return ipaddress
 
+def getMyGUID () :
+    return getnode().__str__()
 
 def sendWithTCP (message, recvAddress, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,6 +39,7 @@ def BlockingRecieveFromTCP (port):
             data = client.recv(512)
             if data:
                 # Set the response to echo back the recieved data
+                d.dprint("got: " + data.encode("utf-8"))
                 message = message + data
             else:
                 print("client at " + address.__str__() + " closed")

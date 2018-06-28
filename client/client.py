@@ -24,7 +24,7 @@ def find_a_server (berry):
 
 if __name__ == "__main__":
     # listen for a reply on the same port.  tcp for replies.
-    thisBerry = BerryBase("button","left_button", getnode().__str__())
+    thisBerry = BerryBase("button","left_button", )
     fas = find_a_server(thisBerry)
 
 

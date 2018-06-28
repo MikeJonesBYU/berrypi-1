@@ -37,10 +37,8 @@ def BlockingRecieveFromTCP (port):
     while True:
         try:
             data = client.recv(512)
-            d.dprint ("data from the pipe: "+data.decode("utf-8"))
             if data:
                 # Set the response to echo back the recieved data
-                d.dprint("got: " + data.decode("utf-8"))
                 message = data
             else:
                 print("client at " + address.__str__() + " closed")
@@ -52,8 +50,8 @@ def BlockingRecieveFromTCP (port):
             print(type(e))
             client.close()
             return False
-    print ("received : " + message.decode("utf-8"))
-    print ("from     : " + address.__str__() + ":"+port.__str__())
+    d.dprint ("received : " + message.decode("utf-8"))
+    d.dprint ("from     : " + address.__str__() + ":"+port.__str__())
     return (message)
 
 class d:

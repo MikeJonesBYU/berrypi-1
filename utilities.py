@@ -32,28 +32,29 @@ def BlockingRecieveFromTCP (port):
     tcpsock.listen(1)
     client, address = tcpsock.accept()
     client.settimeout(60)
-    d.dprint("someone is connecting")
-    message = ""
+    d.dprint("someone is connecting " + address.__str__())
+    message = " "
     while True:
         try:
             data = client.recv(512)
+            d.dprint ("data from the pipe: "+data.decode("utf-8"))
             if data:
                 # Set the response to echo back the recieved data
-                d.dprint("got: " + data.encode("utf-8"))
-                message = message + data
+                d.dprint("got: " + data.decode("utf-8"))
+                message = data
             else:
                 print("client at " + address.__str__() + " closed")
                 client.close()
                 tcpsock.close()
                 break
         except Exception as e:
-            print("some kind of excceptoin")
+            print("some kind of excceptoin on receive")
             print(type(e))
             client.close()
             return False
-    print ("received : " + message)
+    print ("received : " + message.decode("utf-8"))
     print ("from     : " + address.__str__() + ":"+port.__str__())
-    return message
+    return (message)
 
 class d:
     @staticmethod

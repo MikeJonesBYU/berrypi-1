@@ -5,7 +5,7 @@ __server_address__ = 'localhost' #'10.24.66.223'
 __port_number__ = 1234
 __initialization_port__ = 4321
 __verbose__ = True
-
+__testing_without_gpio_pins__ = True
 
 def getMyIPAddress():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

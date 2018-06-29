@@ -1,19 +1,19 @@
 import socket
 import utilities
 from utilities import d
-from BerryBase import BerryBase
-from uuid import getnode
 import json
+from button import button
+from button_internals import button_internals
 
 server_ip_address = '255.255.255.255'
 
-def find_a_server (berry):
+def find_a_server ():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-    asJson = berry.convertToJSON()
-    d.dprint("sending via udp broadcast...\n" + asJson)
-    sock.sendto(asJson.encode('utf-8'), ('255.255.255.255', utilities.__initialization_port__))
+    message = json.dumps({'ipaddress':utilities.getMyIPAddress()});
+    d.dprint("sending via udp broadcast...\n" + message)
+    sock.sendto(message.encode('utf-8'), ('255.255.255.255', utilities.__initialization_port__))
     sock.close()
     # wait for a tcp connection from the server.
     response = utilities.BlockingRecieveFromTCP(utilities.__initialization_port__)
@@ -23,11 +23,28 @@ def find_a_server (berry):
     d.dprint("server is at "+ server_ip_address)
 
 
+def beWhatYouAre (berrySoul):
+    # load up the internals class and get that going.
+    # spin off a thread that waits for interrupts on the pin.
+    # i'm a button.
+    me = button()
+    if utilities.__testing_without_gpio_pins__:
+        # wait for a keypress.
+        test = input("type something in: ")
+        # send it on.
+        me.onPressed()
+    else:
+        # do proper gpio stuffs
+        pass
+
+
+
+
 if __name__ == "__main__":
     # listen for a reply on the same port.  tcp for replies.
-    thisBerry = BerryBase("button","left_button", utilities.getMyGUID())
-    fas = find_a_server(thisBerry)
-
+    internal_button = button_internals.__init__("button","left_button",utilities.getMyGUID(),server_ip_address)
+    find_a_server()
+    beWhatYouAre (internal_button)
 
     #sock.connect((utilities.__server_address__, utilities.__port_number__))
     #sock.send(b'hello over there ')

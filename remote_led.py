@@ -11,8 +11,9 @@ The user never sees this.
 
 class remoteLED ():
 
-    def __init__(self,name):
-        self.name = name
+    def __init__(self):
+        self.name = "anon"
+        d.dprint ("I am "+self.name)
 
     def heartbeat (self):
         d.dprint("thump. I am "+ self.name)

@@ -5,7 +5,7 @@ from utilities import tokens
 import json
 from button import button
 from button_internals import button_internals
-import  remote_led
+from remote_led import remoteLED
 
 def find_a_server ():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -42,11 +42,16 @@ def get_berry_list_from_server ():
     utilities.sendObjToServerWithTCP(command)
     tableJSON,address = utilities.blocking_recieve_from_server_TCP()
     d.dprint("got this table: \n"+tableJSON.decode("utf-8"))
-    return json.loads(tableJSON)[tokens['berries']]
+    return json.loads(tableJSON.decode("utf-8"))[tokens['berries']]
+
+pickledname = "dill"
+
+def setUpLED ():
+    d.dprint ("pickled name "+pickledname)
 
 def setuplocalproxies (berry_list):
     for remote_berry in berry_list:
-        exec(remote_berry[tokens['name']] + "remote_led.__init__('baz')")
+        exec(remote_berry[tokens['name']] + " = remoteLED.__init__()")
         exec(remote_led[tokens['name']] + ".heartbeat()")
 
 if __name__ == "__main__":

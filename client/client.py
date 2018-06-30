@@ -40,7 +40,7 @@ def get_berry_list_from_server ():
     command = {tokens['command']: tokens['get table'],
                tokens['sender address']: utilities.getMyIPAddress()}
     utilities.sendObjToServerWithTCP(command)
-    tableJSON = utilities.blocking_recieve_from_server_TCP()
+    tableJSON,address = utilities.blocking_recieve_from_server_TCP()
     d.dprint("got this table: \n"+tableJSON.decode("utf-8"))
     return "not a table yet :)"
 

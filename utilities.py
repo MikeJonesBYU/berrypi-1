@@ -52,7 +52,7 @@ def sendToServerTCP (message):
     sendWithTCP(message, __server_address__,__port_number__)
 
 def blocking_recieve_from_server_TCP ():
-    BlockingRecieveFromTCP(__port_number__)
+    return BlockingRecieveFromTCP(__port_number__)
 
 def BlockingRecieveFromTCP (port):
     d.dprint("waiting to receive on port " + port.__str__())

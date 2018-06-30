@@ -81,7 +81,7 @@ def BlockingRecieveFromTCP (port):
             return False
     d.dprint ("received : " + message.decode("utf-8"))
     d.dprint ("from     : " + address.__str__() + ":"+port.__str__())
-    return (message)
+    return message, address[0]
 
 class d:
     @staticmethod

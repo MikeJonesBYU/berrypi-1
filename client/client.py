@@ -16,10 +16,9 @@ def find_a_server ():
     sock.sendto(message.encode('utf-8'), ('255.255.255.255', utilities.__initialization_port__))
     sock.close()
     # wait for a tcp connection from the server.
-    response = utilities.BlockingRecieveFromTCP(utilities.__initialization_port__)
+    response,senderIP = utilities.BlockingRecieveFromTCP(utilities.__initialization_port__)
     d.dprint ("response from server "+response.__str__())
-    serverResponse = json.loads(response.decode("utf-8"))
-    return serverResponse['ipaddress']
+    return senderIP
 
 
 def beWhatYouAre (berrySoul):

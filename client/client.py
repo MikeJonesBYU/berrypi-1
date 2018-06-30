@@ -1,11 +1,11 @@
 import socket
 import utilities
 from utilities import d
+from utilities import tokens
 import json
 from button import button
 from button_internals import button_internals
 
-server_ip_address = '255.255.255.255'
 
 def find_a_server ():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -19,8 +19,7 @@ def find_a_server ():
     response = utilities.BlockingRecieveFromTCP(utilities.__initialization_port__)
     d.dprint ("response from server "+response.__str__())
     serverResponse = json.loads(response.decode("utf-8"))
-    server_ip_address = serverResponse['ipaddress']
-    d.dprint("server is at "+ server_ip_address)
+    return serverResponse['ipaddress']
 
 
 def beWhatYouAre (berrySoul):
@@ -37,13 +36,25 @@ def beWhatYouAre (berrySoul):
         # do proper gpio stuffs
         pass
 
+def get_berry_list_from_server ():
+    d.dprint("requesting berry table from server")
+    command = {tokens['command']: tokens['get table'],
+               tokens['sender address']: utilities.getMyIPAddress()}
+    utilities.sendObjToServerWithTCP(command)
+    tableJSON = utilities.blocking_recieve_from_server_TCP()
+    d.dprint("got this table: \n"+tableJSON.decode("utf-8"))
+    return "not a table yet :)"
 
 
 
 if __name__ == "__main__":
     # listen for a reply on the same port.  tcp for replies.
-    internal_button = button_internals.__init__("button","left_button",utilities.getMyGUID(),server_ip_address)
-    find_a_server()
+    internal_button = button_internals.__init__("button","left_button",utilities.getMyGUID())
+    utilities.__server_address__ = find_a_server()
+    # great, now get the table of known berries.
+    berry_list = get_berry_list_from_server ()
+    # and initialize the local proxies for the remote berries.
+    # and now set up the local berry to respond to interrupts.
     beWhatYouAre (internal_button)
 
     #sock.connect((utilities.__server_address__, utilities.__port_number__))

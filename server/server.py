@@ -2,6 +2,7 @@ import socket
 import threading
 import utilities
 from utilities import d
+from utilities import tokens
 import json
 
 class ThreadedServer(object):
@@ -10,6 +11,7 @@ class ThreadedServer(object):
         self.host = host
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
         self.udpsocket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         self.udpsocket.bind ((' ',utilities.__initialization_port__))
 #        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -58,7 +60,23 @@ class ThreadedServer(object):
                 client.close()
                 return False
         print ("out of receive loop")
+        self.process_message (response)
 
+    def process_message (self,messageJSON):
+        message = json.loads(messageJSON)
+        command = message[tokens['command']]
+        d.dprint("processing command: "+command)
+        if command == tokens['get table']:
+            # send over the table.
+            d.dprint("... it was a request for the table.  SEnding")
+            self.send_berry_table(message[tokens['sender address']])
+        else:
+            d.dprint("not sure what command that was")
+
+    def send_berry_table(self,targetIP):
+        table_message_object = {tokens['command'] : tokens['new table']}
+        utilities.sendObjWithTCP(table_message_object,targetIP,utilities.__port_number__)
+        # done.
 
 if __name__ == "__main__":
     while True:

@@ -1,11 +1,23 @@
 import socket
 from uuid import getnode
+import json
 
-__server_address__ = 'localhost' #'10.24.66.223'
+# only at the beginning, the server adddress gets updated on start.
+__server_address__ = " "
 __port_number__ = 1234
 __initialization_port__ = 4321
 __verbose__ = True
 __testing_without_gpio_pins__ = True
+
+
+# the point here is that we have a code completion
+# to make sure we used the same strings on both sides
+# of the conversation.
+tokens = {'command': 'cmd',
+           'sender address': 'myip',
+          'get table':'gettable',
+          'new table': 'newtable'}
+
 
 def getMyIPAddress():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -24,6 +36,23 @@ def sendWithTCP (message, recvAddress, port):
     d.dprint("sent: " + message)
     d.dprint("to  : " + recvAddress + ":" + port.__str__())
     s.close()
+
+def setServerAddress (ipaddr):
+    global __server_address__
+    __server_address__ = ipaddr
+
+def sendObjWithTCP (object, recv_address, port):
+    message = json.dumps(object)
+    sendWithTCP(message,recv_address,port)
+
+def sendObjToServerWithTCP (object):
+    sendObjWithTCP(object,__server_address__,__port_number__)
+
+def sendToServerTCP (message):
+    sendWithTCP(message, __server_address__,__port_number__)
+
+def blocking_recieve_from_server_TCP ():
+    BlockingRecieveFromTCP(__port_number__)
 
 def BlockingRecieveFromTCP (port):
     d.dprint("waiting to receive on port " + port.__str__())

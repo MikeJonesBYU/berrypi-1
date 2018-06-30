@@ -5,7 +5,7 @@ from utilities import tokens
 import json
 from button import button
 from button_internals import button_internals
-
+import  remote_led
 
 def find_a_server ():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -42,9 +42,12 @@ def get_berry_list_from_server ():
     utilities.sendObjToServerWithTCP(command)
     tableJSON,address = utilities.blocking_recieve_from_server_TCP()
     d.dprint("got this table: \n"+tableJSON.decode("utf-8"))
-    return "not a table yet :)"
+    return json.loads(tableJSON)[tokens['berries']]
 
-
+def setuplocalproxies (berry_list):
+    for remote_berry in berry_list:
+        exec(remote_berry[tokens['name']] + "remote_led.__init__('baz')")
+        exec(remote_led[tokens['name']] + ".heartbeat()")
 
 if __name__ == "__main__":
     # listen for a reply on the same port.  tcp for replies.
@@ -53,6 +56,7 @@ if __name__ == "__main__":
     # great, now get the table of known berries.
     berry_list = get_berry_list_from_server ()
     # and initialize the local proxies for the remote berries.
+    setuplocalproxies (berry_list)
     # and now set up the local berry to respond to interrupts.
     beWhatYouAre (internal_button)
 

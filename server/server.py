@@ -74,7 +74,14 @@ class ThreadedServer(object):
             d.dprint("not sure what command that was")
 
     def send_berry_table(self,targetIP):
-        table_message_object = {tokens['command'] : tokens['new table']}
+        table_message_object = {tokens['command'] : tokens['new table'],
+                                tokens['berries']:
+                                    [{tokens['name']: 'bartholomeous',
+                                      tokens['type']: tokens['led']},
+                                     {tokens['name']: 'matthias',
+                                      tokens['type']: tokens['speaker']},
+                                     ]
+                                }
         utilities.sendObjWithTCP(table_message_object,targetIP,utilities.__port_number__)
         # done.
 

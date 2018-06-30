@@ -16,7 +16,12 @@ __testing_without_gpio_pins__ = True
 tokens = {'command': 'cmd',
            'sender address': 'myip',
           'get table':'gettable',
-          'new table': 'newtable'}
+          'new table': 'newtable',
+          'name':'berryname',
+          'berry type':'berrytype',
+          'berries':'berries',
+          'led':'led'
+        }
 
 
 def getMyIPAddress():

@@ -1,4 +1,6 @@
 import utilities
+from utilities import  d
+
 '''
 this file goes on a berry which is NOT an LED 
 but which uses this to route set_state and get_state through 
@@ -11,6 +13,9 @@ class remoteLED ():
 
     def __init__(self,name):
         self.name = name
+
+    def heartbeat (self):
+        d.dprint("thump. I am "+ self.name)
 
     def setColor (self, newColor):
         # probably easiest if that's a string.

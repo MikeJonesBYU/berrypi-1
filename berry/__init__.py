@@ -1,42 +1,44 @@
+"""
+Package home, including BerryBase class.
+"""
 import json
-import utilities
-from utilities import d
-import socket
 
-berryTypes = ["button","slider","led"]
+from . import utilities
+from .utilities import d
 
-hasUserInterrupts = ["button", "slider"]
+BERRY_TYPES = ['button', 'slider', 'led']
+HAS_USER_INTERRUPTS = ['button', 'slider']
 
-class BerryBase ():
-    type = "none"
-    name = "none"
-    guid = "none"
-    ipaddress = "none"
 
-    def __init__(self,type,name,guid):
-        if type in berryTypes:
-            self.type = type
+class BerryBase():
+    berry_type = 'none'
+    name = 'none'
+    guid = 'none'
+    ipaddress = 'none'
+
+    def __init__(self, berry_type, name, guid):
+        if berry_type in BERRY_TYPES:
+            self.berry_type = berry_type
         else:
-            d.dprint("invalid type to berry constructor "+type)
-            self.type = "invalid"
+            d.dprint(f'invalid type to berry constructor {type}')
+            self.berry_type = 'invalid'
+
         self.name = name
         self.guid = guid
-        self.ipaddress = utilities.getMyIPAddress()
+        self.ipaddress = utilities.get_my_ip_address()
 
+    def convert_to_json(self):
+        berry = {
+            'guid': self.guid,
+            'name': self.name,
+            'type': self.berry_type,
+            'ipaddress': self.ipaddress,
+        }
 
-    def convertToJSON (self):
-        asObject = {'guid': self.guid,
-                    'name': self.name,
-                    'type': self.type,
-                    'ipaddress': self.ipaddress}
-        d.dprint("this berry as an object "+json.dumps(asObject))
-        return (json.dumps(asObject))
+        output = json.dumps(berry)
+        d.dprint(f'this berry as an object: {output}')
 
-    def hasUserInterrupts (self):
-        return (self.type in hasUserInterrupts)
+        return output
 
-
-
-
-
-
+    def has_user_interrupts(self):
+        return self.berry_type in HAS_USER_INTERRUPTS

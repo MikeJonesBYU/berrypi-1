@@ -4,8 +4,8 @@ Berry client functions.
 import json
 import socket
 
-import utilities
-from utilities import d
+from .. import utilities
+from ..utilities import d
 
 server_ip_address = '255.255.255.255'
 
@@ -15,12 +15,11 @@ def find_a_server(berry):
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
-    asJson = berry.convertToJSON()
-
-    d.dprint("Sending via udp broadcast...\n" + asJson)
+    output = berry.convert_to_json()
+    d.dprint('Sending via udp broadcast...\n' + output)
 
     sock.sendto(
-        asJson.encode('utf-8'),
+        output.encode('utf-8'),
         (
             '255.255.255.255',
             utilities.__initialization_port__,
@@ -32,6 +31,7 @@ def find_a_server(berry):
     response = utilities.blocking_receive_from_tcp(
         utilities.__initialization_port__,
     )
+    print("response", response)
 
     server_response = json.loads(response)
     server_ip_address = server_response['ipaddress']

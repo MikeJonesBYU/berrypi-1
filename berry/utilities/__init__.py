@@ -41,21 +41,20 @@ def blocking_receive_from_tcp(port):
 
     d.dprint("someone is connecting")
 
-    message = ""
+    message = ''
     while True:
         try:
             data = client.recv(512)
             if data:
                 # Set the response to echo back the recieved data
-                message = message + data
+                message += data.decode('utf-8')
             else:
-                print("client at " + address.__str__() + " closed")
+                print(f'client at {address} closed')
                 client.close()
                 tcpsock.close()
                 break
         except Exception as e:
-            print("some kind of excceptoin")
-            print(type(e))
+            print("Exception: {} ({})".format(e, type(e)))
             client.close()
             return False
 

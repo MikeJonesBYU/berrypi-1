@@ -5,8 +5,8 @@ import json
 import socket
 import threading
 
-import utilities
-from utilities import d
+from .. import utilities
+from ..utilities import d
 
 
 class ThreadedServer(object):
@@ -16,7 +16,7 @@ class ThreadedServer(object):
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.udpsocket.bind((' ', utilities.__initialization_port__))
+        self.udpsocket.bind(('', utilities.__initialization_port__))
         self.sock.bind((self.host, self.port))
 
         # Start up a seperate thread to listen for broadcasts from new berries.
@@ -74,8 +74,7 @@ class ThreadedServer(object):
                     client.close()
                     break
             except Exception as e:
-                print("some kind of excceptoin")
-                print(type(e))
+                print("Exception: {} ({})".format(e, type(e)))
                 client.close()
                 return False
 

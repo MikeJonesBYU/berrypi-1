@@ -31,9 +31,8 @@ def find_a_server(berry):
     response = utilities.blocking_receive_from_tcp(
         utilities.__initialization_port__,
     )
-    print("response", response)
 
     server_response = json.loads(response)
     server_ip_address = server_response['ipaddress']
 
-    d.dprint("server is at " + server_ip_address)
+    d.dprint('server is at ' + server_ip_address)

@@ -8,7 +8,7 @@ __verbose__ = True
 
 def get_my_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
+    s.connect(('8.8.8.8', 80))
 
     ipaddress = s.getsockname()[0]
 
@@ -21,16 +21,16 @@ def send_with_tcp(message, recv_address, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((recv_address, port))
 
-    s.send(message.encode("utf-8"))
+    s.send(message.encode('utf-8'))
 
-    d.dprint("sent: " + message)
-    d.dprint("to  : " + recv_address + ":" + port.__str__())
+    d.dprint('sent: ' + message)
+    d.dprint('to  : ' + recv_address + ':' + port.__str__())
 
     s.close()
 
 
 def blocking_receive_from_tcp(port):
-    d.dprint("waiting to receive on port " + port.__str__())
+    d.dprint('waiting to receive on port ' + port.__str__())
 
     tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcpsock.bind(('', port))
@@ -39,7 +39,7 @@ def blocking_receive_from_tcp(port):
     client, address = tcpsock.accept()
     client.settimeout(60)
 
-    d.dprint("someone is connecting")
+    d.dprint('someone is connecting')
 
     message = ''
     while True:
@@ -54,7 +54,7 @@ def blocking_receive_from_tcp(port):
                 tcpsock.close()
                 break
         except Exception as e:
-            print("Exception: {} ({})".format(e, type(e)))
+            print('Exception: {} ({})'.format(e, type(e)))
             client.close()
             return False
 

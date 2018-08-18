@@ -14,24 +14,27 @@ if __name__ == '__main__':
     try:
         port = int(sys.argv[1])
     except:
+        # Default port
         port = CLIENT_PORT
 
     # Test berry
-    this_berry = BerryButton(
+    berry = BerryButton(
         berry_type='button',
         name='left_button',
         guid=getnode().__str__() + str(port),
     )
 
-    client = BerryClient(berry=this_berry, port=port)
+    client = BerryClient(berry=berry, port=port)
 
     # Listen for a reply on the same port. TCP for replies.
     response = client.find_a_server()
 
     # TODO: Import handlers? Or does this happen somewhere else?
 
-    # Run the server
+    # Client loop (waiting for events or incoming messages)
     while True:
+        # TODO: Figure out how to trigger a code edit message, etc.
+
         # Wait for incoming TCP messages
         message = client.wait_for_message()
 

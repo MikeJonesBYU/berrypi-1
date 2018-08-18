@@ -30,7 +30,10 @@ class BerryClient():
 
         d.dprint('Sending via udp broadcast...\n' + output)
 
-        sock.sendto(output.encode('utf-8'), ('255.255.255.255', self._port))
+        sock.sendto(
+            output.encode('utf-8'),
+            ('255.255.255.255', utilities.REGISTRATION_PORT),
+        )
         sock.close()
 
         # Wait for a TCP connection from the server.

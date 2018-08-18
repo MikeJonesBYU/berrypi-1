@@ -37,7 +37,7 @@ class BerryBase():
             'name': self.name,
             'type': self.berry_type,
             'ip': self.ip_address,
-            'methods': self.methods(),
+            'handlers': self.methods(),
         }
 
         d.dprint(f'this berry as an object: {json.dumps(berry)}')
@@ -49,7 +49,8 @@ class BerryBase():
 
     def methods(self):
         """
-        Returns a list of the class's public methods.
+        Returns a list of the class's public methods. TODO: should this be
+        hardcoded for each berry type?
         """
         return [
             f

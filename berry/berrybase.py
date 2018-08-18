@@ -14,7 +14,7 @@ class BerryBase():
     berry_type = 'none'
     name = 'none'
     guid = 'none'
-    ipaddress = 'none'
+    ip_address = 'none'
 
     def __init__(self, berry_type, name, guid):
         if berry_type in BERRY_TYPES:
@@ -25,14 +25,17 @@ class BerryBase():
 
         self.name = name
         self.guid = guid
-        self.ipaddress = utilities.get_my_ip_address()
+        self.ip_address = utilities.get_my_ip_address()
 
-    def convert_to_json(self):
+    def _convert_to_json(self):
+        """
+        Serializes the berry to JSON.
+        """
         berry = {
             'guid': self.guid,
             'name': self.name,
             'type': self.berry_type,
-            'ipaddress': self.ipaddress,
+            'ip_address': self.ip_address,
         }
 
         output = json.dumps(berry)
@@ -40,5 +43,11 @@ class BerryBase():
 
         return output
 
-    def has_user_interrupts(self):
+    def _has_user_interrupts(self):
         return self.berry_type in HAS_USER_INTERRUPTS
+
+    def methods(self):
+        """
+        Returns a list of the class's public methods.
+        """
+        return [f for f in dir(self) if f[0] != '_' and f != 'methods']

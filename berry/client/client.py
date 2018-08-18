@@ -15,7 +15,7 @@ def find_a_server(berry):
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
-    output = berry.convert_to_json()
+    output = berry._convert_to_json()
     d.dprint('Sending via udp broadcast...\n' + output)
 
     sock.sendto(
@@ -33,6 +33,6 @@ def find_a_server(berry):
     )
 
     server_response = json.loads(response)
-    server_ip_address = server_response['ipaddress']
+    server_ip_address = server_response['ip_address']
 
     d.dprint('server is at ' + server_ip_address)

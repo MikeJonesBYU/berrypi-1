@@ -39,11 +39,11 @@ class ThreadedServer(object):
         d.dprint('berry name is ' + berry_info['name'])
 
         # Open a TCP connection and send my address.
-        response = {'ipaddress': utilities.get_my_ip_address()}
+        response = {'ip_address': utilities.get_my_ip_address()}
 
         utilities.send_with_tcp(
             json.dumps(response),
-            berry_info['ipaddress'],
+            berry_info['ip_address'],
             utilities.__initialization_port__,
         )
 

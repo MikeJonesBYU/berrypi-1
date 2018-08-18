@@ -2,6 +2,7 @@
 BerryBase class used as a base class for berries.
 """
 import json
+import types
 
 from . import utilities
 from .utilities import d
@@ -50,4 +51,14 @@ class BerryBase():
         """
         Returns a list of the class's public methods.
         """
-        return [f for f in dir(self) if f[0] != '_' and f != 'methods']
+        return [
+            f
+            for f in dir(self)
+            if (
+                f[0] != '_'
+                and
+                f != 'methods'
+                and
+                isinstance(getattr(self, f), types.MethodType)
+            )
+        ]

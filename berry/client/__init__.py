@@ -1,4 +1,4 @@
 """
-Berry client functions.
+Berry client package.
 """
-from .client import find_a_server
+from .client import BerryClient

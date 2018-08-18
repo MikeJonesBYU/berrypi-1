@@ -4,7 +4,7 @@ module (so that we can reload the module dynamically and update code).
 """
 from ..berrybase import BerryBase
 
-import button_handlers
+import berry.berries.button_handlers
 
 
 class BerryButton(BerryBase):

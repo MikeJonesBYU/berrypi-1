@@ -3,6 +3,9 @@ import socket
 # The port to listen on via UDP for registrations
 REGISTRATION_PORT = 5555
 
+# The default client port
+CLIENT_PORT = 24601
+
 # The port to run the server on
 SERVER_PORT = 4444
 

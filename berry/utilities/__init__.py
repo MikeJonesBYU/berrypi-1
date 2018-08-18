@@ -6,6 +6,7 @@ from .utilities import (
     send_with_tcp,
     blocking_receive_from_tcp,
     d,
+    CLIENT_PORT,
     REGISTRATION_PORT,
     SERVER_PORT,
     VERBOSE,

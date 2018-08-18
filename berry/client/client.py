@@ -40,9 +40,9 @@ class BerryClient():
         response = utilities.blocking_receive_from_tcp(self._port)
 
         server_response = json.loads(response)
-        server_ip_address = server_response['ip_address']
+        server_ip_address = server_response['ip']
 
-        d.dprint('server is at ' + server_ip_address)
+        d.dprint('Server IP is ' + server_ip_address)
 
         return server_response
 

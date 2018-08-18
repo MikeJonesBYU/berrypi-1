@@ -10,8 +10,11 @@ from ..utilities import d
 
 
 class ThreadedServer(object):
+    _berries = {}
 
     def __init__(self, host, port):
+        self._berries = {}
+
         self._host = host
         self._port = port
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,19 +37,33 @@ class ThreadedServer(object):
                 args=(data,)
             ).start()
 
+    def add_berry(self, berry):
+        """
+        Adds a new berry to the list.
+        """
+        self._berries[berry['guid']] = berry
+
     def communicate_with_new_berry(self, data):
         berry_info = json.loads(data.decode('utf-8'))
 
-        d.dprint('berry name is ' + berry_info['name'])
+        d.dprint('Berry name: ' + berry_info['name'])
 
-        # Open a TCP connection and send my address.
-        response = {'ip_address': utilities.get_my_ip_address()}
+        # Add to berry list
+        self.add_berry(berry_info)
+
+        # Open a TCP connection and send server address to client
+        response = {
+            'ip': utilities.get_my_ip_address(),
+        }
 
         utilities.send_with_tcp(
             json.dumps(response),
-            berry_info['ip_address'],
+            berry_info['ip'],
             berry_info['port'],
         )
+
+        # Debug:
+        d.dprint(f'\nBerries: {self._berries}')
 
     def listen(self):
         self._sock.listen(256)
@@ -61,17 +78,17 @@ class ThreadedServer(object):
 
     def listen_to_client(self, client, address):
         size = 64
-        d.dprint('someone is connecting:')
+        d.dprint('Someone is connecting:')
 
         while True:
             try:
                 data = client.recv(size)
                 if data:
                     # Set the response to echo back the recieved data
-                    print('received: ' + data.decode('utf-8'))
+                    print('\nReceived: ' + data.decode('utf-8'))
                     response = data
                 else:
-                    print('client at ' + address.__str__() + ' closed')
+                    print('Client at ' + address.__str__() + ' closed')
                     client.close()
                     break
             except Exception as e:
@@ -79,6 +96,6 @@ class ThreadedServer(object):
                 client.close()
                 return False
 
-        print('out of receive loop')
+        print('Out of receive loop')
 
         return response

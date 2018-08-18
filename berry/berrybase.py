@@ -36,7 +36,7 @@ class BerryBase():
             'guid': self.guid,
             'name': self.name,
             'type': self.berry_type,
-            'ip_address': self.ip_address,
+            'ip': self.ip_address,
             'methods': self.methods(),
         }
 

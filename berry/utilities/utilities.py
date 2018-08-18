@@ -1,9 +1,13 @@
 import socket
 
-__server_address__ = 'localhost'  # '10.24.66.223'
-__port_number__ = 1234
-__initialization_port__ = 4321
-__verbose__ = True
+# The port to listen on via UDP for registrations
+REGISTRATION_PORT = 5555
+
+# The port to run the server on
+SERVER_PORT = 4444
+
+# Whether to log everything
+VERBOSE = True
 
 
 def get_my_ip_address():
@@ -67,5 +71,5 @@ def blocking_receive_from_tcp(port):
 class d:
     @staticmethod
     def dprint(message):
-        if (__verbose__):
+        if (VERBOSE):
             print(message)

@@ -1,17 +1,17 @@
 """
 Server script.
 """
+import sys
+
 from berry import server, utilities
 
 if __name__ == '__main__':
-    while True:
-        port_num = utilities.__port_number__
-        try:
-            port_num = int(port_num)
-            break
-        except ValueError:
-            pass
+    try:
+        port = int(utilities.SERVER_PORT)
+    except ValueError:
+        print('Invalid port', utilities.SERVER_PORT)
+        sys.exit(-1)
 
-    print(f'starting server on port {port_num}')
+    print(f'Starting server on port {port}')
 
-    server.ThreadedServer('', port_num).listen()
+    server.ThreadedServer('', port).listen()

@@ -27,7 +27,7 @@ class BerryBase():
         self.guid = guid
         self.ip_address = utilities.get_my_ip_address()
 
-    def _convert_to_json(self):
+    def _as_json(self):
         """
         Serializes the berry to JSON.
         """
@@ -36,12 +36,12 @@ class BerryBase():
             'name': self.name,
             'type': self.berry_type,
             'ip_address': self.ip_address,
+            'methods': self.methods(),
         }
 
-        output = json.dumps(berry)
-        d.dprint(f'this berry as an object: {output}')
+        d.dprint(f'this berry as an object: {json.dumps(berry)}')
 
-        return output
+        return berry
 
     def _has_user_interrupts(self):
         return self.berry_type in HAS_USER_INTERRUPTS

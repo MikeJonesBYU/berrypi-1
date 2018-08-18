@@ -12,19 +12,20 @@ from ..utilities import d
 class ThreadedServer(object):
 
     def __init__(self, host, port):
-        self.host = host
-        self.port = port
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.udpsocket.bind(('', utilities.__initialization_port__))
-        self.sock.bind((self.host, self.port))
+        self._host = host
+        self._port = port
+        self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        self._udpsocket.bind(('', utilities.REGISTRATION_PORT))
+        self._sock.bind((self._host, self._port))
 
         # Start up a separate thread to listen for broadcasts from new berries.
         threading.Thread(target=self.listen_for_new_berries).start()
 
     def listen_for_new_berries(self):
         while True:
-            data = self.udpsocket.recv(256)
+            data = self._udpsocket.recv(256)
             message = data.decode('utf-8')
             d.dprint(f'Received via UDP: {message}')
 
@@ -44,13 +45,13 @@ class ThreadedServer(object):
         utilities.send_with_tcp(
             json.dumps(response),
             berry_info['ip_address'],
-            utilities.__initialization_port__,
+            berry_info['port'],
         )
 
     def listen(self):
-        self.sock.listen(256)
+        self._sock.listen(256)
         while True:
-            client, address = self.sock.accept()
+            client, address = self._sock.accept()
             client.settimeout(60)
 
             threading.Thread(

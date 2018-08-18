@@ -24,7 +24,10 @@ class BerryClient():
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
-        output = self._berry._convert_to_json()
+        output = self._berry._as_json()
+        output['port'] = self._port
+        output = json.dumps(output)
+
         d.dprint('Sending via udp broadcast...\n' + output)
 
         sock.sendto(output.encode('utf-8'), ('255.255.255.255', self._port))

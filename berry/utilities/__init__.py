@@ -6,9 +6,7 @@ from .utilities import (
     send_with_tcp,
     blocking_receive_from_tcp,
     d,
+    REGISTRATION_PORT,
+    SERVER_PORT,
+    VERBOSE,
 )
-
-__server_address__ = 'localhost'  # '10.24.66.223'
-__port_number__ = 1234
-__initialization_port__ = 4321
-__verbose__ = True

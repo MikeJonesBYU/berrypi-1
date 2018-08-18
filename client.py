@@ -13,7 +13,12 @@ if __name__ == '__main__':
         print('Usage: python client.py PORT')
         sys.exit(-1)
 
-    port = sys.argv[1]
+    # Get the port number to run this client on
+    try:
+        port = int(sys.argv[1])
+    except:
+        print('Invalid port', port)
+        sys.exit(-1)
 
     # Test berry
     this_berry = BerryButton(

@@ -3,11 +3,12 @@ BerryBase class used as a base class for berries.
 """
 import importlib
 import json
+import logging
 import os
 import types
 
 from . import utilities
-from .utilities import d
+
 
 BERRY_TYPES = ['button', 'slider', 'led']
 HAS_USER_INTERRUPTS = ['button', 'slider']
@@ -23,7 +24,7 @@ class BerryBase():
         if berry_type in BERRY_TYPES:
             self.berry_type = berry_type
         else:
-            d.dprint(f'invalid type to berry constructor {type}')
+            logging.error(f'invalid type to berry constructor {type}')
             self.berry_type = 'invalid'
 
         self.name = name
@@ -45,7 +46,7 @@ class BerryBase():
             'handlers': self.methods(),
         }
 
-        d.dprint(f'this berry as an object: {json.dumps(berry)}')
+        logging.info(f'this berry as an object: {json.dumps(berry)}')
 
         return berry
 

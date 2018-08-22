@@ -2,10 +2,10 @@
 Berry client class.
 """
 import json
+import logging
 import socket
 
 from .. import utilities
-from ..utilities import d
 
 
 class BerryClient():
@@ -28,7 +28,7 @@ class BerryClient():
         output['port'] = self._port
         output = json.dumps(output)
 
-        d.dprint('Sending via udp broadcast...\n' + output)
+        logging.info('Sending via udp broadcast...\n' + output)
 
         sock.sendto(
             output.encode('utf-8'),
@@ -42,7 +42,7 @@ class BerryClient():
         server_response = json.loads(response)
         server_ip_address = server_response['ip']
 
-        d.dprint('Server IP is ' + server_ip_address)
+        logging.info('Server IP is ' + server_ip_address)
 
         return server_response
 
@@ -61,13 +61,13 @@ class BerryClient():
         message = json.loads(message)
 
         if 'type' not in message:
-            d.dprint('Error, message missing type')
+            logging.error('Error, message missing type')
             return
 
         m_type = message['type']
 
         if m_type == 'code-edit':
             # TODO: implement
-            d.dprint('Code editing message')
+            logging.info('Code editing message')
         elif m_type == 'other-message':
             pass

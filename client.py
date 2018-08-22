@@ -1,12 +1,16 @@
 """
 Client script.
 """
+import logging
 import sys
 from uuid import getnode
 
 from berry.client import BerryClient
 from berry.berries import BerryButton
-from berry.utilities import CLIENT_PORT
+from berry.utilities import CLIENT_PORT, LOG_LEVEL
+
+
+logging.getLogger().setLevel(LOG_LEVEL)
 
 
 if __name__ == '__main__':

@@ -2,11 +2,11 @@
 Berry server class.
 """
 import json
+import logging
 import socket
 import threading
 
 from .. import utilities
-from ..utilities import d
 
 
 class ThreadedServer(object):
@@ -30,7 +30,7 @@ class ThreadedServer(object):
         while True:
             data = self._udpsocket.recv(256)
             message = data.decode('utf-8')
-            d.dprint(f'Received via UDP: {message}')
+            logging.info(f'Received via UDP: {message}')
 
             threading.Thread(
                 target=self.communicate_with_new_berry,
@@ -46,7 +46,7 @@ class ThreadedServer(object):
     def communicate_with_new_berry(self, data):
         berry_info = json.loads(data.decode('utf-8'))
 
-        d.dprint('Berry name: ' + berry_info['name'])
+        logging.info('Berry name: ' + berry_info['name'])
 
         # Add to berry list
         self.add_berry(berry_info)
@@ -63,7 +63,7 @@ class ThreadedServer(object):
         )
 
         # Debug:
-        d.dprint(f'\nBerries: {self._berries}')
+        logging.info(f'\nBerries: {self._berries}')
 
     def listen(self):
         self._sock.listen(256)
@@ -78,24 +78,24 @@ class ThreadedServer(object):
 
     def listen_to_client(self, client, address):
         size = 64
-        d.dprint('Someone is connecting:')
+        logging.info('Someone is connecting:')
 
         while True:
             try:
                 data = client.recv(size)
                 if data:
                     # Set the response to echo back the recieved data
-                    print('\nReceived: ' + data.decode('utf-8'))
+                    logging.info('\nReceived: ' + data.decode('utf-8'))
                     response = data
                 else:
-                    print('Client at ' + address.__str__() + ' closed')
+                    logging.info('Client at ' + address.__str__() + ' closed')
                     client.close()
                     break
             except Exception as e:
-                print('Exception: {} ({})'.format(e, type(e)))
+                logging.error('Exception: {} ({})'.format(e, type(e)))
                 client.close()
                 return False
 
-        print('Out of receive loop')
+        logging.info('Out of receive loop')
 
         return response

@@ -30,6 +30,8 @@ if __name__ == '__main__':
     response = client.find_a_server()
 
     # TODO: Import handlers? Or does this happen somewhere else?
+    # Testing
+    berry.on_press()
 
     # Client loop (waiting for events or incoming messages)
     while True:

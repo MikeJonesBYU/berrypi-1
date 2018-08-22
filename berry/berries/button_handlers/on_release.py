@@ -1,3 +1,3 @@
 def on_press():
     # Fill in your code here
-    print("Button pressed!")
+    print("Button released!")

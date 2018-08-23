@@ -127,4 +127,4 @@ class BerryBase():
         handler = getattr(handler_mod, name)
 
         # Call the handler, passing in any arguments
-        return handler(*args, *kwargs)
+        return handler(*args, **kwargs)

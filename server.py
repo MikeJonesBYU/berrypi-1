@@ -17,6 +17,6 @@ if __name__ == '__main__':
         logging.error('Invalid port', utilities.SERVER_PORT)
         sys.exit(-1)
 
-    logging.info(f'Starting server on port {port}')
+    logging.info('Starting server on port {}'.format(port))
 
     server.ThreadedServer('', port).listen()

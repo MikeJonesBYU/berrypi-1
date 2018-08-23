@@ -30,7 +30,7 @@ class ThreadedServer(object):
         while True:
             data = self._udpsocket.recv(256)
             message = data.decode('utf-8')
-            logging.info(f'Received via UDP: {message}')
+            logging.info('Received via UDP: {}'.format(message))
 
             threading.Thread(
                 target=self.register_new_berry,
@@ -77,7 +77,7 @@ class ThreadedServer(object):
         self.send_message_to_berry(guid=berry['guid'], message=response)
 
         # Debug:
-        logging.info(f'\nBerries: {self._berries}')
+        logging.info('\nBerries: {}'.format(self._berries))
 
         # ---------------------------------------------------------------
         # BEGIN TESTING (temporary)

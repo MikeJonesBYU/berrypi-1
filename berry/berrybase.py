@@ -24,7 +24,9 @@ class BerryBase():
         if berry_type in BERRY_TYPES:
             self.berry_type = berry_type
         else:
-            logging.error(f'invalid type to berry constructor {type}')
+            logging.error('invalid type to berry constructor {}'.format(
+                berry_type,
+            ))
             self.berry_type = 'invalid'
 
         self.name = name
@@ -46,7 +48,7 @@ class BerryBase():
             'handlers': self.methods(),
         }
 
-        logging.info(f'this berry as an object: {json.dumps(berry)}')
+        logging.info('this berry as an object: {}'.format(json.dumps(berry)))
 
         return berry
 
@@ -107,7 +109,7 @@ class BerryBase():
 
         # Import modules
         for mod in self._get_modules():
-            module_name = f'berry.client.handlers.{mod}'
+            module_name = 'berry.client.handlers.{}'.format(mod)
             self._handlers[mod] = importlib.import_module(module_name)
 
     def call_handler(self, name, *args, **kwargs):

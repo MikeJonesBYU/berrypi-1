@@ -61,7 +61,7 @@ def blocking_receive_from_tcp(port):
                 # Set the response to echo back the recieved data
                 message += data.decode('utf-8')
             else:
-                logging.info(f'client at {address} closed')
+                logging.info('client at {} closed'.format(address))
                 client.close()
                 tcpsock.close()
                 break
@@ -70,7 +70,7 @@ def blocking_receive_from_tcp(port):
             client.close()
             return False
 
-    logging.info(f'received: {message}')
-    logging.info(f'from    : {address}:{port}')
+    logging.info('received: {}'.format(message))
+    logging.info('from    : {}:{}'.format(address, port))
 
     return message

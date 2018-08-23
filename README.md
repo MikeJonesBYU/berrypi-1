@@ -13,7 +13,7 @@ berries with raspberry pi.
 * you'll need to connect the pi to BYU secure.  I found this easiest to do using the gui desktop interface on the pi.  see https://it.byu.edu/byu/sc_help.do?sysparm_document_key=kb_knowledge,ecf8b5640cc5a9407ed5d80c72bbb5ec
 
 ## running the client/server code. 
-* Once I have the pi set up, I like to just ssh into it.  It's:  ssh pi@<name of pi computer> 
+* Once I have the pi set up, I like to just ssh into it.  It's:  ssh pi@name of pi computer 
 * Then when I do development on my laptop, I can just have the pi open in a terminal window and switch back and forth by switching back and forth between windows. 
 * I do write code on my pi, I write it on my laptop, push it to git and then pull it on the pi (using the ssh connection described above to do the pulls on the pi)
 * start the client on the pi by... 

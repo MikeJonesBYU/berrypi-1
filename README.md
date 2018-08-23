@@ -26,3 +26,4 @@ All the pi zero w's have the same user account (see above) but they should all h
 It's tradition to name them after different kinds of berries.  
 I took raspberry already.  
 * raspberry:  Mike's pi.  
+* huckleberry: Ben's pi.

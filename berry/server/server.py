@@ -33,7 +33,7 @@ class ThreadedServer(object):
             logging.info(f'Received via UDP: {message}')
 
             threading.Thread(
-                target=self.communicate_with_new_berry,
+                target=self.register_new_berry,
                 args=(data,)
             ).start()
 
@@ -43,30 +43,65 @@ class ThreadedServer(object):
         """
         self._berries[berry['guid']] = berry
 
-    def communicate_with_new_berry(self, data):
-        berry_info = json.loads(data.decode('utf-8'))
+    def get_berry(self, guid):
+        """
+        Gets a berry from the list, by guid.
+        """
+        if guid in self._berries:
+            return self._berries[guid]
 
-        logging.info('Berry name: ' + berry_info['name'])
+        return None
+
+    def get_berries(self, guid):
+        """
+        Gets all berries from the list.
+        """
+        return self._berries
+
+    def register_new_berry(self, data):
+        """
+        Registers a new berry.
+        """
+        berry = json.loads(data.decode('utf-8'))
+
+        logging.info('Berry name: ' + berry['name'])
 
         # Add to berry list
-        self.add_berry(berry_info)
+        self.add_berry(berry)
 
         # Open a TCP connection and send server address to client
         response = {
             'ip': utilities.get_my_ip_address(),
         }
 
-        utilities.send_with_tcp(
-            json.dumps(response),
-            berry_info['ip'],
-            berry_info['port'],
-        )
+        self.send_message_to_berry(guid=berry['guid'], message=response)
 
         # Debug:
         logging.info(f'\nBerries: {self._berries}')
 
+        # ---------------------------------------------------------------
+        # BEGIN TESTING (temporary)
+
+        logging.debug('Now sending the code-edit message')
+
+        message = {
+            'type': 'code-edit',
+            'code': {
+                'on_press': 'blahblahblah',
+                'on_release': 'testing123',
+            },
+        }
+
+        self.send_message_to_berry(guid=berry['guid'], message=message)
+
+        # END ---------------------------------------------------------------
+
     def listen(self):
+        """
+        Server listener. Used by the server.py in the root directory.
+        """
         self._sock.listen(256)
+
         while True:
             client, address = self._sock.accept()
             client.settimeout(60)
@@ -77,6 +112,9 @@ class ThreadedServer(object):
             ).start()
 
     def listen_to_client(self, client, address):
+        """
+        UDP receiver.
+        """
         size = 64
         logging.info('Someone is connecting:')
 
@@ -99,3 +137,28 @@ class ThreadedServer(object):
         logging.info('Out of receive loop')
 
         return response
+
+    def send_message_to_berry(self, guid, message):
+        """
+        Sends a message (an object, not yet serialized) to the berry with the
+        matching guid.
+        """
+        berry = self.get_berry(guid)
+
+        # If the guid hasn't been registered, berry will be None
+        if berry is None:
+            return
+
+        utilities.send_with_tcp(
+            json.dumps(message),
+            berry['ip'],
+            berry['port'],
+        )
+
+    def broadcast_message(self, message):
+        """
+        Sequentially sends a message (an object, not yet serialized) to all
+        berries in the list.
+        """
+        for berry in self.get_berries():
+            self.send_message_to_berry(berry['guid'], message)

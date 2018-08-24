@@ -79,25 +79,6 @@ class BerryBase():
             )
         ]
 
-    def _get_modules(self):
-        """
-        Returns a list of all the modules in the client/handlers directory.
-        Used by import_handlers().
-        """
-        modules = []
-        files = os.scandir('berry/client/handlers')
-
-        for entry in files:
-            if not entry.is_file():
-                continue
-
-            if entry.name.startswith('.') or entry.name.startswith('__'):
-                continue
-
-            modules.append(entry.name.replace('.py', ''))
-
-        return modules
-
     def import_handlers(self):
         """
         Imports the berry's handlers from client/handlers. Stashes the imported
@@ -105,26 +86,19 @@ class BerryBase():
         conveniently makes it far easier to reference the imported handlers
         in the subclasses).
         """
-        self._handlers = {}
-
-        # Import modules
-        for mod in self._get_modules():
-            module_name = 'berry.client.handlers.{}'.format(mod)
-            self._handlers[mod] = importlib.import_module(module_name)
+        self._handlers = importlib.import_module('berry.client.handlers')
 
     def call_handler(self, name, *args, **kwargs):
         """
         Wrapper method to call a given handler.
         """
-        # TODO: make this a more specific exception? Or leave it as a KeyError?
-        if name not in self._handlers:
+        # Get the handler function from the berry.client.handlers module
+        handler = getattr(self._handlers, name)
+
+        if not handler:
+            # TODO: make this a more specific exception? Or leave it as a
+            # KeyError?
             raise Exception
-
-        # Get the handler module
-        handler_mod = self._handlers[name]
-
-        # Now get the function (same name as module)
-        handler = getattr(handler_mod, name)
 
         # Call the handler, passing in any arguments
         return handler(*args, **kwargs)

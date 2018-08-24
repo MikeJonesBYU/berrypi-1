@@ -85,16 +85,16 @@ class BerryBase():
         Used by import_handlers().
         """
         modules = []
+        files = os.scandir('berry/client/handlers')
 
-        with os.scandir('berry/client/handlers') as it:
-            for entry in it:
-                if not entry.is_file():
-                    continue
+        for entry in files:
+            if not entry.is_file():
+                continue
 
-                if entry.name.startswith('.') or entry.name.startswith('__'):
-                    continue
+            if entry.name.startswith('.') or entry.name.startswith('__'):
+                continue
 
-                modules.append(entry.name.replace('.py', ''))
+            modules.append(entry.name.replace('.py', ''))
 
         return modules
 

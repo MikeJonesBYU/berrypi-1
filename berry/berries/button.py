@@ -10,7 +10,10 @@ from ..berrybase import BerryBase
 class BerryButton(BerryBase):
     _button = None
 
-    def __init__(self):
+    def __init__(self, berry_type, name, guid):
+        # Take care of general initialization first
+        super().__init__(berry_type, name, guid)
+
         # Hook up to gpiozero, using pin GP17
         self._button = Button(17)
 

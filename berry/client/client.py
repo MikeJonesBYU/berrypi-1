@@ -7,6 +7,8 @@ import socket
 
 from .. import utilities
 
+server_ip_address = 0
+
 
 class BerryClient():
     _berry = None
@@ -71,3 +73,15 @@ class BerryClient():
             logging.info('Code editing message')
         elif m_type == 'other-message':
             pass
+
+
+def send_message_to_server(message):
+    logging.info("Sending message to server", message)
+
+    logging.debug('SERVER IP: {}'.format(server_ip_address))
+
+    utilities.send_with_tcp(
+        json.dumps(message),
+        server_ip_address,
+        utilities.REGISTRATION_PORT,
+    )

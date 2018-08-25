@@ -76,7 +76,7 @@ class BerryClient():
 
 
 def send_message_to_server(message):
-    logging.info("Sending message to server", message)
+    logging.info("Sending message to server: {}".format(message))
 
     logging.debug('SERVER IP: {}'.format(server_ip_address))
 

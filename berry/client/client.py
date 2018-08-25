@@ -83,5 +83,5 @@ def send_message_to_server(message):
     utilities.send_with_tcp(
         json.dumps(message),
         server_ip_address,
-        utilities.REGISTRATION_PORT,
+        utilities.SERVER_PORT,
     )

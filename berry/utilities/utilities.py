@@ -35,14 +35,14 @@ def send_with_tcp(message, recv_address, port):
 
     s.send(message.encode('utf-8'))
 
-    logging.info('sent: ' + message)
-    logging.info('to  : ' + recv_address + ':' + port.__str__())
+    logging.info('Sent: {}'.format(message))
+    logging.info('To: {}:{}'.format(recv_address, port))
 
     s.close()
 
 
 def blocking_receive_from_tcp(port):
-    logging.info('waiting to receive on port ' + port.__str__())
+    logging.info('Waiting to receive on port {}'.format(port))
 
     tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcpsock.bind(('', port))
@@ -51,7 +51,7 @@ def blocking_receive_from_tcp(port):
     client, address = tcpsock.accept()
     client.settimeout(60)
 
-    logging.info('someone is connecting')
+    logging.info('Someone is connecting')
 
     message = ''
     while True:
@@ -61,7 +61,7 @@ def blocking_receive_from_tcp(port):
                 # Set the response to echo back the recieved data
                 message += data.decode('utf-8')
             else:
-                logging.info('client at {} closed'.format(address))
+                logging.info('Client at {} closed'.format(address))
                 client.close()
                 tcpsock.close()
                 break
@@ -70,7 +70,7 @@ def blocking_receive_from_tcp(port):
             client.close()
             return False
 
-    logging.info('received: {}'.format(message))
-    logging.info('from    : {}:{}'.format(address, port))
+    logging.info('Received: {}'.format(message))
+    logging.info('From:     {}:{}'.format(address, port))
 
     return message

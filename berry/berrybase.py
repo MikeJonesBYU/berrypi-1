@@ -36,6 +36,11 @@ class BerryBase():
         # Import the handlers
         self.import_handlers()
 
+        # Initialize GPIO (if we're on a berry)
+        if hasattr(self, 'initialize_gpio'):
+            logging.info('Initializing GPIO')
+            self.initialize_gpio()
+
     def _as_json(self):
         """
         Serializes the berry to JSON.
@@ -62,9 +67,10 @@ class BerryBase():
         """
         # List of methods not to include
         exception_list = [
-            'methods',
-            'import_handlers',
             'call_handler',
+            'import_handlers',
+            'initialize_gpio',
+            'methods',
         ]
 
         return [

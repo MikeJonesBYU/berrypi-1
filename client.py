@@ -33,10 +33,6 @@ if __name__ == '__main__':
     # Listen for a reply on the same port. TCP for replies.
     response = client.find_a_server()
 
-    # TODO: Import handlers? Or does this happen somewhere else?
-    # Testing
-    berry.on_press()
-
     # Client loop (waiting for events or incoming messages)
     while True:
         # TODO: Figure out how to trigger a code edit message, etc.

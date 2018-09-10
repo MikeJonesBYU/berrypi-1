@@ -12,6 +12,14 @@ berries with raspberry pi.
 * The pi will need python3 installed 
 * you'll need to connect the pi to BYU secure.  I found this easiest to do using the gui desktop interface on the pi.  see https://it.byu.edu/byu/sc_help.do?sysparm_document_key=kb_knowledge,ecf8b5640cc5a9407ed5d80c72bbb5ec
 
+## connecting the pi to eduroam. 
+
+the pi and the server will need to be on the same subnet (otherwise udp fails). 
+BYU now uses eduroam.  
+* edit wpa_supplicants.conf  as per https://normally.online/2017/07/11/how-to-connect-your-raspberry-pi-to-eduroam/ 
+* restart the pi.  
+* magic. 
+
 ## running the client/server code. 
 * Once I have the pi set up, I like to just ssh into it.  It's:  ssh pi@name of pi computer 
 * Then when I do development on my laptop, I can just have the pi open in a terminal window and switch back and forth by switching back and forth between windows. 

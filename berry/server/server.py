@@ -7,6 +7,7 @@ import socket
 import threading
 
 from .. import utilities
+from . import window
 
 
 class ThreadedServer(object):
@@ -79,25 +80,6 @@ class ThreadedServer(object):
         # Debug:
         logging.info('\nBerries: {}'.format(self._berries))
 
-        # ---------------------------------------------------------------
-        # BEGIN TESTING (temporary)
-
-        import time
-        time.sleep(5)
-        logging.debug('Now sending the code-edit message')
-
-        message = {
-            'type': 'code-edit',
-            'code': {
-                'on_press': 'blahblahblah',
-                'on_release': 'testing123',
-            },
-        }
-
-        self.send_message_to_berry(guid=berry['guid'], message=message)
-
-        # END ---------------------------------------------------------------
-
     def listen(self):
         """
         Server listener. Used by the server.py in the root directory.
@@ -115,18 +97,19 @@ class ThreadedServer(object):
 
     def listen_to_client(self, client, address):
         """
-        UDP receiver.
+        Receiver.
         """
         size = 64
         logging.info('Someone is connecting:')
 
+        message = ''
         while True:
             try:
                 data = client.recv(size)
                 if data:
                     # Set the response to echo back the received data
                     logging.info('\nReceived: ' + data.decode('utf-8'))
-                    response = data
+                    message += data.decode('utf-8')
                 else:
                     logging.info('Client at ' + address.__str__() + ' closed')
                     client.close()
@@ -138,7 +121,28 @@ class ThreadedServer(object):
 
         logging.info('Out of receive loop')
 
-        return response
+        self.process_message(message)
+
+    def process_message(self, message):
+        """
+        Processes an incoming message.
+        """
+        print('process', message)
+
+        message = json.loads(str(message))
+
+        if 'type' not in message:
+            logging.error('Error, message missing type')
+            return
+
+        m_type = message['type']
+
+        if m_type == 'code-edit':
+            logging.info('Code editing message')
+
+            self.open_edit_code_window(message['code'])
+        elif m_type == 'other-message':
+            pass
 
     def send_message_to_berry(self, guid, message):
         """
@@ -164,3 +168,11 @@ class ThreadedServer(object):
         """
         for berry in self.get_berries():
             self.send_message_to_berry(berry['guid'], message)
+
+    def open_edit_code_window(self, code):
+        """
+        Opens the window for editing code.
+        """
+        edit_window = window.EditWindow()
+        edit_window._textbox.setText(code)
+        edit_window.show()

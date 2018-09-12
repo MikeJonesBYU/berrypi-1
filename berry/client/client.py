@@ -47,6 +47,25 @@ class BerryClient():
 
         logging.info('Server IP is {}'.format(server_ip_address))
 
+        # ---------------------------------------------------------------
+        # BEGIN TESTING (temporary)
+
+        import time
+        time.sleep(5)
+
+        code = self._berry.load_handler_code()
+
+        logging.debug('Now sending the code-edit message to the server')
+
+        message = {
+            'type': 'code-edit',
+            'code': code,
+        }
+
+        send_message_to_server(message=message)
+
+        # END ---------------------------------------------------------------
+
         return server_response
 
     def wait_for_message(self):
@@ -56,12 +75,6 @@ class BerryClient():
         """
         # Wait for a TCP connection from the server.
         return utilities.blocking_receive_from_tcp(self._port)
-
-    def listen(self):
-        """
-        Listen for messages from the server.
-        """
-        return utilities.tcp_listen(self._port, self.process_message)
 
     def process_message(self, message):
         """
@@ -80,7 +93,6 @@ class BerryClient():
             logging.info('Code editing message')
         elif m_type == 'other-message':
             pass
-
 
 def send_message_to_server(message):
     logging.info("Sending message to server: {}".format(message))

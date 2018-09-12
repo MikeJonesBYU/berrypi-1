@@ -108,3 +108,12 @@ class BerryBase():
 
         # Call the handler, passing in any arguments
         return handler(*args, **kwargs)
+
+    def load_handler_code(self):
+        """
+        Returns the handler code in client/handlers.py. Used for code editing.
+        """
+        with open('berry/client/handlers.py', 'r') as f:
+            code = f.read()
+
+        return code

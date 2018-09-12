@@ -33,6 +33,10 @@ if __name__ == '__main__':
     # Listen for a reply on the same port. TCP for replies.
     response = client.find_a_server()
 
-    # Client loop (wait for incoming messages via TCP)
+    # Client loop (waiting for events or incoming messages)
     while True:
-        client.listen()
+        # Blocking wait for incoming TCP messages
+        message = client.wait_for_message()
+
+        # And process the message
+        client.process_message(message=message)

@@ -82,17 +82,19 @@ class ThreadedServer(object):
         # ---------------------------------------------------------------
         # BEGIN TESTING (temporary)
 
-        # logging.debug('Now sending the code-edit message')
+        import time
+        time.sleep(5)
+        logging.debug('Now sending the code-edit message')
 
-        # message = {
-        #     'type': 'code-edit',
-        #     'code': {
-        #         'on_press': 'blahblahblah',
-        #         'on_release': 'testing123',
-        #     },
-        # }
+        message = {
+            'type': 'code-edit',
+            'code': {
+                'on_press': 'blahblahblah',
+                'on_release': 'testing123',
+            },
+        }
 
-        # self.send_message_to_berry(guid=berry['guid'], message=message)
+        self.send_message_to_berry(guid=berry['guid'], message=message)
 
         # END ---------------------------------------------------------------
 

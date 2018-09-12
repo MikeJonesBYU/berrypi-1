@@ -88,8 +88,6 @@ def tcp_listen(port, callback):
     tcpsock.listen(1)
 
     while True:
-        logging.info('Someone is connecting')
-
         client, address = tcpsock.accept()
         client.settimeout(60)
 
@@ -99,10 +97,11 @@ def tcp_listen(port, callback):
         ).start()
 
 
-def tcp_listen_callback(self, client, address, socket, callback):
+def tcp_listen_callback(client, address, socket, callback):
     """
     TCP listener callback.
     """
+    logging.info('Someone is connecting')
     message = ''
 
     while True:
@@ -121,6 +120,7 @@ def tcp_listen_callback(self, client, address, socket, callback):
             client.close()
 
             return None
+
 
     # Call the callback with whatever message we got
     callback(message)

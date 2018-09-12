@@ -122,7 +122,7 @@ class ThreadedServer(object):
             try:
                 data = client.recv(size)
                 if data:
-                    # Set the response to echo back the recieved data
+                    # Set the response to echo back the received data
                     logging.info('\nReceived: ' + data.decode('utf-8'))
                     response = data
                 else:

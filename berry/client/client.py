@@ -57,6 +57,12 @@ class BerryClient():
         # Wait for a TCP connection from the server.
         return utilities.blocking_receive_from_tcp(self._port)
 
+    def listen(self):
+        """
+        Listen for messages from the server.
+        """
+        return utilities.tcp_listen(self._port, self.process_message)
+
     def process_message(self, message):
         """
         Processes an incoming message.

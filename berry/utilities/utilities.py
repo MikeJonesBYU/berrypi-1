@@ -3,6 +3,7 @@ Utility functions.
 """
 import logging
 import socket
+import threading
 
 
 # The port to listen on via UDP for registrations
@@ -74,3 +75,52 @@ def blocking_receive_from_tcp(port):
     logging.info('From:     {}:{}'.format(address, port))
 
     return message
+
+
+def tcp_listen(port, callback):
+    """
+    Threaded TCP listener.
+    """
+    logging.info('Waiting to receive on port {}'.format(port))
+
+    tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    tcpsock.bind(('', port))
+    tcpsock.listen(1)
+
+    while True:
+        logging.info('Someone is connecting')
+
+        client, address = tcpsock.accept()
+        client.settimeout(60)
+
+        threading.Thread(
+            target=tcp_listen_callback,
+            args=(client, address, tcpsock, callback),
+        ).start()
+
+
+def tcp_listen_callback(self, client, address, socket, callback):
+    """
+    TCP listener callback.
+    """
+    message = ''
+
+    while True:
+        try:
+            data = client.recv(512)
+            if data:
+                # Set the response to echo back the recieved data
+                message += data.decode('utf-8')
+            else:
+                logging.info('Client at {} closed'.format(address))
+                client.close()
+                socket.close()
+                break
+        except Exception as e:
+            logging.error('Exception: {} ({})'.format(e, type(e)))
+            client.close()
+
+            return None
+
+    # Call the callback with whatever message we got
+    callback(message)

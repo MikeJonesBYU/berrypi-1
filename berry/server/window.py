@@ -14,16 +14,12 @@ class EditWindow(QWidget):
     Window for editing code.
     """
 
-    def __init__(self, code, guid, server):
+    def __init__(self):
         super().__init__()
-        self.init_ui(code)
+        self.init_ui()
 
-        self._guid = guid
-        self._server = server
-
-    def init_ui(self, code):
+    def init_ui(self):
         self._textbox = QTextEdit()
-        self._textbox.setText(code)
 
         self._save_button = QPushButton("Save Code")
         self._save_button.clicked.connect(self.save_code_handler)
@@ -37,7 +33,24 @@ class EditWindow(QWidget):
         # Window settings
         self.resize(800, 800)
         self.setWindowTitle('Edit Code')
-        self.show()
+
+    def set_guid(self, guid):
+        """
+        Saves a copy of the guid. Used in save_code_handler().
+        """
+        self._guid = guid
+
+    def set_server(self, server):
+        """
+        Saves a reference to the server instance. Used in save_code_handler().
+        """
+        self._server = server
+
+    def load_code(self, code):
+        """
+        Loads the code into the QTextEdit instance.
+        """
+        self._textbox.setText(code)
 
     def save_code_handler(self):
         """

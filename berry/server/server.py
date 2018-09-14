@@ -13,11 +13,13 @@ from . import window
 class ThreadedServer(object):
     _berries = {}
 
-    def __init__(self, host, port):
+    def __init__(self, host, port, edit_window):
         self._berries = {}
 
         self._host = host
         self._port = port
+        self._edit_window = edit_window
+
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -171,9 +173,12 @@ class ThreadedServer(object):
 
     def open_edit_code_window(self, code, guid):
         """
-        Opens the window for editing code.
+        Opens the window for editing code, loading needed data first.
         """
-        self.edit_window = window.EditWindow(code, guid, self)
+        self._edit_window.load_code(code)
+        self._edit_window.set_guid(guid)
+        self._edit_window.set_server(self)
+        self._edit_window.show()
 
     def send_edited_code(self, code, guid):
         """

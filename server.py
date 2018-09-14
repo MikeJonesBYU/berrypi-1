@@ -22,13 +22,16 @@ if __name__ == '__main__':
         logging.error('Invalid port', utilities.SERVER_PORT)
         sys.exit(-1)
 
+    logging.info('Setting up Qt')
     app = QApplication(sys.argv)
     app.setApplicationName('Code Editor')
+    edit_window = server.window.EditWindow()
 
     logging.info('Starting server on port {}'.format(port))
 
     # Start thread for server
-    threading.Thread(target=lambda: server.ThreadedServer('', port).listen()).start()
-    # server.ThreadedServer('', port).listen()
+    threading.Thread(
+        target=lambda: server.ThreadedServer('', port, edit_window).listen()
+    ).start()
 
     sys.exit(app.exec_())

@@ -3,6 +3,7 @@ Server script.
 """
 import logging
 import sys
+import threading
 
 from PyQt5.QtWidgets import (
     QApplication,
@@ -26,6 +27,8 @@ if __name__ == '__main__':
 
     logging.info('Starting server on port {}'.format(port))
 
-    server.ThreadedServer('', port).listen()
+    # Start thread for server
+    threading.Thread(target=lambda: server.ThreadedServer('', port).listen()).start()
+    # server.ThreadedServer('', port).listen()
 
     sys.exit(app.exec_())

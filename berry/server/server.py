@@ -173,6 +173,4 @@ class ThreadedServer(object):
         """
         Opens the window for editing code.
         """
-        edit_window = window.EditWindow()
-        edit_window._textbox.setText(code)
-        edit_window.show()
+        self.edit_window = window.EditWindow(code)

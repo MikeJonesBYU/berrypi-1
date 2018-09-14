@@ -14,12 +14,14 @@ class EditWindow(QWidget):
     Window for editing code.
     """
 
-    def __init__(self):
+    def __init__(self, code):
         super().__init__()
-        self.init_ui()
+        self.init_ui(code)
 
-    def init_ui(self):
+    def init_ui(self, code):
         self._textbox = QTextEdit()
+        self._textbox.setText(code)
+
         self._save_button = QPushButton("Save Code")
 
         # Container

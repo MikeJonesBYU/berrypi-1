@@ -140,7 +140,7 @@ class ThreadedServer(object):
         if m_type == 'code-edit':
             logging.info('Code editing message')
 
-            self.open_edit_code_window(message['code'])
+            self.open_edit_code_window(message['code'], message['guid'])
         elif m_type == 'other-message':
             pass
 
@@ -169,8 +169,21 @@ class ThreadedServer(object):
         for berry in self.get_berries():
             self.send_message_to_berry(berry['guid'], message)
 
-    def open_edit_code_window(self, code):
+    def open_edit_code_window(self, code, guid):
         """
         Opens the window for editing code.
         """
-        self.edit_window = window.EditWindow(code)
+        self.edit_window = window.EditWindow(code, guid, self)
+
+    def send_edited_code(self, code, guid):
+        """
+        Sends the edited code back to the client via the code-save message.
+        """
+        logging.debug('Now sending the code-save message to the server')
+
+        message = {
+            'type': 'code-save',
+            'code': code,
+        }
+
+        self.send_message_to_berry(self, guid, message)

@@ -60,6 +60,7 @@ class BerryClient():
         message = {
             'type': 'code-edit',
             'code': code,
+            'guid': self._berry.guid,
         }
 
         send_message_to_server(message=message)
@@ -88,11 +89,12 @@ class BerryClient():
 
         m_type = message['type']
 
-        if m_type == 'code-edit':
-            # TODO: implement
-            logging.info('Code editing message')
+        if m_type == 'code-save':
+            logging.info('Got saved code, now writing and reloading')
+            self._berry.update_handler_code(message['code'])
         elif m_type == 'other-message':
             pass
+
 
 def send_message_to_server(message):
     logging.info("Sending message to server: {}".format(message))

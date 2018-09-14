@@ -5,6 +5,7 @@ import importlib
 import json
 import logging
 import os
+import shutil
 import types
 
 from . import utilities
@@ -94,6 +95,13 @@ class BerryBase():
         """
         self._handlers = importlib.import_module('berry.client.handlers')
 
+    def reload_handlers(self):
+        """
+        Reloads the berry's handlers from client/handlers.
+        """
+        new_handlers = importlib.reload(self._handlers)
+        self._handlers = new_handlers
+
     def call_handler(self, name, *args, **kwargs):
         """
         Wrapper method to call a given handler.
@@ -117,3 +125,29 @@ class BerryBase():
             code = f.read()
 
         return code
+
+    def update_handler_code(self, code):
+        """
+        Updates the handler code in client/handlers.py. Used for code editing.
+        """
+        temp_path = 'berry/client/handlers_tmp.py'
+        dest_path = 'berry/client/handlers.py'
+
+        # Write out to the temp copy
+        with open(temp_path, 'w') as f:
+            f.write(code)
+
+        # Make sure it worked
+        with open(temp_path, 'r') as f:
+            disk_code = f.read()
+
+        if code != disk_code:
+            logging.error('Code written to disk doesn\'t match, try again')
+            return
+
+        # Move the temp copy over the real copy
+        shutil.copy(temp_path, dest_path)
+        os.remove(temp_path)
+
+        logging.info('Code updated, now reloading handlers')
+        self.reload_handlers()

@@ -1,6 +1,8 @@
 """
 Berry window class. Used for editing code
 """
+import logging
+
 from PyQt5.QtWidgets import (
     QPushButton,
     QTextEdit,
@@ -47,6 +49,8 @@ class EditWindow(QWidget):
         """
         Loads the code into the QTextEdit instance.
         """
+        logging.info('loading code', payload)
+
         self._textbox.setText(payload['code'])
         self._guid = payload['guid']
 

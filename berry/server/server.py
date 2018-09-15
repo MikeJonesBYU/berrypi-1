@@ -25,7 +25,10 @@ class ThreadedServer(QObject):
 
         self._host = host
         self._port = port
+
         self._edit_window = edit_window
+        self._edit_window.set_server(self)
+
         self._save_code_signal.connect(self.send_edited_code)
 
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -137,8 +140,6 @@ class ThreadedServer(QObject):
         """
         Processes an incoming message.
         """
-        print('process', message)
-
         message = json.loads(str(message))
 
         if 'type' not in message:

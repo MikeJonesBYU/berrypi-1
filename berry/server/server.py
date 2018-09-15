@@ -6,19 +6,27 @@ import logging
 import socket
 import threading
 
+from PyQt5 import QtCore
+from PyQt5.QtCore import QObject
+
 from .. import utilities
-from . import window
 
 
-class ThreadedServer(object):
+class ThreadedServer(QObject):
     _berries = {}
 
+    _load_code_signal = QtCore.pyqtSignal(dict, name='load_code')
+    _save_code_signal = QtCore.pyqtSignal(dict, name='save_code')
+
     def __init__(self, host, port, edit_window):
+        super().__init__()
+
         self._berries = {}
 
         self._host = host
         self._port = port
         self._edit_window = edit_window
+        self._save_code_signal.connect(self.send_edited_code)
 
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -175,12 +183,14 @@ class ThreadedServer(object):
         """
         Opens the window for editing code, loading needed data first.
         """
-        self._edit_window.load_code(code)
-        self._edit_window.set_guid(guid)
-        self._edit_window.set_server(self)
+        self._load_code_signal.emit({
+            'code': code,
+            'guid': guid,
+        })
+
         self._edit_window.show()
 
-    def send_edited_code(self, code, guid):
+    def send_edited_code(self, payload):
         """
         Sends the edited code back to the client via the code-save message.
         """
@@ -188,7 +198,7 @@ class ThreadedServer(object):
 
         message = {
             'type': 'code-save',
-            'code': code,
+            'code': payload['code'],
         }
 
-        self.send_message_to_berry(self, guid, message)
+        self.send_message_to_berry(self, ['guid'], message)

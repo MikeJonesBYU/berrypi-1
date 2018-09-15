@@ -30,8 +30,10 @@ if __name__ == '__main__':
     logging.info('Starting server on port {}'.format(port))
 
     # Start thread for server
-    threading.Thread(
+    t = threading.Thread(
         target=lambda: server.ThreadedServer('', port, edit_window).listen()
-    ).start()
+    )
+    t.daemon = True
+    t.start()
 
     sys.exit(app.exec_())

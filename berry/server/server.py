@@ -29,8 +29,6 @@ class ThreadedServer(QObject):
         self._edit_window = edit_window
         self._edit_window.set_server(self)
 
-        self._save_code_signal.connect(self.send_edited_code)
-
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -189,6 +187,7 @@ class ThreadedServer(QObject):
             'guid': guid,
         })
 
+    @QtCore.pyqtSlot(dict)
     def send_edited_code(self, payload):
         """
         Sends the edited code back to the client via the code-save message.

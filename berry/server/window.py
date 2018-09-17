@@ -3,6 +3,7 @@ Berry window class. Used for editing code
 """
 import logging
 
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import (
     QPushButton,
     QTextEdit,
@@ -44,12 +45,14 @@ class EditWindow(QWidget):
 
         # Set up Qt signals
         self._server._load_code_signal.connect(self.load_code)
+        self._server._save_code_signal.connect(self._server.send_edited_code)
 
+    @QtCore.pyqtSlot(dict)
     def load_code(self, payload):
         """
         Loads the code into the QTextEdit instance.
         """
-        logging.info('loading code', payload)
+        logging.info('loading code: {}'.format(payload))
 
         self._textbox.setText(payload['code'])
         self._guid = payload['guid']
@@ -62,8 +65,10 @@ class EditWindow(QWidget):
         """
         payload = {
             'guid': self._guid,
-            'code': self._textbox.text(),
+            'code': self._textbox.toPlainText(),
         }
+
+        logging.info('saving code: {}'.format(payload))
 
         # Send code back to client
         self._server._save_code_signal.emit(payload)

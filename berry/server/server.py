@@ -189,8 +189,6 @@ class ThreadedServer(QObject):
             'guid': guid,
         })
 
-        self._edit_window.show()
-
     def send_edited_code(self, payload):
         """
         Sends the edited code back to the client via the code-save message.

@@ -54,6 +54,8 @@ class EditWindow(QWidget):
         self._textbox.setText(payload['code'])
         self._guid = payload['guid']
 
+        self.show()
+
     def save_code_handler(self):
         """
         Handler for when the Save Code button is clicked.

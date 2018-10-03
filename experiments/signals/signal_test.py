@@ -1,5 +1,6 @@
 import sys
 import threading
+import time
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import QObject
@@ -34,18 +35,16 @@ class MainThreadWidget(QWidget):
         self.setLayout(vbox)
 
         # Window settings
-        self.resize(800, 800)
+        self.resize(500, 500)
         self.setWindowTitle('Edit Code')
 
     def save_code_handler(self):
-        print('Clicked save code on GUI thread, emitting save code to worker')
+        print('Clicked save code on GUI thread, emitting save code to worker:')
 
-        self._save_code_signal.emit({
+        self._worker._save_code_signal.emit({
             'signal': 'save-code',
             'code': 'blah blah blah',
         })
-
-        print('Emitted')
 
     @QtCore.pyqtSlot(dict)
     def load_code(self, message):
@@ -62,6 +61,7 @@ class WorkerThread(QObject):
         super().__init__()
 
         self._window = window
+        self._window._worker = self
         self._window._save_code_signal = self._save_code_signal
         self._save_code_signal.connect(self.save_code)
 

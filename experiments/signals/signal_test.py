@@ -18,6 +18,7 @@ class MainThreadWidget(QWidget):
     GUI widget on main thread.
     """
     _load_code_signal = QtCore.pyqtSignal(dict, name='load_code')
+    _save_code_signal = QtCore.pyqtSignal(dict, name='save_code')
 
     def __init__(self):
         super().__init__()
@@ -55,15 +56,14 @@ class MainThreadWidget(QWidget):
 class WorkerThread(QObject):
     _window = None
 
-    _save_code_signal = QtCore.pyqtSignal(dict, name='save_code')
 
     def __init__(self, window):
         super().__init__()
 
         self._window = window
         self._window._worker = self
-        self._window._save_code_signal = self._save_code_signal
-        self._save_code_signal.connect(self.save_code)
+        # self._window._save_code_signal = self._save_code_signal
+        self._window._save_code_signal.connect(self.save_code)
 
     def listen(self):
         print('Listening on worker thread, emitting load code to GUI thread')

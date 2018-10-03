@@ -18,7 +18,6 @@ class MainThreadWidget(QWidget):
     GUI widget on main thread.
     """
     _load_code_signal = QtCore.pyqtSignal(dict, name='load_code')
-    _save_code_signal = QtCore.pyqtSignal(dict, name='save_code')
 
     def __init__(self):
         super().__init__()
@@ -42,7 +41,7 @@ class MainThreadWidget(QWidget):
     def save_code_handler(self):
         print('Clicked save code on GUI thread, emitting save code to worker:')
 
-        self._worker._save_code_signal.emit({
+        self._worker.save_code({
             'signal': 'save-code',
             'code': 'blah blah blah',
         })
@@ -56,13 +55,14 @@ class MainThreadWidget(QWidget):
 class WorkerThread(QObject):
     _window = None
 
+    _save_code_signal = QtCore.pyqtSignal(dict, name='save_code')
 
     def __init__(self, window):
         super().__init__()
 
         self._window = window
         self._window._worker = self
-        # self._window._save_code_signal = self._save_code_signal
+        self._window._save_code_signal = self._save_code_signal
         self._window._save_code_signal.connect(self.save_code)
 
     def listen(self):
@@ -73,6 +73,10 @@ class WorkerThread(QObject):
             'code': 'Garbanzo Bean',
         })
 
+        t = threading.Thread(target=lambda: self.pass_time())
+        t.start()
+
+    def pass_time(self):
         while 1:
             pass
 

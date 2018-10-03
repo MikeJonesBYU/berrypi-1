@@ -1,7 +1,7 @@
 """
 Button handlers
 
-Name: stradivarius
+Name: what
 
 """
 from .client import send_message_to_server

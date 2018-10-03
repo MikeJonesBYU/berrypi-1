@@ -187,7 +187,6 @@ class ThreadedServer(QObject):
             'guid': guid,
         })
 
-    @QtCore.pyqtSlot(dict)
     def send_edited_code(self, payload):
         """
         Sends the edited code back to the client via the code-save message.
@@ -199,4 +198,4 @@ class ThreadedServer(QObject):
             'code': payload['code'],
         }
 
-        self.send_message_to_berry(self, ['guid'], message)
+        self.send_message_to_berry(payload['guid'], message)

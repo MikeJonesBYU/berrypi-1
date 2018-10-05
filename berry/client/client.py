@@ -42,30 +42,11 @@ class BerryClient():
         response = utilities.blocking_receive_from_tcp(self._port)
 
         server_response = json.loads(response)
+
         global server_ip_address
         server_ip_address = server_response['ip']
 
         logging.info('Server IP is {}'.format(server_ip_address))
-
-        # ---------------------------------------------------------------
-        # BEGIN TESTING (temporary)
-
-        import time
-        time.sleep(5)
-
-        code = self._berry.load_handler_code()
-
-        logging.debug('Now sending the code-edit message to the server')
-
-        message = {
-            'type': 'code-edit',
-            'code': code,
-            'guid': self._berry.guid,
-        }
-
-        send_message_to_server(message=message)
-
-        # END ---------------------------------------------------------------
 
         return server_response
 
@@ -83,17 +64,52 @@ class BerryClient():
         """
         message = json.loads(message)
 
-        if 'type' not in message:
-            logging.error('Error, message missing type')
+        if 'command' not in message:
+            logging.error('Error, message missing command')
             return
 
-        m_type = message['type']
+        command = message['command']
 
-        if m_type == 'code-save':
+        if command == 'code-save':
             logging.info('Got saved code, now writing and reloading')
             self._berry.update_handler_code(message['code'])
-        elif m_type == 'other-message':
+        elif command == 'other-message':
             pass
+
+    def input_loop(self):
+        """
+        Debug mode input loop. Processes keyboard input and acts accordingly.
+
+        Usage:
+            e -- sends 'code-edit' message to server
+        """
+        while True:
+            command = input('> ').strip()
+
+            if command == 'e':
+                # Edit code
+                self.input_send_code_edit_message()
+            elif command == '\n':
+                # Allow newlines (for spacing apart output)
+                pass
+            else:
+                print('Unrecognized input, please try again\n')
+
+    def input_send_code_edit_message(self):
+        """
+        Sends the code edit message to the server. Used in input loop.
+        """
+        code = self._berry.load_handler_code()
+
+        logging.debug('Now sending the code-edit message to the server')
+
+        message = {
+            'command': 'code-edit',
+            'code': code,
+            'guid': self._berry.guid,
+        }
+
+        send_message_to_server(message=message)
 
 
 def send_message_to_server(message):

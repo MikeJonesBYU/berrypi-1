@@ -3,6 +3,7 @@ Client script.
 """
 import logging
 import sys
+import threading
 from uuid import getnode
 
 from berry.client import BerryClient
@@ -29,6 +30,9 @@ if __name__ == '__main__':
     )
 
     client = BerryClient(berry=berry, port=port)
+
+    # Start debug input mode thread
+    threading.Thread(target=client.input_loop).start()
 
     # Listen for a reply on the same port. TCP for replies.
     response = client.find_a_server()

@@ -22,7 +22,6 @@ if __name__ == '__main__':
         logging.error('Invalid port', utilities.SERVER_PORT)
         sys.exit(-1)
 
-    logging.info('Setting up Qt')
     app = QApplication(sys.argv)
     app.setApplicationName('Code Editor')
     edit_window = server.window.EditWindow()

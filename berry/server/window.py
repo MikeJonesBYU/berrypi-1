@@ -45,7 +45,6 @@ class EditWindow(QWidget):
 
         # Set up Qt signals
         self._server._load_code_signal.connect(self.load_code)
-        # self._server._save_code_signal.connect(self._server.send_edited_code)
 
     @QtCore.pyqtSlot(dict)
     def load_code(self, payload):
@@ -72,3 +71,6 @@ class EditWindow(QWidget):
 
         # Send code back to client
         self._server.send_edited_code(payload)
+
+        # And close the window
+        # self.close()

@@ -140,17 +140,19 @@ class ThreadedServer(QObject):
         """
         message = json.loads(str(message))
 
-        if 'type' not in message:
-            logging.error('Error, message missing type')
+        if 'command' not in message:
+            logging.error('Error, message missing command')
             return
 
-        m_type = message['type']
+        command = message['command']
 
-        if m_type == 'code-edit':
+        if command == 'code-edit':
+            # Edit code
             logging.info('Code editing message')
 
             self.open_edit_code_window(message['code'], message['guid'])
-        elif m_type == 'other-message':
+        else:
+            # Anything else
             pass
 
     def send_message_to_berry(self, guid, message):
@@ -194,7 +196,7 @@ class ThreadedServer(QObject):
         logging.debug('Now sending the code-save message to the server')
 
         message = {
-            'type': 'code-save',
+            'command': 'code-save',
             'code': payload['code'],
         }
 

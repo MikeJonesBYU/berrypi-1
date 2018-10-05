@@ -51,8 +51,6 @@ class EditWindow(QWidget):
         """
         Loads the code into the QTextEdit instance.
         """
-        logging.info('loading code: {}'.format(payload))
-
         self._textbox.setText(payload['code'])
         self._guid = payload['guid']
 
@@ -67,10 +65,8 @@ class EditWindow(QWidget):
             'code': self._textbox.toPlainText(),
         }
 
-        logging.info('saving code: {}'.format(payload))
-
         # Send code back to client
         self._server.send_edited_code(payload)
 
-        # And close the window
+        # And close the window (doesn't work yet, it kills the whole app)
         # self.close()

@@ -71,7 +71,6 @@ class BerryClient():
         command = message['command']
 
         if command == 'code-save':
-            logging.info('Got saved code, now writing and reloading')
             self._berry.update_handler_code(message['code'])
         elif command == 'other-message':
             pass
@@ -79,6 +78,7 @@ class BerryClient():
     def input_loop(self):
         """
         Debug mode input loop. Processes keyboard input and acts accordingly.
+        Make sure to hit enter after each command.
 
         Usage:
             e -- sends 'code-edit' message to server
@@ -89,8 +89,8 @@ class BerryClient():
             if command == 'e':
                 # Edit code
                 self.input_send_code_edit_message()
-            elif command == '\n':
-                # Allow newlines (for spacing apart output)
+            elif command == '':
+                # Allow empty input (for spacing apart output)
                 pass
             else:
                 print('Unrecognized input, please try again\n')
@@ -100,8 +100,6 @@ class BerryClient():
         Sends the code edit message to the server. Used in input loop.
         """
         code = self._berry.load_handler_code()
-
-        logging.debug('Now sending the code-edit message to the server')
 
         message = {
             'command': 'code-edit',
@@ -114,8 +112,6 @@ class BerryClient():
 
 def send_message_to_server(message):
     logging.info("Sending message to server: {}".format(message))
-
-    logging.debug('SERVER IP: {}'.format(server_ip_address))
 
     utilities.send_with_tcp(
         json.dumps(message),

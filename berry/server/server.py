@@ -148,8 +148,6 @@ class ThreadedServer(QObject):
 
         if command == 'code-edit':
             # Edit code
-            logging.info('Code editing message')
-
             self.open_edit_code_window(message['code'], message['guid'])
         else:
             # Anything else
@@ -193,8 +191,6 @@ class ThreadedServer(QObject):
         """
         Sends the edited code back to the client via the code-save message.
         """
-        logging.debug('Now sending the code-save message to the server')
-
         message = {
             'command': 'code-save',
             'code': payload['code'],

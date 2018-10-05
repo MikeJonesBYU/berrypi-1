@@ -115,7 +115,11 @@ class BerryBase():
             raise Exception
 
         # Call the handler, passing in any arguments
-        return handler(*args, **kwargs)
+        try:
+            return handler(*args, **kwargs)
+        except Exception:
+            # If there was an exception running the handler, bail out
+            return None
 
     def load_handler_code(self):
         """

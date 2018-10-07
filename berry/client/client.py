@@ -110,6 +110,7 @@ class BerryClient():
         message = {
             'command': 'code-edit',
             'code': code,
+            'name': self._berry.name,
             'guid': self._berry.guid,
         }
 

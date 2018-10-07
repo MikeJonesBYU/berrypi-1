@@ -158,7 +158,11 @@ class ThreadedServer(QObject):
 
         if command == 'code-edit':
             # Edit code
-            self.open_edit_code_window(message['code'], message['guid'])
+            self.open_edit_code_window(
+                message['guid'],
+                message['name'],
+                message['code'],
+            )
         else:
             # Anything else
             pass

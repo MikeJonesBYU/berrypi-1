@@ -73,7 +73,7 @@ class EditWindow(QWidget):
         """
         payload = {
             'guid': self._guid,
-            'name': self._name_textbox.toPlainText(),
+            'name': self._name_textbox.text(),
             'code': self._code_textbox.toPlainText(),
         }
 

@@ -101,7 +101,7 @@ class BerryBase():
         conveniently makes it far easier to reference the imported handlers
         in the subclasses).
         """
-        self._handlers = importlib.import_module('berry.client.handlers')
+        self._handlers = importlib.import_module('berry.client._handlers')
 
     def reload_handlers(self):
         """

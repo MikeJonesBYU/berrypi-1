@@ -188,13 +188,14 @@ class ThreadedServer(QObject):
         for berry in self.get_berries():
             self.send_message_to_berry(berry['guid'], message)
 
-    def open_edit_code_window(self, code, guid):
+    def open_edit_code_window(self, guid, name, code):
         """
         Opens the window for editing code, loading needed data first.
         """
         self._load_code_signal.emit({
-            'code': code,
             'guid': guid,
+            'name': name,
+            'code': code,
         })
 
     def send_edited_code(self, payload):
@@ -203,6 +204,7 @@ class ThreadedServer(QObject):
         """
         message = {
             'command': 'code-save',
+            'name': payload['name'],
             'code': payload['code'],
         }
 

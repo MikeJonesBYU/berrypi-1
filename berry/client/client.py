@@ -71,7 +71,13 @@ class BerryClient():
         command = message['command']
 
         if command == 'code-save':
-            self._berry.update_handler_code(message['code'])
+            # Update the code
+            if 'code' in message:
+                self._berry.update_handler_code(message['code'])
+
+            # And update the name
+            if 'name' in message:
+                self._berry.save_berry_name(message['name'])
         elif command == 'other-message':
             pass
 

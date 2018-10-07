@@ -5,6 +5,8 @@ import logging
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import (
+    QLabel,
+    QLineEdit,
     QPushButton,
     QTextEdit,
     QVBoxLayout,
@@ -22,15 +24,23 @@ class EditWindow(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self._textbox = QTextEdit()
+        self._name_textbox = QLineEdit()
+        self._code_textbox = QTextEdit()
 
-        self._save_button = QPushButton("Save Code")
+        self._save_button = QPushButton("Save Changes")
         self._save_button.clicked.connect(self.save_code_handler)
 
         # Container
         vbox = QVBoxLayout()
-        vbox.addWidget(self._textbox)
+
+        vbox.addWidget(QLabel("Berry Name"))
+        vbox.addWidget(self._name_textbox)
+
+        vbox.addWidget(QLabel("Berry Handler Code"))
+        vbox.addWidget(self._code_textbox)
+
         vbox.addWidget(self._save_button)
+
         self.setLayout(vbox)
 
         # Window settings
@@ -51,8 +61,9 @@ class EditWindow(QWidget):
         """
         Loads the code into the QTextEdit instance.
         """
-        self._textbox.setText(payload['code'])
         self._guid = payload['guid']
+        self._name_textbox.setText(payload['name'])
+        self._code_textbox.setText(payload['code'])
 
         self.show()
 
@@ -62,7 +73,8 @@ class EditWindow(QWidget):
         """
         payload = {
             'guid': self._guid,
-            'code': self._textbox.toPlainText(),
+            'name': self._name_textbox.toPlainText(),
+            'code': self._code_textbox.toPlainText(),
         }
 
         # Send code back to client

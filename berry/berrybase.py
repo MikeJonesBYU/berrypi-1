@@ -12,7 +12,12 @@ from . import utilities
 
 
 BERRY_TYPES = ['button', 'slider', 'led']
-HAS_USER_INTERRUPTS = ['button', 'slider']
+
+BERRY_BASE_PATH = 'berry/client'
+
+BERRY_NAME_PATH = '{}/_berry_name.txt'.format(BERRY_BASE_PATH)
+BERRY_HANDLERS_PATH = '{}/_handlers.py'.format(BERRY_BASE_PATH)
+BERRY_HANDLERS_TMP_PATH = '{}/_handlers_tmp.py'.format(BERRY_BASE_PATH)
 
 
 class BerryBase():
@@ -21,7 +26,7 @@ class BerryBase():
     guid = 'none'
     ip_address = 'none'
 
-    def __init__(self, berry_type, name, guid):
+    def __init__(self, berry_type, guid, name=None):
         if berry_type in BERRY_TYPES:
             self.berry_type = berry_type
         else:
@@ -30,9 +35,15 @@ class BerryBase():
             ))
             self.berry_type = 'invalid'
 
-        self.name = name
         self.guid = guid
         self.ip_address = utilities.get_my_ip_address()
+
+        # Load the berry name from the parameter if present or from disk
+        if name is not None:
+            self.name = name
+        else:
+            # Load from disk
+            self.get_berry_name()
 
         # Import the handlers
         self.import_handlers()
@@ -57,9 +68,6 @@ class BerryBase():
         logging.info('this berry as an object: {}'.format(json.dumps(berry)))
 
         return berry
-
-    def _has_user_interrupts(self):
-        return self.berry_type in HAS_USER_INTERRUPTS
 
     def methods(self):
         """
@@ -125,7 +133,7 @@ class BerryBase():
         """
         Returns the handler code in client/handlers.py. Used for code editing.
         """
-        with open('berry/client/handlers.py', 'r') as f:
+        with open(BERRY_HANDLERS_PATH, 'r') as f:
             code = f.read()
 
         return code
@@ -134,8 +142,8 @@ class BerryBase():
         """
         Updates the handler code in client/handlers.py. Used for code editing.
         """
-        temp_path = 'berry/client/handlers_tmp.py'
-        dest_path = 'berry/client/handlers.py'
+        temp_path = BERRY_HANDLERS_TMP_PATH
+        dest_path = BERRY_HANDLERS_PATH
 
         # Write out to the temp copy
         with open(temp_path, 'w') as f:
@@ -155,3 +163,23 @@ class BerryBase():
 
         logging.info('Code updated, now reloading handlers')
         self.reload_handlers()
+
+    def get_berry_name(self):
+        """
+        Reads in the berry name from client/berry_name.txt and returns it.
+        """
+        with open(BERRY_NAME_PATH, 'r') as f:
+            name = f.read()
+
+        self.name = name.strip()
+
+        return self.name
+
+    def save_berry_name(self, name):
+        """
+        Saves the name to client/berry_name.txt.
+        """
+        self.name = name
+
+        with open(BERRY_NAME_PATH, 'w') as f:
+            f.write(self.name)

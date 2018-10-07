@@ -6,8 +6,7 @@ import sys
 import threading
 from uuid import getnode
 
-from berry.client import BerryClient
-from berry.berries import BerryButton
+from berry.client import BerryClient, get_berry
 from berry.utilities import CLIENT_PORT, LOG_LEVEL
 
 
@@ -22,13 +21,13 @@ if __name__ == '__main__':
         # Default port
         port = CLIENT_PORT
 
-    # Test berry
-    berry = BerryButton(
-        berry_type='button',
-        name='left_button',
-        guid=getnode().__str__() + str(port),
-    )
+    # Create GUID
+    guid = getnode().__str__() + str(port)
 
+    # Get berry from config
+    berry = get_berry(guid=guid)
+
+    # Initialize the client
     client = BerryClient(berry=berry, port=port)
 
     # Start debug input mode thread

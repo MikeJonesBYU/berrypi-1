@@ -13,15 +13,20 @@ from .. import utilities
 
 
 class ThreadedServer(QObject):
+    # Maps GUIDs to berry instances
     _berries = {}
 
+    # Maps berry names to berry instances
+    _berry_names = {}
+
+    # Qt signals for sending messages from worker thread to main (GUI) thread
     _load_code_signal = QtCore.pyqtSignal(dict, name='load_code')
-    _save_code_signal = QtCore.pyqtSignal(dict, name='save_code')
 
     def __init__(self, host, port, edit_window):
         super().__init__()
 
         self._berries = {}
+        self._berry_names = {}
 
         self._host = host
         self._port = port
@@ -54,14 +59,19 @@ class ThreadedServer(QObject):
         Adds a new berry to the list.
         """
         self._berries[berry['guid']] = berry
+        self._berry_names[berry['name']] = berry
 
-    def get_berry(self, guid):
+    def get_berry(self, guid=None, name=None):
         """
-        Gets a berry from the list, by guid.
+        Gets a berry from the list, by either guid or name.
         """
-        if guid in self._berries:
+        if guid and guid in self._berries:
             return self._berries[guid]
 
+        if name and name in self._berry_names:
+            return self._berry_names[name]
+
+        # Didn't find it either way
         return None
 
     def get_berries(self, guid):
@@ -76,7 +86,7 @@ class ThreadedServer(QObject):
         """
         berry = json.loads(data.decode('utf-8'))
 
-        logging.info('Berry name: ' + berry['name'])
+        logging.info('Registering berry (name=' + berry['name'] + ')')
 
         # Add to berry list
         self.add_berry(berry)

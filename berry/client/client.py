@@ -160,8 +160,8 @@ class BerryClient():
 
                 # Wait half a second (don't need to check quite so often)
                 time.sleep(0.5)
-        except:
-            print('Light sensor thread died')
+        except Exception as ex:
+            print('Light sensor thread died', ex)
 
 
 def send_message_to_server(message):

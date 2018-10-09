@@ -9,6 +9,8 @@ from .. import utilities
 
 server_ip_address = 0
 
+LIGHT_CHANGE_RATE_THRESHOLD = 15
+
 
 class BerryClient():
     _berry = None
@@ -94,16 +96,17 @@ class BerryClient():
 
             if command == 'e':
                 # Edit code
-                self.input_send_code_edit_message()
+                self.send_code_edit_message()
             elif command == '':
                 # Allow empty input (for spacing apart output)
                 pass
             else:
                 print('Unrecognized input, please try again\n')
 
-    def input_send_code_edit_message(self):
+    def send_code_edit_message(self):
         """
-        Sends the code edit message to the server. Used in input loop.
+        Sends the code edit message to the server. Used in input loop and
+        light loop.
         """
         code = self._berry.load_handler_code()
 
@@ -115,6 +118,50 @@ class BerryClient():
         }
 
         send_message_to_server(message=message)
+
+    def light_loop(self):
+        """
+        Light sensor loop. Watches the TSL2561 lux value and, if it jumps by
+        a great enough threshold, initiates the code-edit message.
+        """
+        try:
+            import board
+            import busio
+            import adafruit_tsl2561
+            import time
+
+            i2c = busio.I2C(board.SCL, board.SDA)
+            sensor = adafruit_tsl2561.TSL2561(i2c)
+
+            # Get initial reading by first waiting two seconds (so we ignore
+            # the useless initial value) and then watch for three seconds and
+            # average the values together
+            time.sleep(2)
+            lux_readings = []
+            for i in range(0, 3):
+                lux_readings.insert(0, sensor.lux)
+                time.sleep(1)
+
+            average_lux = sum(lux_readings) / 3.0
+
+            while True:
+                lux = sensor.lux
+
+                # Check if we're above threshold and if so, send the message
+                change_rate = lux / average_lux
+                if change_rate > LIGHT_CHANGE_RATE_THRESHOLD:
+                    self.send_code_edit_message()
+
+                # Update the average
+                # TODO: make this more elegant
+                lux_readings.insert(0, lux)
+                lux_readings.pop()
+                average_lux = sum(lux_readings) / 3.0
+
+                # Wait half a second (don't need to check quite so often)
+                time.sleep(0.5)
+        except:
+            print('Light sensor thread died')
 
 
 def send_message_to_server(message):

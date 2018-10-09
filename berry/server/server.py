@@ -34,6 +34,8 @@ class ThreadedServer(QObject):
         self._edit_window = edit_window
         self._edit_window.set_server(self)
 
+        self._editing_code = False
+
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -157,12 +159,16 @@ class ThreadedServer(QObject):
         command = message['command']
 
         if command == 'code-edit':
-            # Edit code
-            self.open_edit_code_window(
-                message['guid'],
-                message['name'],
-                message['code'],
-            )
+            if not self._editing_code:
+                # Set mode (so we don't keep opening the window)
+                self._editing_code = True
+
+                # Open the code editing window
+                self.open_edit_code_window(
+                    message['guid'],
+                    message['name'],
+                    message['code'],
+                )
         else:
             # Anything else
             pass
@@ -213,3 +219,5 @@ class ThreadedServer(QObject):
         }
 
         self.send_message_to_berry(payload['guid'], message)
+
+        self._editing_code = False

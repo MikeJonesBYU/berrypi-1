@@ -2,6 +2,7 @@
 RemoteBerries and BerryProps classes, used to reference remote berries in
 client code.
 """
+import json
 
 
 class RemoteBerries(object):
@@ -65,9 +66,15 @@ class RemoteBerries(object):
                 'attribute': attr,
             }
 
+            # Send it to the server
             self._client.send_message_to_server(message=message)
 
-            return self
+            # Now wait for a response
+            # TODO: figure out how to ignore other possible messages that the
+            # client may receive here
+            message = self._client.wait_for_message()
+
+            return self.parse_response_message(message)
 
         def __setattr__(self, attr, value):
             """
@@ -89,7 +96,7 @@ class RemoteBerries(object):
             }
 
             # If value is a callable, stash it for later reference and don't
-            # send it to the server
+            # send it (the value) to the server
             if callable(value):
                 # Save a reference to the code so we can call it when the
                 # event is triggered
@@ -101,6 +108,7 @@ class RemoteBerries(object):
                 message['payload'] = None
                 message['code-key'] = key
 
+            # Send it to the server
             self._client.send_message_to_server(message=message)
 
         def __call__(self):
@@ -109,3 +117,14 @@ class RemoteBerries(object):
             anything here because we already handled things in __getattr__.
             """
             pass
+
+        def parse_response_message(self, message):
+            """
+            Parses a response message and returns the actual response.
+            """
+            response = json.loads(message)
+
+            if 'payload' in response:
+                return response['payload']
+
+            return None

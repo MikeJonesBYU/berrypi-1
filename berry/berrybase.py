@@ -8,6 +8,7 @@ import os
 import shutil
 import types
 
+from . import remote
 from . import utilities
 
 
@@ -114,6 +115,9 @@ class BerryBase():
         """
         Wrapper method to call a given handler.
         """
+        # Instantiate RemoteBerries
+        remote_berries = remote.RemoteBerries()
+
         # Get the handler function from the berry.client.handlers module
         handler = getattr(self._handlers, name)
 
@@ -122,11 +126,10 @@ class BerryBase():
             # KeyError?
             raise Exception
 
-        # Call the handler, passing in any arguments
+        # Call the handler, passing in the RemoteBerries instance and any
+        # other arguments
         try:
-            # TODO: add RemoteBerries instance
-            # return handler(remote_berries, *args, **kwargs)
-            return handler(*args, **kwargs)
+            return handler(remote_berries, *args, **kwargs)
         except Exception:
             # If there was an exception running the handler, bail out
             return None

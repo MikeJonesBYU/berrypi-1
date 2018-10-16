@@ -19,6 +19,7 @@ class BerryClient():
 
     def __init__(self, berry, port):
         self._berry = berry
+        self._berry._client = self
         self._port = int(port)
 
         # Maps berry/event handlers to functions, for use in user code

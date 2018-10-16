@@ -102,7 +102,7 @@ class RemoteBerries(object):
             if callable(value):
                 # Save a reference to the code so we can call it when the
                 # event is triggered
-                key = f'{self._name}|{attr}'
+                key = '{}|{}'.format(self._name, attr)
                 self._client.code[key] = value
 
                 # Remove the callable from the payload, since we can't

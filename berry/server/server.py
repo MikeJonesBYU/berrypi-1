@@ -169,6 +169,44 @@ class ThreadedServer(QObject):
                     message['name'],
                     message['code'],
                 )
+
+        elif command == 'remote-command':
+            # Send remote command message to destination berry
+
+            # Get the berry GUID
+            berry = self.get_berry(name=message['destination'])
+            guid = berry['guid']
+
+            # Prep the message to the destination berry
+            message = {
+                'command': 'remote-command',
+                'source': message['source'],
+                'attribute': message['attribute'],
+                'payload': message['payload'],
+            }
+
+            self.send_message_to_berry(guid, message)
+
+        elif command == 'remote-response':
+            # Send response message back to the source berry
+
+            # Get the berry GUID
+            berry = self.get_berry(name=message['source'])
+            guid = berry['guid']
+
+            # Prep the message to the source berry
+            message = {
+                'command': 'remote-command',
+                'attribute': message['attribute'],
+                'payload': message['payload'],
+            }
+
+            self.send_message_to_berry(guid, message)
+
+        elif command == 'event':
+            # Send event message to any berries registered for that
+            # event/client pair
+            pass
         else:
             # Anything else
             pass

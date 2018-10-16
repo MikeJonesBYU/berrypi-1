@@ -62,7 +62,8 @@ class RemoteBerries(object):
             # Prep the remote command message
             message = {
                 'command': 'remote-command',
-                'berry': self._name,
+                'destination': self._name,
+                'source': self._client._berry.name,
                 'attribute': attr,
             }
 
@@ -90,7 +91,8 @@ class RemoteBerries(object):
 
             message = {
                 'command': 'remote-command',
-                'berry': self._name,
+                'destination': self._name,
+                'source': self._client._berry.name,
                 'attribute': attr,
                 'payload': value,
             }

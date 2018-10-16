@@ -85,7 +85,21 @@ class BerryClient():
             # And update the name
             if 'name' in message:
                 self._berry.save_berry_name(message['name'])
-        elif command == 'other-message':
+
+        elif command == 'remote-command':
+            # Handle it appropriately
+
+            # TODO: respond with remote-response message
+            pass
+
+        elif command == 'event':
+            # Look up the code and execute it
+
+            # TODO: figure this out
+            pass
+
+        else:
+            # Unrecognized message
             pass
 
     def input_loop(self):

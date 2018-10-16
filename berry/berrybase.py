@@ -124,6 +124,8 @@ class BerryBase():
 
         # Call the handler, passing in any arguments
         try:
+            # TODO: add RemoteBerries instance
+            # return handler(remote_berries, *args, **kwargs)
             return handler(*args, **kwargs)
         except Exception:
             # If there was an exception running the handler, bail out

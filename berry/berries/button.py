@@ -15,19 +15,17 @@ class BerryButton(BerryBase):
         # Import
         try:
             from gpiozero import Button
-            on_berry = True
         except:
-            # Things failed, must be running locally, not on a berry
-            on_berry = False
+            # Things failed, must be running locally, not on a berry, so don't
+            # bother initializing GPIO
+            return
 
-        # Check if we're running on a berry or not
-        if on_berry:
-            # Hook up to gpiozero, using pin GP17
-            self._button = Button(17)
+        # Hook up to gpiozero, using pin GP17
+        self._button = Button(17)
 
-            # Hook in handlers
-            self._button.when_pressed = self.on_press
-            self._button.when_released = self.on_release
+        # Hook in handlers
+        self._button.when_pressed = self.on_press
+        self._button.when_released = self.on_release
 
     def on_press(self):
         """

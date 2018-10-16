@@ -7,9 +7,10 @@ Name: led_button
 from .client import send_message_to_server
 
 
-def on_press():
+def on_press(remote):
     """
-    Handler called when the button is pressed.
+    Handler called when the button is pressed. The remote parameter gives
+    access to other berries' functionality.
     """
     print("Button 1 pressed!")
 
@@ -19,9 +20,10 @@ def on_press():
     )
 
 
-def on_release():
+def on_release(remote):
     """
-    Handler called when the button is released.
+    Handler called when the button is released. The remote parameter gives
+    access to other berries' functionality.
     """
     print("Button 1 released!")
 

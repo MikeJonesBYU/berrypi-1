@@ -15,10 +15,14 @@ LIGHT_CHANGE_RATE_THRESHOLD = 15
 class BerryClient():
     _berry = None
     _port = None
+    _code = None
 
     def __init__(self, berry, port):
         self._berry = berry
         self._port = int(port)
+
+        # Maps berry/event handlers to functions, for use in user code
+        self._code = {}
 
     def find_a_server(self):
         """
@@ -162,6 +166,14 @@ class BerryClient():
                 time.sleep(0.5)
         except Exception as ex:
             print('Light sensor thread died', ex)
+
+    def call_remote_command(self, key, payload=None):
+        """
+        Calls a remote command, passing in an optional payload. Used by user
+        code.
+        """
+        if key in self.code:
+            self.code[key](payload)
 
 
 def send_message_to_server(message):

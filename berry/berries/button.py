@@ -7,6 +7,12 @@ from ..berrybase import BerryBase
 
 class BerryButton(BerryBase):
     _button = None
+    _gpio = False  # Whether we're using GPIO (vs. testing locally)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self._gpio = False
 
     def initialize_gpio(self):
         """
@@ -15,6 +21,7 @@ class BerryButton(BerryBase):
         # Import
         try:
             from gpiozero import Button
+            self._gpio = True
         except:
             # Things failed, must be running locally, not on a berry, so don't
             # bother initializing GPIO
@@ -26,6 +33,17 @@ class BerryButton(BerryBase):
         # Hook in handlers
         self._button.when_pressed = self.on_press
         self._button.when_released = self.on_release
+
+    def is_pressed(self):
+        """
+        Part of button API. Returns True or False depending on whether the
+        button is pressed.
+        """
+        if self._gpio:
+            return self._button.is_pressed
+
+        # Testing mode, always false
+        return False
 
     def on_press(self):
         """
@@ -40,3 +58,9 @@ class BerryButton(BerryBase):
         Returns nothing.
         """
         self.call_handler('on_release')
+
+    def test_attr(self):
+        """
+        TESTING.
+        """
+        return 15

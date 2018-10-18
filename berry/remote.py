@@ -59,23 +59,24 @@ class RemoteBerries(object):
             if attr.startswith('_'):
                 return super().getattr(attr)
 
+            # Make sure response list key exists
+            key = '{}|{}'.format(self._name, attr)
+            self._client.create_response_key(key)
+
             # Prep the remote command message
             message = {
                 'command': 'remote-command',
                 'destination': self._name,
                 'source': self._client._berry.name,
                 'attribute': attr,
+                'key': key,
             }
 
             # Send it to the server
             self._client.send_message_to_server(message=message)
 
-            # Now wait for a response
-            # TODO: figure out how to ignore other possible messages that the
-            # client may receive here
-            message = self._client.wait_for_message()
-
-            return self.parse_response_message(message)
+            # Now keep checking the responses dictionary until we get something
+            return self._client.get_response(key)
 
         def __setattr__(self, attr, value):
             """

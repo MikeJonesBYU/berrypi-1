@@ -39,6 +39,6 @@ def on_test(remote):
     """
     print("In test handler")
 
-    print('remote.other_berry.lux')
-    foo = remote.other_berry.lux
+    print('remote.other_berry.test_attr')
+    foo = remote.other_berry.test_attr
     print(foo)

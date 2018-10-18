@@ -16,6 +16,7 @@ class BerryClient():
     _berry = None
     _port = None
     _code = None
+    _responses = None
 
     def __init__(self, berry, port):
         self._berry = berry
@@ -24,6 +25,9 @@ class BerryClient():
 
         # Maps berry/event handlers to functions, for use in user code
         self._code = {}
+
+        # Maps attribute calls to response values, for use in RemoteBerries
+        self._responses = {}
 
     def find_a_server(self):
         """
@@ -87,10 +91,40 @@ class BerryClient():
                 self._berry.save_berry_name(message['name'])
 
         elif command == 'remote-command':
-            # Handle it appropriately
+            # Run the remote command on this client
+            attribute = message['attribute']
+            source = message['source']
+            key = message['key']
+            payload = message['payload'] if 'payload' in message else None
 
-            # TODO: respond with remote-response message
-            pass
+            # Check if the berry object has the attribute
+            if hasattr(self._berry, attribute):
+                # Yes, the berry has this attribute
+                attr = getattr(self._berry, attribute)
+
+                if callable(attr):
+                    # Function
+                    if payload:
+                        # Pass in parameters
+                        response = attr(payload)
+                    else:
+                        # Don't pass in any parameters
+                        response = attr()
+                else:
+                    # Not a function
+                    response = attr
+            else:
+                response = None
+
+            # Respond with remote-response message to be relayed to source
+            message = {
+                'command': 'remote-response',
+                'destination': source,
+                'response': response,
+                'key': key,
+            }
+
+            send_message_to_server(message=message)
 
         elif command == 'event':
             # Look up the code and execute it
@@ -98,6 +132,16 @@ class BerryClient():
             # TODO: figure this out
             pass
 
+        elif command == 'remote-response':
+            # Run the remote command on this client
+            response = message['response']
+            key = message['key']
+
+            # Make sure response key exists
+            self.create_response_key(key)
+
+            # Add the response to the _responses dictionary
+            self.add_response(key, response)
         else:
             # Unrecognized message
             pass
@@ -195,7 +239,39 @@ class BerryClient():
             self.code[key](payload)
 
     def send_message_to_server(self, message):
+        """
+        Wrapper for send_message_to_server, to provide easier access.
+        """
         send_message_to_server(message)
+
+    def create_response_key(self, key):
+        """
+        Makes sure key exists in the _responses dictionary.
+        """
+        if key not in self._responses:
+            self._responses[key] = []
+
+    def add_response(self, key, response):
+        """
+        Adds a response for the given key. (We put it at the front so that pop
+        works the way we expect.)
+        """
+        self._responses[key].insert(0, response)
+
+    def get_response(self, key):
+        """
+        Gets the key from the _responses dictionary and loops until it can
+        pop a response off the queue.
+        """
+        response = None
+        while True:
+            try:
+                response = self._responses.get(key, []).pop()
+                break
+            except IndexError:
+                pass
+
+        return response
 
 
 def send_message_to_server(message):

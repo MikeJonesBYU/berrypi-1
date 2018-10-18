@@ -27,7 +27,6 @@ class RemoteBerries(object):
         Returns a BerryProps instance for the referenced berry (since any
         attribute access at this level is for a berry).
         """
-        print('remote', attr)
         # Ignore anything that starts with an underscore
         if attr.startswith('_'):
             return super().getattr(attr)
@@ -56,7 +55,6 @@ class RemoteBerries(object):
                 if berries.light_sensor.lux > 200:
                     pass:
             """
-            print('props', attr)
             # Ignore anything that starts with an underscore
             if attr.startswith('_'):
                 return super().getattr(attr)
@@ -68,8 +66,6 @@ class RemoteBerries(object):
                 'source': self._client._berry.name,
                 'attribute': attr,
             }
-            print('sending message', message)
-            print('client', self._client)
 
             # Send it to the server
             self._client.send_message_to_server(message=message)
@@ -89,7 +85,6 @@ class RemoteBerries(object):
 
                 berries.button_berry.on_press = my_func
             """
-            print('props', attr)
             # Ignore anything that starts with an underscore
             if attr.startswith('_'):
                 return super().__setattr__(attr, value)
@@ -114,9 +109,6 @@ class RemoteBerries(object):
                 # serialize it into JSON, and instead send the key
                 message['payload'] = None
                 message['code-key'] = key
-
-            print('sending message setattr', message)
-            print('client', self._client)
 
             # Send it to the server
             self._client.send_message_to_server(message=message)

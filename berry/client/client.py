@@ -194,6 +194,9 @@ class BerryClient():
         if key in self.code:
             self.code[key](payload)
 
+    def send_message_to_server(self, message):
+        send_message_to_server(message)
+
 
 def send_message_to_server(message):
     print('message')

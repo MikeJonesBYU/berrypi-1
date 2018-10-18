@@ -78,9 +78,14 @@ class BerryBase():
         # List of methods not to include
         exception_list = [
             'call_handler',
+            'get_berry_name',
             'import_handlers',
             'initialize_gpio',
+            'load_handler_code',
             'methods',
+            'reload_handlers',
+            'save_berry_name',
+            'update_handler_code',
         ]
 
         return [
@@ -116,7 +121,7 @@ class BerryBase():
         Wrapper method to call a given handler.
         """
         # Instantiate RemoteBerries
-        remote_berries = remote.RemoteBerries()
+        remote_berries = remote.RemoteBerries(self._client)
 
         # Get the handler function from the berry.client.handlers module
         handler = getattr(self._handlers, name)

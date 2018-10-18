@@ -109,6 +109,7 @@ class BerryClient():
 
         Usage:
             e -- sends 'code-edit' message to server
+            t -- executes the on_test() handler for the berry
         """
         while True:
             command = input('> ').strip()
@@ -116,6 +117,9 @@ class BerryClient():
             if command == 'e':
                 # Edit code
                 self.send_code_edit_message()
+            elif command == 't':
+                # Test code handler
+                self._berry.call_handler('on_test')
             elif command == '':
                 # Allow empty input (for spacing apart output)
                 pass
@@ -192,6 +196,7 @@ class BerryClient():
 
 
 def send_message_to_server(message):
+    print('message')
     logging.info("Sending message to server: {}".format(message))
 
     utilities.send_with_tcp(

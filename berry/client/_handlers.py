@@ -31,3 +31,14 @@ def on_release(remote):
     send_message_to_server(
         message='button_released',
     )
+
+
+def on_test(remote):
+    """
+    Test handler.
+    """
+    print("In test handler")
+
+    print('remote.other_berry.lux')
+    foo = remote.other_berry.lux
+    print(foo)

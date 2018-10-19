@@ -161,6 +161,12 @@ class BerryClient():
             if command == 'e':
                 # Edit code
                 self.send_code_edit_message()
+            elif command == 'b':
+                # Test: button press
+                self._berry.on_press()
+            elif command == 'r':
+                # Test: button release
+                self._berry.on_release()
             elif command == 't':
                 # Test code handler
                 self._berry.call_handler('on_test')

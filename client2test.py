@@ -25,10 +25,10 @@ if __name__ == '__main__':
     guid = getnode().__str__() + str(port)
 
     # Set up berry
-    from berry.berries import BerryButton
-    berry = BerryButton(
+    from berry.berries import BerryLED
+    berry = BerryLED(
         berry_type='button',
-        name='other_berry',
+        name='led_berry',
         guid=guid,
     )
 

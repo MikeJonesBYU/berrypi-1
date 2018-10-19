@@ -1,6 +1,8 @@
 """
 LED class.
 """
+import logging
+
 from ..berrybase import BerryBase
 
 
@@ -45,6 +47,8 @@ class BerryLED(BerryBase):
         """
         Wrapper for the LED's off() function. Returns nothing.
         """
+        logging.info('Turning LED off')
+
         self._led.off()
 
         # For testing
@@ -54,6 +58,8 @@ class BerryLED(BerryBase):
         """
         Wrapper for the LED's on() function. Returns nothing.
         """
+        logging.info('Turning LED on')
+
         self._led.on()
 
         # For testing
@@ -63,6 +69,8 @@ class BerryLED(BerryBase):
         """
         Wrapper for the LED's toggle() function. Returns nothing.
         """
+        logging.info('Toggling LED')
+
         self._led.toggle()
 
         # For testing

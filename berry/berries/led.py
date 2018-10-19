@@ -49,7 +49,8 @@ class BerryLED(BerryBase):
         """
         logging.info('Turning LED off')
 
-        self._led.off()
+        if self._gpio:
+            self._led.off()
 
         # For testing
         self._test_state = False
@@ -60,7 +61,8 @@ class BerryLED(BerryBase):
         """
         logging.info('Turning LED on')
 
-        self._led.on()
+        if self._gpio:
+            self._led.on()
 
         # For testing
         self._test_state = True

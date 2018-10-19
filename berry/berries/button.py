@@ -8,6 +8,7 @@ from ..berrybase import BerryBase
 class BerryButton(BerryBase):
     _button = None
     _gpio = False  # Whether we're using GPIO (vs. testing locally)
+    _test_state = False  # Used for internal testing
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -42,8 +43,8 @@ class BerryButton(BerryBase):
         if self._gpio:
             return self._button.is_pressed
 
-        # Testing mode, always false
-        return False
+        # For testing
+        return self._test_state
 
     def on_press(self):
         """
@@ -52,6 +53,9 @@ class BerryButton(BerryBase):
         """
         self.call_handler('on_press')
 
+        # For testing
+        self._test_state = True
+
     def on_release(self):
         """
         Stub for the on_release handler. Activated when the button is released.
@@ -59,8 +63,5 @@ class BerryButton(BerryBase):
         """
         self.call_handler('on_release')
 
-    def test_attr(self):
-        """
-        TESTING.
-        """
-        return 15
+        # For testing
+        self._test_state = False

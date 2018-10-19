@@ -1,8 +1,5 @@
 """
-Button handlers
-
-Name: led_button
-
+Client handlers.
 """
 import logging
 
@@ -16,7 +13,7 @@ def on_press(remote):
     """
     logging.info('Button pressed, now turning on LED')
 
-    remote.led_berry.on()
+    remote.led_berry.off()
 
 
 def on_release(remote):
@@ -26,15 +23,4 @@ def on_release(remote):
     """
     logging.info('Button released, now turning off LED')
 
-    remote.led_berry.off()
-
-
-def on_test(remote):
-    """
-    Test handler.
-    """
-    print("In test handler")
-
-    print('remote.other_berry.test_attr')
-    foo = remote.other_berry.test_attr
-    print(foo)
+    remote.led_berry.on()

@@ -2,6 +2,8 @@
 #
 # Instructions: update this to import the right class, then instantiate that
 # class inside get_berry().
+#
+# Copy this to _berry_config.py
 
 from berry.berries import BerryButton
 

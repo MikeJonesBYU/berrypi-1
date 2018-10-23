@@ -8,13 +8,10 @@ from ..berrybase import BerryBase
 
 class BerryLED(BerryBase):
     _led = None
-    _gpio = False  # Whether we're using GPIO (vs. testing locally)
     _test_state = False  # For internal testing
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-        self._gpio = False
 
     def initialize_gpio(self):
         """
@@ -23,7 +20,6 @@ class BerryLED(BerryBase):
         # Import
         try:
             from gpiozero import LED
-            self._gpio = True
         except:
             # Things failed, must be running locally, not on a berry, so don't
             # bother initializing GPIO
@@ -37,7 +33,7 @@ class BerryLED(BerryBase):
         Part of LED API. Returns True or False depending on whether the LED
         is lit.
         """
-        if self._gpio:
+        if self.live:
             return self._led.is_lit
 
         # For testing
@@ -49,7 +45,7 @@ class BerryLED(BerryBase):
         """
         logging.info('Turning LED off')
 
-        if self._gpio:
+        if self.live:
             self._led.off()
 
         # For testing
@@ -61,7 +57,7 @@ class BerryLED(BerryBase):
         """
         logging.info('Turning LED on')
 
-        if self._gpio:
+        if self.live:
             self._led.on()
 
         # For testing
@@ -73,7 +69,8 @@ class BerryLED(BerryBase):
         """
         logging.info('Toggling LED')
 
-        self._led.toggle()
+        if self.live:
+            self._led.toggle()
 
         # For testing
         self._test_state = not self._test_state

@@ -12,6 +12,7 @@ def get_berry(guid):
     # Test berry
     berry = BerryButton(
         berry_type='button',
+        live=True,
         guid=guid,
     )
 

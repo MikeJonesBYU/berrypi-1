@@ -26,8 +26,9 @@ class BerryBase():
     name = 'none'
     guid = 'none'
     ip_address = 'none'
+    live = False
 
-    def __init__(self, berry_type, guid, name=None):
+    def __init__(self, berry_type, live, guid, name=None):
         if berry_type in BERRY_TYPES:
             self.berry_type = berry_type
         else:
@@ -38,6 +39,9 @@ class BerryBase():
 
         self.guid = guid
         self.ip_address = utilities.get_my_ip_address()
+
+        # Whether the berry is live (on a Pi) or not (testing locally)
+        self.live = live
 
         # Load the berry name from the parameter if present or from disk
         if name is not None:
@@ -50,7 +54,7 @@ class BerryBase():
         self.import_handlers()
 
         # Initialize GPIO (if we're on a berry)
-        if hasattr(self, 'initialize_gpio'):
+        if self.live and hasattr(self, 'initialize_gpio'):
             logging.info('Initializing GPIO')
             self.initialize_gpio()
 

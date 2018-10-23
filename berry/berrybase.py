@@ -120,6 +120,22 @@ class BerryBase():
         new_handlers = importlib.reload(self._handlers)
         self._handlers = new_handlers
 
+        self.setup_client()
+
+    def setup_client(self):
+        """
+        Code that needs to run when a client is initially set up and also when
+        the handlers are reloaded. Called in client's and in BerryBase's
+        reload_handlers method.
+        """
+        # Reload the user handler code since the old code is no longer
+        # applicable; if self._client doesn't exist yet, we're on initial
+        # load and don't need to worry
+        self._client.wipe_user_handlers()
+
+        # Run the client's setup() function if it exists
+        self.call_handler('setup')
+
     def call_handler(self, name, *args, **kwargs):
         """
         Wrapper method to call a given handler.
@@ -197,3 +213,9 @@ class BerryBase():
 
         with open(BERRY_NAME_PATH, 'w') as f:
             f.write(self.name)
+
+    def send_message_to_server(self, message):
+        """
+        Wrapper for sending a message to the server.
+        """
+        self._client.send_message_to_server(message)

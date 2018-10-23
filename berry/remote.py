@@ -109,15 +109,24 @@ class RemoteBerries(object):
             # If value is a callable, stash it for later reference and don't
             # send it (the value) to the server
             if callable(value):
+                logging.info('Callable used in setattr')
+
                 # Save a reference to the code so we can call it when the
                 # event is triggered
                 key = '{}|{}'.format(self._name, attr)
-                self._client.code[key] = value
+                logging.info('Key: {}'.format(key))
+
+                self._client.set_code(key, value)
+                logging.info('Saved code')
+                logging.info(self._client.get_code(key))
 
                 # Remove the callable from the payload, since we can't
                 # serialize it into JSON, and instead send the key
                 message['payload'] = None
                 message['code-key'] = key
+
+                logging.info('message')
+                logging.info(message)
 
             # Send it to the server
             self._client.send_message_to_server(message=message)

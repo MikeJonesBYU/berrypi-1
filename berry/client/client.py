@@ -59,6 +59,9 @@ class BerryClient():
 
         logging.info('Server IP is {}'.format(server_ip_address))
 
+        # Set up the berry (runs the setup() function)
+        self._berry.setup_client()
+
         return server_response
 
     def wait_for_message(self):
@@ -128,9 +131,11 @@ class BerryClient():
 
         elif command == 'event':
             # Look up the code and execute it
+            key = message['key']
+            code = self.get_code(key)
 
-            # TODO: figure this out
-            pass
+            if code is not None:
+                code()
 
         elif command == 'remote-response':
             # Run the remote command on this client
@@ -169,7 +174,7 @@ class BerryClient():
                 self._berry.on_release()
             elif command == 't':
                 # Test code handler
-                self._berry.call_handler('on_test')
+                self._berry.on_test()
             elif command == '':
                 # Allow empty input (for spacing apart output)
                 pass
@@ -278,6 +283,26 @@ class BerryClient():
                 pass
 
         return response
+
+    def wipe_user_handlers(self):
+        """
+        Wipes the _code dictionary, used on initial setup and whenever the
+        handlers get reloaded. This way we don't end up with multiple
+        registrations for the same thing on the same berry.
+        """
+        self._code = {}
+
+    def set_code(self, key, value):
+        """
+        Sets code for a key. Used in user handlers.
+        """
+        self._code[key] = value
+
+    def get_code(self, key):
+        """
+        Returns code for a key. Used in user handlers.
+        """
+        return self._code[key]
 
 
 def send_message_to_server(message):

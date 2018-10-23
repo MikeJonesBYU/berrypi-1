@@ -13,11 +13,9 @@ from .. import utilities
 
 
 class ThreadedServer(QObject):
-    # Maps GUIDs to berry instances
-    _berries = {}
-
-    # Maps berry names to berry instances
-    _berry_names = {}
+    """
+    Server class.
+    """
 
     # Qt signals for sending messages from worker thread to main (GUI) thread
     _load_code_signal = QtCore.pyqtSignal(dict, name='load_code')
@@ -25,20 +23,28 @@ class ThreadedServer(QObject):
     def __init__(self, host, port, edit_window):
         super().__init__()
 
-        self._berries = {}
-        self._berry_names = {}
-
         self._host = host
         self._port = port
 
+        # Maps GUIDs to berry instances
+        self._berries = {}
+
+        # Maps berry names to berry instances
+        self._berry_names = {}
+
+        # Reference to Qt window for editing code
         self._edit_window = edit_window
         self._edit_window.set_server(self)
 
+        # Whether we're currently editing code
         self._editing_code = False
 
+        # Registration mapping for user handlers
+        self._registered_berries = {}
+
+        # Set up sockets
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
         self._udpsocket.bind(('', utilities.REGISTRATION_PORT))
         self._sock.bind((self._host, self._port))
 
@@ -173,22 +179,44 @@ class ThreadedServer(QObject):
         elif command == 'remote-command':
             # Send remote command message to destination berry
 
-            # Get the berry GUID
-            berry = self.get_berry(name=message['destination'])
-            guid = berry['guid']
+            # First check to see if the code-key exists; if so, we're just
+            # registering an event handler, not actually executing a command
+            if 'code-key' in message:
+                logging.info('Code key in message: {}'.format(message['code-key']))
+                # Register this code key for the source berry
+                key = message['code-key']
+                registrations = self._registered_berries
 
-            # Prep the message to the destination berry
-            response = {
-                'command': 'remote-command',
-                'source': message['source'],
-                'attribute': message['attribute'],
-                'key': message['key'],
-            }
+                # Initialize the list
+                if key not in registrations:
+                    registrations[key] = {}
 
-            if 'payload' in response:
-                message['payload'] = response['payload']
+                # Add key to the list if it's not already in there
+                source = message['source']
+                if source not in registrations[key]:
+                    registrations[key][source] = True
 
-            self.send_message_to_berry(guid, response)
+                # self._registered_berries = registrations
+
+                logging.info('Registrations')
+                logging.info(self._registered_berries)
+            else:
+                # Get the berry GUID
+                berry = self.get_berry(name=message['destination'])
+                guid = berry['guid']
+
+                # Prep the message to the destination berry
+                response = {
+                    'command': 'remote-command',
+                    'source': message['source'],
+                    'attribute': message['attribute'],
+                    'key': message['key'],
+                }
+
+                if 'payload' in response:
+                    message['payload'] = response['payload']
+
+                self.send_message_to_berry(guid, response)
 
         elif command == 'remote-response':
             # Send response message back to the source berry
@@ -198,18 +226,38 @@ class ThreadedServer(QObject):
             guid = berry['guid']
 
             # Prep the message to the source berry
-            message = {
+            response = {
                 'command': 'remote-response',
                 'response': message['response'],
                 'key': message['key'],
             }
 
-            self.send_message_to_berry(guid, message)
+            self.send_message_to_berry(guid, response)
 
         elif command == 'event':
             # Send event message to any berries registered for that
             # event/client pair
-            pass
+            logging.info('got event message')
+            logging.info(message)
+
+            key = '{}|{}'.format(message['name'], message['event'])
+
+            # Prep the message
+            message = {
+                'command': 'event',
+                'event': message['event'],
+                'source': message['name'],
+                'key': key,
+            }
+
+            # Send the message to each registered berry
+            registered_berries = self._registered_berries[key].keys()
+            for berry in registered_berries:
+                berry = self.get_berry(name=berry)
+                guid = berry['guid']
+
+                self.send_message_to_berry(guid, message)
+
         else:
             # Anything else
             pass

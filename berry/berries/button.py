@@ -51,7 +51,16 @@ class BerryButton(BerryBase):
         """
         logging.info('Button on press')
 
+        # Call the user handler if it exists
         self.call_handler('on_press')
+
+        # Send event message to server (for any registered clients)
+        message = {
+            'command': 'event',
+            'event': 'on_press',
+            'name': self.name,
+        }
+        self.send_message_to_server(message)
 
         # For testing
         self._test_state = True
@@ -63,7 +72,16 @@ class BerryButton(BerryBase):
         """
         logging.info('Button on release')
 
+        # Call the user handler if it exists
         self.call_handler('on_release')
+
+        # Send event message to server (for any registered clients)
+        message = {
+            'command': 'event',
+            'event': 'on_release',
+            'name': self.name,
+        }
+        self.send_message_to_server(message)
 
         # For testing
         self._test_state = False

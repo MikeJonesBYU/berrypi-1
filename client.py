@@ -34,7 +34,8 @@ if __name__ == '__main__':
     threading.Thread(target=client.input_loop).start()
 
     # Start thread to watch lux value
-    threading.Thread(target=client.light_loop).start()
+    if berry.live:
+        threading.Thread(target=client.light_loop).start()
 
     # Listen for a reply on the same port. TCP for replies.
     response = client.find_a_server()

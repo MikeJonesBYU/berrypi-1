@@ -281,8 +281,7 @@ class BerryClient():
 
 
 def send_message_to_server(message):
-    print('message')
-    logging.info("Sending message to server: {}".format(message))
+    # logging.info("Sending message to server: {}".format(message))
 
     utilities.send_with_tcp(
         json.dumps(message),

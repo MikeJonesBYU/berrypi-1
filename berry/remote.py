@@ -3,6 +3,7 @@ RemoteBerries and BerryProps classes, used to reference remote berries in
 client code.
 """
 import json
+import logging
 
 
 class RemoteBerries(object):
@@ -76,7 +77,14 @@ class RemoteBerries(object):
             self._client.send_message_to_server(message=message)
 
             # Now keep checking the responses dictionary until we get something
-            return self._client.get_response(key)
+            response = self._client.get_response(key)
+
+            # Wrap our response in an empty function so that it can be callable
+            # by the user code (otherwise it'll die)
+            def response_wrapper():
+                return response
+
+            return response_wrapper
 
         def __setattr__(self, attr, value):
             """

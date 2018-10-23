@@ -1,4 +1,5 @@
 __pycache__/
+*.pyc
 
 _berry_config.py
 _berry_name.txt

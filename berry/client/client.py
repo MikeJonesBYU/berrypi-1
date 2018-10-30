@@ -212,13 +212,13 @@ class BerryClient():
             sensor = adafruit_tsl2561.TSL2561(i2c)
 
             # Get initial reading by first waiting two seconds (so we ignore
-            # the useless initial value) and then watch for three seconds and
-            # average the values together
+            # the useless initial value) and then watch for 600ms (200ms three
+            # times) and average the values together
             time.sleep(2)
             lux_readings = []
             for i in range(0, 3):
                 lux_readings.insert(0, sensor.lux)
-                time.sleep(1)
+                time.sleep(0.2)
 
             average_lux = sum(lux_readings) / 3.0
 
@@ -236,8 +236,8 @@ class BerryClient():
                 lux_readings.pop()
                 average_lux = sum(lux_readings) / 3.0
 
-                # Wait half a second (don't need to check quite so often)
-                time.sleep(0.5)
+                # Wait 100ms
+                time.sleep(0.1)
         except Exception as ex:
             print('Light sensor thread died', ex)
 

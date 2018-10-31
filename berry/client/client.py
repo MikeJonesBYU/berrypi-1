@@ -157,15 +157,15 @@ class BerryClient():
         Make sure to hit enter after each command.
 
         Usage:
-            e -- sends 'code-edit' message to server
+            s -- sends 'berry-selected' message to server
             t -- executes the on_test() handler for the berry
         """
         while True:
             command = input('> ').strip()
 
-            if command == 'e':
-                # Edit code
-                self.send_code_edit_message()
+            if command == 's':
+                # Select berry
+                self.send_berry_selected_message()
             elif command == 'b':
                 # Test: button press
                 self._berry.on_press()
@@ -181,15 +181,15 @@ class BerryClient():
             else:
                 print('Unrecognized input, please try again\n')
 
-    def send_code_edit_message(self):
+    def send_berry_selected_message(self):
         """
-        Sends the code edit message to the server. Used in input loop and
+        Sends the berry-selected message to the server. Used in input loop and
         light loop.
         """
         code = self._berry.load_handler_code()
 
         message = {
-            'command': 'code-edit',
+            'command': 'berry-selected',
             'code': code,
             'name': self._berry.name,
             'guid': self._berry.guid,
@@ -200,7 +200,7 @@ class BerryClient():
     def light_loop(self):
         """
         Light sensor loop. Watches the TSL2561 lux value and, if it jumps by
-        a great enough threshold, initiates the code-edit message.
+        a great enough threshold, initiates the berry-selected message.
         """
         try:
             import board
@@ -228,7 +228,7 @@ class BerryClient():
                 # Check if we're above threshold and if so, send the message
                 change_rate = lux / average_lux
                 if change_rate > LIGHT_CHANGE_RATE_THRESHOLD:
-                    self.send_code_edit_message()
+                    self.send_berry_selected_message()
 
                 # Update the average
                 # TODO: make this more elegant

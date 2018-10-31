@@ -20,6 +20,10 @@ class ThreadedServer(QObject):
     # Qt signals for sending messages from worker thread to main (GUI) thread
     _load_code_signal = QtCore.pyqtSignal(dict, name='load_code')
 
+    # Modes
+    NORMAL_MODE = 0
+    EDIT_MODE = 1
+
     def __init__(self, host, port, edit_window):
         super().__init__()
 
@@ -36,8 +40,8 @@ class ThreadedServer(QObject):
         self._edit_window = edit_window
         self._edit_window.set_server(self)
 
-        # Whether we're currently editing code
-        self._editing_code = False
+        # Which mode we're in
+        self._mode = self.NORMAL_MODE
 
         # Registration mapping for user handlers
         self._registered_berries = {}
@@ -164,10 +168,10 @@ class ThreadedServer(QObject):
 
         command = message['command']
 
-        if command == 'code-edit':
-            if not self._editing_code:
+        if command == 'berry-selected':
+            if self._mode == self.NORMAL_MODE:
                 # Set mode (so we don't keep opening the window)
-                self._editing_code = True
+                self._mode = self.EDIT_MODE
 
                 # Open the code editing window
                 self.open_edit_code_window(
@@ -175,6 +179,11 @@ class ThreadedServer(QObject):
                     message['name'],
                     message['code'],
                 )
+
+            elif self._mode == self.EDIT_MODE:
+                # Insert the berry's name into the code editing window
+                # TODO
+                pass
 
         elif command == 'remote-command':
             # Send remote command message to destination berry
@@ -309,4 +318,5 @@ class ThreadedServer(QObject):
 
         self.send_message_to_berry(payload['guid'], message)
 
-        self._editing_code = False
+        # Reset to normal mode now that we're no longer editing code
+        self._mode = self.NORMAL_MODE

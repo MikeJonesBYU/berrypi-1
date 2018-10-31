@@ -67,6 +67,7 @@ class EditWindow(QWidget):
         self._code_textbox.setText(payload['code'])
 
         self.show()
+        self.raise_()
 
     @QtCore.pyqtSlot(str)
     def insert_name(self, name):
@@ -75,6 +76,10 @@ class EditWindow(QWidget):
         """
         cursor = self._code_textbox.textCursor()
         cursor.insertText(name)
+
+        # Make sure the window is on top
+        self.show()
+        self.raise_()
 
     def save_code_handler(self):
         """

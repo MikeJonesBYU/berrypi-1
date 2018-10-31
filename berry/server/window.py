@@ -55,6 +55,7 @@ class EditWindow(QWidget):
 
         # Set up Qt signals
         self._server._load_code_signal.connect(self.load_code)
+        self._server._insert_name_signal.connect(self.insert_name)
 
     @QtCore.pyqtSlot(dict)
     def load_code(self, payload):
@@ -66,6 +67,14 @@ class EditWindow(QWidget):
         self._code_textbox.setText(payload['code'])
 
         self.show()
+
+    @QtCore.pyqtSlot(str)
+    def insert_name(self, name):
+        """
+        Inserts the berry name into the QTextEdit instance at the cursor.
+        """
+        cursor = self._code_textbox.textCursor()
+        cursor.insertText(name)
 
     def save_code_handler(self):
         """

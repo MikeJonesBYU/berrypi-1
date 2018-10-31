@@ -19,6 +19,7 @@ class ThreadedServer(QObject):
 
     # Qt signals for sending messages from worker thread to main (GUI) thread
     _load_code_signal = QtCore.pyqtSignal(dict, name='load_code')
+    _insert_name_signal = QtCore.pyqtSignal(str, name='insert-name')
 
     # Modes
     NORMAL_MODE = 0
@@ -182,8 +183,7 @@ class ThreadedServer(QObject):
 
             elif self._mode == self.EDIT_MODE:
                 # Insert the berry's name into the code editing window
-                # TODO
-                pass
+                self._insert_name_signal.emit(message['name'])
 
         elif command == 'remote-command':
             # Send remote command message to destination berry
@@ -191,7 +191,6 @@ class ThreadedServer(QObject):
             # First check to see if the code-key exists; if so, we're just
             # registering an event handler, not actually executing a command
             if 'code-key' in message:
-                logging.info('Code key in message: {}'.format(message['code-key']))
                 # Register this code key for the source berry
                 key = message['code-key']
                 registrations = self._registered_berries
@@ -204,11 +203,6 @@ class ThreadedServer(QObject):
                 source = message['source']
                 if source not in registrations[key]:
                     registrations[key][source] = True
-
-                # self._registered_berries = registrations
-
-                logging.info('Registrations')
-                logging.info(self._registered_berries)
             else:
                 # Get the berry GUID
                 berry = self.get_berry(name=message['destination'])
@@ -246,9 +240,6 @@ class ThreadedServer(QObject):
         elif command == 'event':
             # Send event message to any berries registered for that
             # event/client pair
-            logging.info('got event message')
-            logging.info(message)
-
             key = '{}|{}'.format(message['name'], message['event'])
 
             # Prep the message

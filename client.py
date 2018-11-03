@@ -33,9 +33,13 @@ if __name__ == '__main__':
     # Start debug input mode thread
     threading.Thread(target=client.input_loop).start()
 
-    # Start thread to watch lux value
+    # Start threads for sensors
     if berry.live:
+        # Start light loop thread
         threading.Thread(target=client.light_loop).start()
+
+        # Start magnet loop thread
+        threading.Thread(target=client.magnet_loop).start()
 
     # Listen for a reply on the same port. TCP for replies.
     response = client.find_a_server()

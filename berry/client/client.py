@@ -10,7 +10,7 @@ from .. import utilities
 server_ip_address = 0
 
 LIGHT_CHANGE_RATE_THRESHOLD = 10
-MAG_CHANGE_RATE_THRESHOLD = 10
+MAG_CHANGE_RATE_THRESHOLD = 2
 
 
 class BerryClient():
@@ -273,9 +273,21 @@ class BerryClient():
                 mag = sensor.magnetic
 
                 # Check if we're above threshold and if so, send the message
-                change_rate_x = mag[0] / average_x
-                change_rate_y = mag[1] / average_y
-                change_rate_z = mag[2] / average_z
+                try:
+                    change_rate_x = abs(mag[0] / average_x)
+                except Exception:
+                    change_rate_x = 0
+
+                try:
+                    change_rate_y = abs(mag[1] / average_y)
+                except Exception:
+                    change_rate_y = 0
+
+                try:
+                    change_rate_z = abs(mag[2] / average_z)
+                except Exception:
+                    change_rate_z = 0
+
                 if (
                     change_rate_x > MAG_CHANGE_RATE_THRESHOLD
                     or

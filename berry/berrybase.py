@@ -147,9 +147,12 @@ class BerryBase():
         handler = getattr(self._handlers, name)
 
         if not handler:
-            # TODO: make this a more specific exception? Or leave it as a
-            # KeyError?
-            raise Exception
+            if name == 'setup':
+                # Setup is optional, so just return without an error
+                return
+
+            # Raise an exception since the handler doesn't exist
+            raise Exception('Handler not found')
 
         # Call the handler, passing in the RemoteBerries instance and any
         # other arguments

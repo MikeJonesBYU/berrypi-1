@@ -33,10 +33,6 @@ if __name__ == '__main__':
     # Start debug input mode thread
     threading.Thread(target=client.input_loop).start()
 
-    # Start main loop thread (loop() handler)
-    t = threading.Thread(target=client.main_loop).start()
-    client._loop_thread = t
-
     # Start threads for sensors
     if berry.live:
         # Start light loop thread

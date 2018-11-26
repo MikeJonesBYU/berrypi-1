@@ -123,9 +123,6 @@ class BerryBase():
 
         self.setup_client()
 
-        # TODO: do I do this here?
-        # self.loop_client()
-
     def setup_client(self):
         """
         Code that needs to run when a client is initially set up and also when
@@ -146,14 +143,6 @@ class BerryBase():
         the handlers are reloaded. Called in client's and in BerryBase's
         reload_handlers method.
         """
-        # TODO: pass in old loop thread
-        # TODO: kill old loop thread
-        if self._client:
-            self._client._loop_thread.stop()
-
-        t = threading.Thread(target=self._client.main_loop).start()
-        self._client._loop_thread = t
-
         # Run the client's loop() function if it exists
         self.call_handler('loop')
 

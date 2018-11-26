@@ -4,6 +4,7 @@ Berry client class.
 import json
 import logging
 import socket
+import threading
 
 from .. import utilities
 
@@ -62,6 +63,9 @@ class BerryClient():
 
         # Set up the berry (runs the setup() function)
         self._berry.setup_client()
+
+        # Start the loop() handler loop
+        threading.Thread(target=self.main_loop).start()
 
         return server_response
 
@@ -156,8 +160,10 @@ class BerryClient():
         """
         Main loop. Calls the loop() handler if it exists.
         """
-        # Call loop() handler
-        self._berry.loop_client()
+        # Start main loop thread (loop() handler)
+        while True:
+            # Call loop() handler
+            self._berry.loop_client()
 
     def input_loop(self):
         """
@@ -167,6 +173,9 @@ class BerryClient():
         Usage:
             s -- sends 'berry-selected' message to server
             t -- executes the on_test() handler for the berry
+            b -- button press
+            r -- button release
+            h -- reload handlers
         """
         while True:
             command = input('> ').strip()
@@ -183,6 +192,9 @@ class BerryClient():
             elif command == 't':
                 # Test code handler
                 self._berry.on_test()
+            elif command == 'h':
+                # Test code handler
+                self._berry.reload_handlers()
             elif command == '':
                 # Allow empty input (for spacing apart output)
                 pass

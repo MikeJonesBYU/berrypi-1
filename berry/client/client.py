@@ -6,6 +6,7 @@ import logging
 import socket
 import threading
 
+from .state import ClientState
 from .. import utilities
 
 server_ip_address = 0
@@ -19,11 +20,13 @@ class BerryClient():
     _port = None
     _code = None
     _responses = None
+    _state = None
 
     def __init__(self, berry, port):
         self._berry = berry
         self._berry._client = self
         self._port = int(port)
+        self._state = ClientState(client=self)
 
         # Maps berry/event handlers to functions, for use in user code
         self._code = {}
@@ -152,6 +155,12 @@ class BerryClient():
 
             # Add the response to the _responses dictionary
             self.add_response(key, response)
+
+        elif command == 'update-state':
+            # Replace the client's state with the new, updated state
+            new_state = message['state']
+            self._state._replace_state(new_state)
+
         else:
             # Unrecognized message
             pass
@@ -392,6 +401,25 @@ class BerryClient():
         Returns code for a key. Used in user handlers.
         """
         return self._code[key]
+
+    def update_state(self, data):
+        """
+        Updates the state dictionary with the specified dictionary by sending
+        it to the server (the canonical source of state).
+        """
+        # Send the update delta dictionary to the server
+        message = {
+            'command': 'update-state',
+            'state': data,
+        }
+
+        send_message_to_server(message=message)
+
+    def get_state(self):
+        """
+        Returns the state dictionary.
+        """
+        return self._state
 
 
 def send_message_to_server(message):

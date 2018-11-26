@@ -150,6 +150,9 @@ class BerryBase():
         """
         Wrapper method to call a given handler.
         """
+        # Get the state
+        state = self._client.get_state()
+
         # Instantiate RemoteBerries
         remote_berries = remote.RemoteBerries(self._client)
 
@@ -164,10 +167,10 @@ class BerryBase():
             # Raise an exception since the handler doesn't exist
             raise Exception('Handler not found')
 
-        # Call the handler, passing in the RemoteBerries instance and any
-        # other arguments
+        # Call the handler, passing in the state and the RemoteBerries instance
+        # and any other arguments
         try:
-            return handler(remote_berries, *args, **kwargs)
+            return handler(state, remote_berries, *args, **kwargs)
         except Exception:
             # If there was an exception running the handler, bail out
             return None

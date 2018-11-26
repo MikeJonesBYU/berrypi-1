@@ -152,6 +152,13 @@ class BerryClient():
             # Unrecognized message
             pass
 
+    def main_loop(self):
+        """
+        Main loop. Calls the loop() handler if it exists.
+        """
+        # Call loop() handler
+        self._berry.loop_client()
+
     def input_loop(self):
         """
         Debug mode input loop. Processes keyboard input and acts accordingly.

@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import shutil
+import threading
 import types
 
 from . import remote
@@ -136,10 +137,22 @@ class BerryBase():
         # Run the client's setup() function if it exists
         self.call_handler('setup')
 
+    def loop_client(self):
+        """
+        Code that needs to run when a client is initially set up and also when
+        the handlers are reloaded. Called in client's and in BerryBase's
+        reload_handlers method.
+        """
+        # Run the client's loop() function if it exists
+        self.call_handler('loop')
+
     def call_handler(self, name, *args, **kwargs):
         """
         Wrapper method to call a given handler.
         """
+        # Get the state
+        state = self._client.get_state()
+
         # Instantiate RemoteBerries
         remote_berries = remote.RemoteBerries(self._client)
 
@@ -147,14 +160,17 @@ class BerryBase():
         handler = getattr(self._handlers, name)
 
         if not handler:
-            # TODO: make this a more specific exception? Or leave it as a
-            # KeyError?
-            raise Exception
+            if name == 'setup':
+                # Setup is optional, so just return without an error
+                return
 
-        # Call the handler, passing in the RemoteBerries instance and any
-        # other arguments
+            # Raise an exception since the handler doesn't exist
+            raise Exception('Handler not found')
+
+        # Call the handler, passing in the state and the RemoteBerries instance
+        # and any other arguments
         try:
-            return handler(remote_berries, *args, **kwargs)
+            return handler(state, remote_berries, *args, **kwargs)
         except Exception:
             # If there was an exception running the handler, bail out
             return None

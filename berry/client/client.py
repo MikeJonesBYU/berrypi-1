@@ -4,7 +4,9 @@ Berry client class.
 import json
 import logging
 import socket
+import threading
 
+from .state import ClientState
 from .. import utilities
 
 server_ip_address = 0
@@ -18,11 +20,13 @@ class BerryClient():
     _port = None
     _code = None
     _responses = None
+    _state = None
 
     def __init__(self, berry, port):
         self._berry = berry
         self._berry._client = self
         self._port = int(port)
+        self._state = ClientState(client=self)
 
         # Maps berry/event handlers to functions, for use in user code
         self._code = {}
@@ -62,6 +66,9 @@ class BerryClient():
 
         # Set up the berry (runs the setup() function)
         self._berry.setup_client()
+
+        # Start the loop() handler loop
+        threading.Thread(target=self.main_loop).start()
 
         return server_response
 
@@ -148,9 +155,24 @@ class BerryClient():
 
             # Add the response to the _responses dictionary
             self.add_response(key, response)
+
+        elif command == 'update-state':
+            # Replace the client's state with the new, updated state
+            new_state = message['state']
+            self._state._replace_state(new_state)
+
         else:
             # Unrecognized message
             pass
+
+    def main_loop(self):
+        """
+        Main loop. Calls the loop() handler if it exists.
+        """
+        # Start main loop thread (loop() handler)
+        while True:
+            # Call loop() handler
+            self._berry.loop_client()
 
     def input_loop(self):
         """
@@ -160,6 +182,9 @@ class BerryClient():
         Usage:
             s -- sends 'berry-selected' message to server
             t -- executes the on_test() handler for the berry
+            b -- button press
+            r -- button release
+            h -- reload handlers
         """
         while True:
             command = input('> ').strip()
@@ -176,6 +201,9 @@ class BerryClient():
             elif command == 't':
                 # Test code handler
                 self._berry.on_test()
+            elif command == 'h':
+                # Test code handler
+                self._berry.reload_handlers()
             elif command == '':
                 # Allow empty input (for spacing apart output)
                 pass
@@ -373,6 +401,25 @@ class BerryClient():
         Returns code for a key. Used in user handlers.
         """
         return self._code[key]
+
+    def update_state(self, data):
+        """
+        Updates the state dictionary with the specified dictionary by sending
+        it to the server (the canonical source of state).
+        """
+        # Send the update delta dictionary to the server
+        message = {
+            'command': 'update-state',
+            'state': data,
+        }
+
+        send_message_to_server(message=message)
+
+    def get_state(self):
+        """
+        Returns the state dictionary.
+        """
+        return self._state
 
 
 def send_message_to_server(message):

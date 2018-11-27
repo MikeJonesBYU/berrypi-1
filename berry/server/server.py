@@ -44,6 +44,9 @@ class ThreadedServer(QObject):
         # Which mode we're in
         self._mode = self.NORMAL_MODE
 
+        # Shared state
+        self._state = {}
+
         # Registration mapping for user handlers
         self._registered_berries = {}
 
@@ -87,11 +90,11 @@ class ThreadedServer(QObject):
         # Didn't find it either way
         return None
 
-    def get_berries(self, guid):
+    def get_berries(self):
         """
         Gets all berries from the list.
         """
-        return self._berries
+        return list(self._berries.values())
 
     def register_new_berry(self, data):
         """
@@ -257,6 +260,20 @@ class ThreadedServer(QObject):
                 guid = berry['guid']
 
                 self.send_message_to_berry(guid, message)
+
+        elif command == 'update-state':
+            # Update the shared state
+            update_delta = message['state']
+            self._state.update(update_delta)
+
+            # Prep the message
+            message = {
+                'command': 'update-state',
+                'state': self._state,
+            }
+
+            # Send the message to all berries
+            self.broadcast_message(message)
 
         else:
             # Anything else

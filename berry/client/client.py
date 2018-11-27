@@ -399,6 +399,11 @@ class BerryClient():
         """
         self._code = {}
 
+        # If the berry has handlers, it should have a wipe_handlers() method
+        # that unhooks anything the user has set (see button for an example)
+        if hasattr(self, 'wipe_handlers'):
+            self.wipe_handlers()
+
     def set_code(self, key, value):
         """
         Sets code for a key. Used in user handlers.

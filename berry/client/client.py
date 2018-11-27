@@ -188,6 +188,7 @@ class BerryClient():
             b -- button press
             r -- button release
             h -- reload handlers
+            z -- set state, takes JSON (example: `z { "key": 3290 }`)
         """
         while True:
             command = input('> ').strip()
@@ -207,6 +208,11 @@ class BerryClient():
             elif command == 'h':
                 # Test code handler
                 self._berry.reload_handlers()
+            elif command[0] == 'z':
+                # Test updating state
+                json_data = command[1:].strip()
+                update = json.loads(json_data)
+                self.update_state(update)
             elif command == '':
                 # Allow empty input (for spacing apart output)
                 pass

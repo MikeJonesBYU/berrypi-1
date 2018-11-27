@@ -161,6 +161,9 @@ class BerryClient():
             new_state = message['state']
             self._state._replace_state(new_state)
 
+            # And call the on_state handler
+            self._berry.on_state()
+
         else:
             # Unrecognized message
             pass

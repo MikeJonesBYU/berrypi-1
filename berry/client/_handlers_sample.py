@@ -31,7 +31,7 @@ def setup(state, remote):
     """
     Run whenever the client code is loaded. Optional.
     """
-    print('setup')
+    logging.info('setup')
 
 
 def loop(state, remote):
@@ -39,5 +39,13 @@ def loop(state, remote):
     If present, looped over in its own thread. Use for widget logic where
     needed.
     """
-    print('looping')
+    logging.info('looping')
     time.sleep(1)
+
+
+def on_state(state, remote):
+    """
+    Handler called whenever state is updated.
+    """
+    val = state.get('value')
+    logging.info('on_state, val = {}'.format(val))

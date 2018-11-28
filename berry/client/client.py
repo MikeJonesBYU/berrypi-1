@@ -161,6 +161,9 @@ class BerryClient():
             new_state = message['state']
             self._state._replace_state(new_state)
 
+            # And call the on_state handler
+            self._berry.on_state()
+
         else:
             # Unrecognized message
             pass
@@ -185,6 +188,7 @@ class BerryClient():
             b -- button press
             r -- button release
             h -- reload handlers
+            z -- set state, takes JSON (example: `z { "key": 3290 }`)
         """
         while True:
             command = input('> ').strip()
@@ -204,6 +208,11 @@ class BerryClient():
             elif command == 'h':
                 # Test code handler
                 self._berry.reload_handlers()
+            elif command[0] == 'z':
+                # Test updating state
+                json_data = command[1:].strip()
+                update = json.loads(json_data)
+                self.update_state(update)
             elif command == '':
                 # Allow empty input (for spacing apart output)
                 pass
@@ -389,6 +398,11 @@ class BerryClient():
         registrations for the same thing on the same berry.
         """
         self._code = {}
+
+        # If the berry has handlers, it should have a wipe_handlers() method
+        # that unhooks anything the user has set (see button for an example)
+        if hasattr(self, 'wipe_handlers'):
+            self.wipe_handlers()
 
     def set_code(self, key, value):
         """

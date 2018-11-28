@@ -85,3 +85,11 @@ class BerryButton(BerryBase):
 
         # For testing
         self._test_state = False
+
+    def wipe_handlers(self):
+        """
+        Unhooks any user handlers so that reloading works as expected.
+        """
+        if self.live:
+            self._button.when_pressed = None
+            self._button.when_released = None

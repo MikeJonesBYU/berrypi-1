@@ -235,3 +235,11 @@ class BerryBase():
         Wrapper for sending a message to the server.
         """
         self._client.send_message_to_server(message)
+
+    def on_state(self):
+        """
+        Function allowing the user code to implement an on_state() handler
+        that's called whenever the client receives a new state update.
+        """
+        # Run the client's on_state() function if it exists
+        self.call_handler('on_state')

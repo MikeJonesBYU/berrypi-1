@@ -170,7 +170,13 @@ class BerryBase():
         # Call the handler, passing in the state and the RemoteBerries instance
         # and any other arguments
         try:
-            return handler(state, remote_berries, *args, **kwargs)
+            return handler(
+                state,
+                remote_berries,
+                self,  # the berry itself
+                *args,
+                **kwargs,
+            )
         except Exception:
             # If there was an exception running the handler, bail out
             return None

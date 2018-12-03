@@ -24,8 +24,8 @@ class BerryScreen(BerryBase):
             from luma.core.render import canvas
             from luma.oled.device import ssd1306
 
-            serial = i2c(port=0)
-            device = ssd1306(serial, bcm_DC=27, bcm_RST=17)
+            serial = i2c(port=1, address=0x3C)
+            device = ssd1306(serial)
 
             self._canvas = canvas(device)
         except:

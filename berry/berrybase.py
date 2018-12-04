@@ -13,7 +13,7 @@ from . import remote
 from . import utilities
 
 
-BERRY_TYPES = ['button', 'slider', 'led']
+BERRY_TYPES = ['button', 'led', 'screen', 'accelerometer']
 
 BERRY_BASE_PATH = 'berry/client'
 

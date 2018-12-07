@@ -208,7 +208,7 @@ class BerryClient():
             elif command == 'h':
                 # Test code handler
                 self._berry.reload_handlers()
-            elif command[0] == 'z':
+            elif len(command) >= 1 and command[0] == 'z':
                 # Test updating state
                 json_data = command[1:].strip()
                 update = json.loads(json_data)

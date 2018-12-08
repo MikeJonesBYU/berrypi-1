@@ -6,14 +6,19 @@ import json
 import logging
 import os
 import shutil
-import threading
 import types
 
 from . import remote
 from . import utilities
 
 
-BERRY_TYPES = ['button', 'led', 'screen', 'accelerometer']
+BERRY_TYPES = [
+    'button',
+    'led',
+    'screen',
+    'accelerometer',
+    'fsr',  # force sensitive resistor
+]
 
 BERRY_BASE_PATH = 'berry/client'
 
@@ -68,7 +73,7 @@ class BerryBase():
             'name': self.name,
             'type': self.berry_type,
             'ip': self.ip_address,
-            'handlers': self.methods(),
+            # 'handlers': self.methods(),
         }
 
         logging.info('this berry as an object: {}'.format(json.dumps(berry)))

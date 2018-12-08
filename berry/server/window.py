@@ -33,10 +33,10 @@ class EditWindow(QWidget):
         # Container
         vbox = QVBoxLayout()
 
-        vbox.addWidget(QLabel("Berry Name"))
+        vbox.addWidget(QLabel("Widget Name"))
         vbox.addWidget(self._name_textbox)
 
-        vbox.addWidget(QLabel("Berry Handler Code"))
+        vbox.addWidget(QLabel("Widget Handler Code"))
         vbox.addWidget(self._code_textbox)
 
         vbox.addWidget(self._save_button)

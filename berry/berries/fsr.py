@@ -34,7 +34,7 @@ class BerryFSR(BerryBase):
             return
 
         # Start force loop thread
-        threading.Thread(target=self.force_loop).start()
+        threading.Thread(target=self._force_loop).start()
 
     def _force_loop(self):
         """

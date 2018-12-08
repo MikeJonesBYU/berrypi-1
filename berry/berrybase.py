@@ -6,14 +6,19 @@ import json
 import logging
 import os
 import shutil
-import threading
 import types
 
 from . import remote
 from . import utilities
 
 
-BERRY_TYPES = ['button', 'led', 'screen', 'accelerometer']
+BERRY_TYPES = [
+    'button',
+    'led',
+    'screen',
+    'accelerometer',
+    'fsr',  # force sensitive resistor
+]
 
 BERRY_BASE_PATH = 'berry/client'
 

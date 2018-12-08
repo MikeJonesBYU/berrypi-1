@@ -37,28 +37,33 @@ class BerryScreen(BerryBase):
         """
         Draws a point. See the PIL ImageDraw reference for details.
         """
-        self._canvas.point(xy, fill)
+        with self._canvas as draw:
+            draw.point(xy, fill)
 
     def line(self, xy, fill=None, width=1):
         """
         Draws a line. See the PIL ImageDraw reference for details.
         """
-        self._canvas.line(xy, fill, width)
+        with self._canvas as draw:
+            draw.line(xy, fill, width)
 
     def rectangle(self, xy, fill=None, outline=None):
         """
         Draws a rectangle. See the PIL ImageDraw reference for details.
         """
-        self._canvas.rectangle(xy, fill, outline)
+        with self._canvas as draw:
+            draw.rectangle(xy, fill, outline)
 
     def ellipse(self, xy, fill=None, outline=None):
         """
         Draws an ellipse. See the PIL ImageDraw reference for details.
         """
-        self._canvas.ellipse(xy, fill, outline)
+        with self._canvas as draw:
+            draw.ellipse(xy, fill, outline)
 
     def text(self, xy, text, fill=None):
         """
         Draws text. See the PIL ImageDraw reference for details.
         """
-        self._canvas.text(xy, text, fill)
+        with self._canvas as draw:
+            draw.text(xy, text, fill)

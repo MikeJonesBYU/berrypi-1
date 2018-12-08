@@ -28,12 +28,12 @@ class BerryFSR(BerryBase):
             return
 
     def _scale(self, value):
-        return value / self._divisor
+        return self._divisor / value
 
     def force(self):
         """
         Part of force API. Returns a number with the scaled force (which should
-        end up being between 0 and around 1,200 based on my testing).
+        end up being between 0 and 1 based on my testing).
         """
         return self._scale(self.force())
 

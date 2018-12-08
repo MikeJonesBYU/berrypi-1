@@ -29,7 +29,8 @@ class BerryAccelerometer(BerryBase):
             import adafruit_lsm303
 
             i2c = busio.I2C(board.SCL, board.SDA)
-        except:
+        except Exception as ex:
+            print('Exception loading accelerometer', ex)
             # Things failed, must be running locally, not on a berry, so don't
             # bother initializing GPIO
             return

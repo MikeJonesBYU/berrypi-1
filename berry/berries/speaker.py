@@ -20,7 +20,7 @@ class BerrySpeaker(BerryBase):
         # Nothing to do
         return
 
-    def beep(self, frequency=1400, duration=0.2):
+    def beep(self, freq=1400, duration=0.2):
         """
         Beeps.
         """
@@ -31,4 +31,4 @@ class BerrySpeaker(BerryBase):
                 env={'AUDIODEV': 'hw:1'},
             )
         else:
-            print('Beeped (freq={}, dur={})'.format(frequency, duration))
+            print('Beeped (freq={}, dur={})'.format(freq, duration))

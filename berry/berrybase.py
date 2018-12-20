@@ -18,6 +18,7 @@ BERRY_TYPES = [
     'screen',
     'accelerometer',
     'fsr',  # force sensitive resistor
+    'speaker',
 ]
 
 BERRY_BASE_PATH = 'berry/client'

@@ -24,8 +24,11 @@ class BerrySpeaker(BerryBase):
         """
         Beeps.
         """
-        subprocess.run(
-            ['play', '-b', '16', '-q', '-n', 'synth', str(duration), 'sin', str(freq)],  # noqa
-            stderr=None,
-            env={'AUDIODEV': 'hw:1'},
-        )
+        if self.live:
+            subprocess.run(
+                ['play', '-b', '16', '-q', '-n', 'synth', str(duration), 'sin', str(freq)],  # noqa
+                stderr=None,
+                env={'AUDIODEV': 'hw:1'},
+            )
+        else:
+            print('Beeped (freq={}, dur={})'.format(frequency, duration))

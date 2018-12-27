@@ -1,39 +1,70 @@
 // Ansible widget cases
+//
+// Mount: base mount for widgets
+// -----------------------------------------------------------------------------
 
-module widget_mount(s, h, thickness) {
-    // 1 mm off for spacing
-    real_s = s - 1;
-    inside_s = real_s - thickness;
-    grip_height = 5;
-    grip_thickness = 7;
+include <../params.scad>;
 
-    // Square base
-    difference() {
-        // Outside
-        union() {
-            // Base
-            cube([real_s, real_s, h]);
-            
-            // Grip
-            translate([-grip_thickness/2, -grip_thickness/2, h - grip_height])
-                linear_extrude(height=grip_height)
-                hull() {
-                    translate([0, 0, 0])
-                        circle(r=5/2);
-                
-                    translate([real_s + grip_thickness, 0, 0])
-                        circle(r=5/2);
-                
-                    translate([0, real_s+grip_thickness, 0])
-                        circle(r=5/2);
-                
-                    translate([real_s+grip_thickness, real_s+grip_thickness, 0])
-                        circle(r=5/2);
-                }
-        }
-        
-        // Carve out inside
-        translate([thickness, thickness, -thickness])
-            cube([inside_s - thickness, inside_s - thickness, h]);
-    }
+// -----------------------------------------------------------------------------
+
+module widget_mount() {
+	color(WIDGET_MOUNT_COLOR) {
+		// Square base
+		difference() {
+			// Outside
+			union() {
+				// Base
+				cube([WIDGET_MOUNT_SIZE, WIDGET_MOUNT_SIZE, MOUNT_HEIGHT]);
+				
+				// Grip
+				translate([
+					-GRIP_THICKNESS / 2,
+					-GRIP_THICKNESS / 2,
+					MOUNT_HEIGHT - GRIP_HEIGHT
+				])
+					linear_extrude(height=GRIP_HEIGHT)
+					hull() {
+						translate([
+							0,
+							0,
+							0
+						])
+							circle(r=WIDGET_BORDER_RADIUS);
+					
+						translate([
+							WIDGET_MOUNT_SIZE + GRIP_THICKNESS,
+							0,
+							0
+						])
+							circle(r=WIDGET_BORDER_RADIUS);
+					
+						translate([
+							0,
+							WIDGET_MOUNT_SIZE + GRIP_THICKNESS,
+							0,
+						])
+							circle(r=WIDGET_BORDER_RADIUS);
+					
+						translate([
+							WIDGET_MOUNT_SIZE + GRIP_THICKNESS,
+							WIDGET_MOUNT_SIZE + GRIP_THICKNESS,
+							0,
+						])
+							circle(r=WIDGET_BORDER_RADIUS);
+					}
+			}
+			
+			// Carve out inside
+			translate([
+				WIDGET_MOUNT_THICKNESS,
+				WIDGET_MOUNT_THICKNESS,
+				-WIDGET_MOUNT_THICKNESS
+			])
+				cube([
+					WIDGET_MOUNT_SIZE - WIDGET_MOUNT_THICKNESS * 2,
+					WIDGET_MOUNT_SIZE - WIDGET_MOUNT_THICKNESS * 2,
+					MOUNT_HEIGHT
+				]);
+		}
+	}
 }

@@ -51,28 +51,28 @@ module _widget_dock_border() {
 				-DOCK_BORDER_THICKNESS / 2,
 				0
 			])
-				circle(r=WIDGET_BORDER_RADIUS);
+				circle(r=WIDGET_BORDER_RADIUS, $fn=SEGMENTS);
 		
 			translate([
 				WIDGET_DOCK_SIZE + DOCK_BORDER_THICKNESS / 2,
 				-DOCK_BORDER_THICKNESS / 2,
 				0
 			])
-				circle(r=WIDGET_BORDER_RADIUS);
+				circle(r=WIDGET_BORDER_RADIUS, $fn=SEGMENTS);
 		
 			translate([
 				-DOCK_BORDER_THICKNESS / 2,
 				WIDGET_DOCK_SIZE + DOCK_BORDER_THICKNESS / 2,
 				0
 			])
-				circle(r=WIDGET_BORDER_RADIUS);
+				circle(r=WIDGET_BORDER_RADIUS, $fn=SEGMENTS);
 		
 			translate([
 				WIDGET_DOCK_SIZE + DOCK_BORDER_THICKNESS / 2,
 				WIDGET_DOCK_SIZE + DOCK_BORDER_THICKNESS / 2,
 				0
 			])
-				circle(r=WIDGET_BORDER_RADIUS);
+				circle(r=WIDGET_BORDER_RADIUS, $fn=SEGMENTS);
 		}
 }
 
@@ -90,7 +90,8 @@ module _selector_dock_border() {
 		cylinder(
 			DOCK_BORDER_HEIGHT,
 			SELECTOR_DOCK_BORDER_RADIUS,
-			SELECTOR_DOCK_BORDER_RADIUS
+			SELECTOR_DOCK_BORDER_RADIUS,
+			$fn=MOUNT_SEGMENTS
 		);
 }
 
@@ -151,7 +152,8 @@ module _selector_dock() {
 			DOCK_BORDER_HEIGHT + 1,
 			// Size of the dock
 			SELECTOR_DOCK_RADIUS,
-			SELECTOR_DOCK_RADIUS
+			SELECTOR_DOCK_RADIUS,
+			$fn=MOUNT_SEGMENTS
 		);
 	
 	// Selection dock hole
@@ -168,7 +170,8 @@ module _selector_dock() {
 			10,
 			// Size of the hole
 			SELECTOR_HOLE_SIZE,
-			SELECTOR_HOLE_SIZE
+			SELECTOR_HOLE_SIZE,
+			$fn=MOUNT_SEGMENTS
 		);
 }
 
@@ -179,31 +182,31 @@ module _ridge_peg_holes() {
 	translate([
 		RIDGE_PEG_OFFSET,
 		RIDGE_PEG_OFFSET,
-		// Add one to make sure it goes through
-		-LID_THICKNESS + 1
+		// Add 10 to make sure it goes through
+		-10
 	])
-		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_HOLE, RIDGE_PEG_RADIUS_HOLE);
+		cylinder(20, RIDGE_PEG_RADIUS_HOLE, RIDGE_PEG_RADIUS_HOLE, $fn=SEGMENTS);
 
 	translate([
 		CASE_WIDTH - RIDGE_PEG_OFFSET,
 		RIDGE_PEG_OFFSET,
-		-LID_THICKNESS + 1
+		-10
 	])
-		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_HOLE, RIDGE_PEG_RADIUS_HOLE);
+		cylinder(20, RIDGE_PEG_RADIUS_HOLE, RIDGE_PEG_RADIUS_HOLE, $fn=SEGMENTS);
 
 	translate([
 		RIDGE_PEG_OFFSET,
 		CASE_LENGTH - RIDGE_PEG_OFFSET,
-		-LID_THICKNESS + 1
+		-10
 	])
-		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_HOLE, RIDGE_PEG_RADIUS_HOLE);
+		cylinder(20, RIDGE_PEG_RADIUS_HOLE, RIDGE_PEG_RADIUS_HOLE, $fn=SEGMENTS);
 
 	translate([
 		CASE_WIDTH - RIDGE_PEG_OFFSET,
 		CASE_LENGTH - RIDGE_PEG_OFFSET,
-		-LID_THICKNESS + 1
+		-10
 	])
-		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_HOLE, RIDGE_PEG_RADIUS_HOLE);
+		cylinder(20, RIDGE_PEG_RADIUS_HOLE, RIDGE_PEG_RADIUS_HOLE, $fn=SEGMENTS);
 }
 
 // -----------------------------------------------------------------------------

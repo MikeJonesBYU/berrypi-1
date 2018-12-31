@@ -22,13 +22,17 @@ module battery_pack() {
 			// Move it in a little bit
 			WALL_THICKNESS * 2,
 			// Sit it directly on the floor
-			WALL_THICKNESS
+			WALL_THICKNESS + BATTERY_DIAMETER / 2
 		])
-			cube([
-				BATTERY_WIDTH,
-				BATTERY_HEIGHT,
-				BATTERY_DEPTH
-			]);
+			rotate([-90, 0, 0])
+			linear_extrude(BATTERY_LENGTH)
+			hull() {
+				translate([BATTERY_DIAMETER / 2, 0, 0])
+					circle(BATTERY_DIAMETER / 2, $fn=SEGMENTS);
+
+				translate([BATTERY_WIDTH - BATTERY_DIAMETER / 2, 0, 0])
+					circle(BATTERY_DIAMETER / 2, $fn=SEGMENTS);
+			}
     }
 }
 
@@ -45,11 +49,43 @@ module raspberry_pi() {
 			// account) and a little extra since it won't sit flush
 			SHELF_HEIGHT + SHELF_THICKNESS + 2
 		])
-            cube([
-				PI_WIDTH,
-				PI_LENGTH,
-				PI_DEPTH
-			]);
+			difference() {
+				// Base Pi
+				cube([
+					PI_WIDTH,
+					PI_LENGTH,
+					PI_DEPTH
+				]);
+
+				// Peg holes
+				translate([
+					PI_HOLE_OFFSET_X,
+					PI_HOLE_OFFSET_Y,
+					-5
+				])
+					cylinder(10, PI_HOLE_RADIUS, PI_HOLE_RADIUS, $fn=SEGMENTS);
+
+				translate([
+					PI_WIDTH - PI_HOLE_OFFSET_X,
+					PI_HOLE_OFFSET_Y,
+					-5
+				])
+					cylinder(10, PI_HOLE_RADIUS, PI_HOLE_RADIUS, $fn=SEGMENTS);
+
+				translate([
+					PI_HOLE_OFFSET_X,
+					PI_LENGTH - PI_HOLE_OFFSET_Y,
+					-5
+				])
+					cylinder(10, PI_HOLE_RADIUS, PI_HOLE_RADIUS, $fn=SEGMENTS);
+
+				translate([
+					PI_WIDTH - PI_HOLE_OFFSET_X,
+					PI_LENGTH - PI_HOLE_OFFSET_Y,
+					-5
+				])
+					cylinder(10, PI_HOLE_RADIUS, PI_HOLE_RADIUS, $fn=SEGMENTS);
+			}
     }
 }
 

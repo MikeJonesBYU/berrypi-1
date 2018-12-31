@@ -7,14 +7,14 @@ include <../params.scad>;
 
 // -----------------------------------------------------------------------------
 
-module selector_mount() {
+module selector_mount(type_label) {
 	color(SELECTOR_MOUNT_COLOR) {
 		// Cylinder base
 		difference() {
 			// Outside
 			union() {
 				// Base
-				cylinder(MOUNT_HEIGHT, SELECTOR_MOUNT_RADIUS, SELECTOR_MOUNT_RADIUS);
+				cylinder(MOUNT_HEIGHT, SELECTOR_MOUNT_RADIUS, SELECTOR_MOUNT_RADIUS, $fn=MOUNT_SEGMENTS);
 				
 				// Grip
 				translate([
@@ -25,7 +25,18 @@ module selector_mount() {
 					cylinder(
 						GRIP_HEIGHT,
 						SELECTOR_MOUNT_RADIUS + GRIP_THICKNESS,
-						SELECTOR_MOUNT_RADIUS + GRIP_THICKNESS
+						SELECTOR_MOUNT_RADIUS + GRIP_THICKNESS,
+						$fn=MOUNT_SEGMENTS
+					);
+
+				// Type label
+				translate([0, SELECTOR_LABEL_Y, MOUNT_HEIGHT])
+				linear_extrude(LABEL_MOUNT_HEIGHT)
+					text(
+						type_label,
+						font=LABEL_MOUNT_FONT,
+						size=LABEL_MOUNT_FONT_SIZE,
+						halign="center"
 					);
 			}
 			
@@ -38,7 +49,8 @@ module selector_mount() {
 					cylinder(
 						MOUNT_HEIGHT,
 						SELECTOR_HOLE_RADIUS,
-						SELECTOR_HOLE_RADIUS
+						SELECTOR_HOLE_RADIUS,
+						$fn=MOUNT_SEGMENTS
 					);
 		}
 	}

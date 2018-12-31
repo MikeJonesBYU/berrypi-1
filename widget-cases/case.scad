@@ -20,6 +20,9 @@ module case() {
 			
 			// Pi shelf
 			_pi_shelf();
+
+			// Battery guides
+			_battery_guides();
 		   
 			// Ridges
 			_ridges();
@@ -104,28 +107,28 @@ module _ridge_pegs() {
 		RIDGE_PEG_OFFSET,
 		CASE_HEIGHT
 	])
-		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_BASE, RIDGE_PEG_RADIUS_TOP);
+		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_BASE, RIDGE_PEG_RADIUS_TOP, $fn=SEGMENTS);
 
 	translate([
 		CASE_WIDTH - RIDGE_PEG_OFFSET,
 		RIDGE_PEG_OFFSET,
 		CASE_HEIGHT
 	])
-		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_BASE, RIDGE_PEG_RADIUS_TOP);
+		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_BASE, RIDGE_PEG_RADIUS_TOP, $fn=SEGMENTS);
 
 	translate([
 		RIDGE_PEG_OFFSET,
 		CASE_LENGTH - RIDGE_PEG_OFFSET,
 		CASE_HEIGHT
 	])
-		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_BASE, RIDGE_PEG_RADIUS_TOP);
+		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_BASE, RIDGE_PEG_RADIUS_TOP, $fn=SEGMENTS);
 
 	translate([
 		CASE_WIDTH - RIDGE_PEG_OFFSET,
 		CASE_LENGTH - RIDGE_PEG_OFFSET,
 		CASE_HEIGHT
 	])
-		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_BASE, RIDGE_PEG_RADIUS_TOP);
+		cylinder(RIDGE_PEG_HEIGHT, RIDGE_PEG_RADIUS_BASE, RIDGE_PEG_RADIUS_TOP, $fn=SEGMENTS);
 }
 
 // -----------------------------------------------------------------------------
@@ -161,7 +164,7 @@ module _pi_pegs() {
 		SHELF_PEG_OFFSET_Y,
 		0
 	])
-        cylinder(SHELF_PEG_HEIGHT, SHELF_PEG_RADIUS_BASE, SHELF_PEG_RADIUS_TOP);
+        cylinder(SHELF_PEG_HEIGHT, SHELF_PEG_RADIUS_BASE, SHELF_PEG_RADIUS_TOP, $fn=SEGMENTS);
 
     translate([
 		// Offset from end of Pi
@@ -169,7 +172,7 @@ module _pi_pegs() {
 		SHELF_PEG_OFFSET_Y,
 		0
 	])
-        cylinder(SHELF_PEG_HEIGHT, SHELF_PEG_RADIUS_BASE, SHELF_PEG_RADIUS_TOP);
+        cylinder(SHELF_PEG_HEIGHT, SHELF_PEG_RADIUS_BASE, SHELF_PEG_RADIUS_TOP, $fn=SEGMENTS);
 
     translate([
 		SHELF_PEG_OFFSET_X,
@@ -177,7 +180,7 @@ module _pi_pegs() {
 		PI_LENGTH - SHELF_PEG_OFFSET_Y,
 		0
 	])
-        cylinder(SHELF_PEG_HEIGHT, SHELF_PEG_RADIUS_BASE, SHELF_PEG_RADIUS_TOP);
+        cylinder(SHELF_PEG_HEIGHT, SHELF_PEG_RADIUS_BASE, SHELF_PEG_RADIUS_TOP, $fn=SEGMENTS);
 
     translate([
 		// Offset from end of Pi
@@ -186,7 +189,34 @@ module _pi_pegs() {
 		PI_LENGTH - SHELF_PEG_OFFSET_Y,
 		0
 	])
-        cylinder(SHELF_PEG_HEIGHT, SHELF_PEG_RADIUS_BASE, SHELF_PEG_RADIUS_TOP);
+        cylinder(SHELF_PEG_HEIGHT, SHELF_PEG_RADIUS_BASE, SHELF_PEG_RADIUS_TOP, $fn=SEGMENTS);
+}
+
+// -----------------------------------------------------------------------------
+
+module _battery_guides() {
+	// Battery guides
+	translate([
+		// Put it on the near side
+		(CASE_WIDTH / 2 - BATTERY_WIDTH / 2) - (BATTERY_GUIDE_WIDTH*1.414) - BATTERY_GUIDE_OFFSET_X,
+		// Move it down to the right spot in the case
+		WALL_THICKNESS,
+		// Move it up to the right height (at the floor)
+		WALL_THICKNESS
+	])
+	rotate([0, 45, 0])
+		cube([BATTERY_GUIDE_WIDTH, BATTERY_GUIDE_LENGTH, BATTERY_GUIDE_HEIGHT]);
+
+	translate([
+		// Put it on the far side
+		(CASE_WIDTH / 2 + BATTERY_WIDTH / 2) + BATTERY_GUIDE_OFFSET_X,
+		// Move it down to the right spot in the case
+		WALL_THICKNESS,
+		// Move it up to the right height (at the floor)
+		WALL_THICKNESS
+	])
+	rotate([0, 45, 0])
+		cube([BATTERY_GUIDE_WIDTH, BATTERY_GUIDE_LENGTH, BATTERY_GUIDE_HEIGHT]);
 }
 
 // -----------------------------------------------------------------------------

@@ -30,7 +30,7 @@ module front() {
 				// Center it
 				FRONT_DOOR_HEIGHT / 2
 			])
-				sphere(10);
+				sphere(10, $fn=SEGMENTS);
         }
     }
 }

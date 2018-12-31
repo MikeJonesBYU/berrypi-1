@@ -29,28 +29,28 @@ module widget_mount() {
 							0,
 							0
 						])
-							circle(r=WIDGET_BORDER_RADIUS);
+							circle(r=WIDGET_BORDER_RADIUS, $fn=SEGMENTS);
 					
 						translate([
 							WIDGET_MOUNT_SIZE + GRIP_THICKNESS,
 							0,
 							0
 						])
-							circle(r=WIDGET_BORDER_RADIUS);
+							circle(r=WIDGET_BORDER_RADIUS, $fn=SEGMENTS);
 					
 						translate([
 							0,
 							WIDGET_MOUNT_SIZE + GRIP_THICKNESS,
 							0,
 						])
-							circle(r=WIDGET_BORDER_RADIUS);
+							circle(r=WIDGET_BORDER_RADIUS, $fn=SEGMENTS);
 					
 						translate([
 							WIDGET_MOUNT_SIZE + GRIP_THICKNESS,
 							WIDGET_MOUNT_SIZE + GRIP_THICKNESS,
 							0,
 						])
-							circle(r=WIDGET_BORDER_RADIUS);
+							circle(r=WIDGET_BORDER_RADIUS, $fn=SEGMENTS);
 					}
 			}
 			

@@ -25,8 +25,6 @@ MOUNT_OFFSET_Z = 30;
 // Case
 case();
 
-/*
- *
 // Front
 translate([
 	0,
@@ -67,7 +65,6 @@ translate([
 	CASE_HEIGHT + LID_OFFSET_Z + MOUNT_OFFSET_Z
 ])
 	widget_mount();
-*/
 
 // Battery pack and Raspberry Pi
 pack_and_pi();

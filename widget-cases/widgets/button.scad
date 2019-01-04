@@ -1,6 +1,6 @@
 // Ansible widget cases
 
-// Budget widget
+// Button widget
 module button_widget() {
     peg_r1 = 2.5;
     peg_r2 = 1.5;

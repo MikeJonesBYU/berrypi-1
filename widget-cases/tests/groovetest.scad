@@ -20,7 +20,8 @@ translate([40, 0, 0])
             cylinder(4, 3, 3);
     }
 
-translate([80, 0, 0])
+translate([75, 33, 0])
+rotate([0, 0, 90])
     difference() {
         cube([35, 30, 3]);
         
@@ -35,10 +36,14 @@ translate([80, 0, 0])
     }
 
 // Groove casing
-translate([0, 70, 0])
+translate([0, 66, 0])
 rotate([90, 0, 0])
     difference() {
         cube([40, 25, 31]);
+
+		// Back hole
+		translate([3, 3, -6])
+			cube([34, 27, 40]);
 
         // Groove
         translate([3, 3, 3])

@@ -5,7 +5,7 @@ PEG_RADIUS_BASE = 2.5 / 2;
 PEG_RADIUS_TOP = 1.5 / 2;
 PEG_OFFSET = 5;
 
-BOARD_WIDTH = 30;
+BOARD_WIDTH = 18;
 BOARD_LENGTH = 10;
 BOARD_THICKNESS = 3;
 
@@ -70,10 +70,6 @@ module test_peg_holes(r, x, y, i) {
 
 			peg_hole(PEG_OFFSET, PEG_OFFSET, r);
 			peg_hole(BOARD_WIDTH - PEG_OFFSET, PEG_OFFSET, r);
-            
-            for (x=[0:i-1])
-                translate([10, 2, -3])
-                    cube([i+1, 6, 4]);
 		}
 }
 
@@ -81,29 +77,29 @@ module test_peg_holes(r, x, y, i) {
 // -----------------------------------------------------------------------------
 // Peg hole tests 
 
-test_peg_holes(1.5, 5, 0, 1);
-test_peg_holes(1.75, 5, 20, 2);
-test_peg_holes(2, 5, 40, 3);
-test_peg_holes(2.25, 5, 60, 4);
-test_peg_holes(2.5, 5, 80, 5);
+test_peg_holes(1.5, 0, 0, 1);
+test_peg_holes(1.75, 0, 13, 2);
+test_peg_holes(2, 0, 26, 3);
+test_peg_holes(2.25, 0, 39, 4);
+test_peg_holes(2.5, 0, 52, 5);
 
 // -----------------------------------------------------------------------------
 // Peg tests 
 
-test_pegs(1, 2.5, 6, 40, 0, 1, 1);
-test_pegs(1.25, 2.5, 6, 40, 20, 2, 1);
-test_pegs(1.5, 2.5, 6, 40, 40, 3, 1);
-test_pegs(1.75, 2.5, 6, 40, 60, 4, 1);
-test_pegs(2, 2.5, 6, 40, 80, 5, 1);
+test_pegs(1, 2.5, 6, 23, 0, 1, 1);
+test_pegs(1.25, 2.5, 6, 23, 13, 2, 1);
+test_pegs(1.5, 2.5, 6, 23, 26, 3, 1);
+test_pegs(1.75, 2.5, 6, 23, 39, 4, 1);
+test_pegs(2, 2.5, 6, 23, 52, 5, 1);
 
-test_pegs(1, 2.5, 4, 75, 0, 1, 2);
-test_pegs(1.25, 2.5, 4, 75, 20, 2, 2);
-test_pegs(1.5, 2.5, 4, 75, 40, 3, 2);
-test_pegs(1.75, 2.5, 4, 75, 60, 4, 2);
-test_pegs(2, 2.5, 4, 75, 80, 5, 2);
+test_pegs(1, 2.5, 4, 46, 0, 1, 2);
+test_pegs(1.25, 2.5, 4, 46, 13, 2, 2);
+test_pegs(1.5, 2.5, 4, 46, 26, 3, 2);
+test_pegs(1.75, 2.5, 4, 46, 39, 4, 2);
+test_pegs(2, 2.5, 4, 46, 52, 5, 2);
 
-test_pegs(1, 2, 6, 110, 0, 1, 3);
-test_pegs(1.25, 2, 6, 110, 20, 2, 3);
-test_pegs(1.5, 2, 6, 110, 40, 3, 3);
-test_pegs(1.75, 2, 6, 110, 60, 4, 3);
-test_pegs(2, 2, 6, 110, 80, 5, 3);
+test_pegs(1, 2, 6, 69, 0, 1, 3);
+test_pegs(1.25, 2, 6, 69, 13, 2, 3);
+test_pegs(1.5, 2, 6, 69, 26, 3, 3);
+test_pegs(1.75, 2, 6, 69, 39, 4, 3);
+test_pegs(2, 2, 6, 69, 52, 5, 3);

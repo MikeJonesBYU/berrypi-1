@@ -30,6 +30,9 @@ module case() {
 			
 		// Cut out the door slot
 		_door_slot();
+
+		// Cut out floor hole
+		_floor_hole();
 	}
 }
 
@@ -42,7 +45,11 @@ module _case_walls() {
 		0,
 		0
 	])
-		cube([WALL_THICKNESS, CASE_LENGTH, CASE_HEIGHT]);
+		difference() {
+			cube([WALL_THICKNESS, CASE_LENGTH, CASE_HEIGHT]);
+
+			_side_hatching();
+		}
 	
 	// Side wall (near side)
 	translate([
@@ -50,10 +57,55 @@ module _case_walls() {
 		0,
 		0
 	])
-		cube([WALL_THICKNESS, CASE_LENGTH, CASE_HEIGHT]);
+		difference() {
+			cube([WALL_THICKNESS, CASE_LENGTH, CASE_HEIGHT]);
+
+			_side_hatching();
+		}
 
 	// Back wall
-	cube([CASE_WIDTH, WALL_THICKNESS, CASE_HEIGHT]);
+	difference() {
+		cube([CASE_WIDTH, WALL_THICKNESS, CASE_HEIGHT]);
+
+		_back_hatching();
+	}
+}
+
+// -----------------------------------------------------------------------------
+
+module _side_hatching() {
+	// X 0 to wallthickness
+	// Y 0 to caselength
+	// Z 0 to caseheight
+
+	difference() {
+		// Hatching
+
+		// Frame
+		difference() {
+			cube([WALL_THICKNESS, SIDE_HATCH_LENGTH, CASE_HEIGHT]);
+
+			translate([
+				-5,
+				HATCH_FRAME_OFFSET,
+				HATCH_FRAME_OFFSET
+			])
+				cube([
+					WALL_THICKNESS + 10,
+					SIDE_HATCH_LENGTH - HATCH_FRAME_OFFSET * 2,
+					CASE_HEIGHT - HATCH_FRAME_OFFSET * 2
+				]);
+		}
+	}
+	
+	// Take raw hatching (alternating, rotated 45°)
+	// Create a frame (cube minus hole)
+	// Difference the frame out of the hatching
+}
+
+// -----------------------------------------------------------------------------
+
+module _back_hatching() {
 }
 
 // -----------------------------------------------------------------------------
@@ -142,7 +194,20 @@ module _pi_shelf() {
 		// Move it up to the right height (with room for the battery)
 		SHELF_HEIGHT
 	])
-		cube([CASE_WIDTH, SHELF_LENGTH, SHELF_THICKNESS]);
+		difference() {
+			cube([CASE_WIDTH, SHELF_LENGTH, SHELF_THICKNESS]);
+
+			// Shelf hole
+			translate([
+				// Center it
+				(CASE_WIDTH / 2) - (SHELF_HOLE_WIDTH / 2),
+				// Move it down just a bit
+				SHELF_HOLE_OFFSET_Y,
+				// Cut through all the way
+				-2
+			])
+				cube([SHELF_HOLE_WIDTH, SHELF_HOLE_LENGTH, SHELF_THICKNESS + 10]);
+		}
 
 	// Pi pegs
 	translate([
@@ -200,7 +265,7 @@ module _battery_guides() {
 		// Put it on the near side
 		(CASE_WIDTH / 2 - BATTERY_WIDTH / 2) - (BATTERY_GUIDE_WIDTH*1.414) - BATTERY_GUIDE_OFFSET_X,
 		// Move it down to the right spot in the case
-		WALL_THICKNESS,
+		BATTERY_GUIDE_OFFSET_Y,
 		// Move it up to the right height (at the floor)
 		WALL_THICKNESS
 	])
@@ -211,7 +276,7 @@ module _battery_guides() {
 		// Put it on the far side
 		(CASE_WIDTH / 2 + BATTERY_WIDTH / 2) + BATTERY_GUIDE_OFFSET_X,
 		// Move it down to the right spot in the case
-		WALL_THICKNESS,
+		BATTERY_GUIDE_OFFSET_Y,
 		// Move it up to the right height (at the floor)
 		WALL_THICKNESS
 	])
@@ -244,4 +309,31 @@ module _door_slot() {
 
 // -----------------------------------------------------------------------------
 
+module _floor_hole() {
+	// Cut out the floor hole
+	translate([
+		// Center it
+		(CASE_WIDTH / 2) - (FLOOR_HOLE_WIDTH / 2),
+		// Move it in a little bit
+		WALL_THICKNESS * 4,
+		// Cut through all the way
+		-5
+	])
+		cube([
+			// A percentage of the battery width, so there are still shelves for
+			// the battery to sit on
+			FLOOR_HOLE_WIDTH,
+			// Ditto
+			FLOOR_HOLE_LENGTH,
+			// Cut through all the way
+			FLOOR_THICKNESS + 10
+		]);
+}
+
+// -----------------------------------------------------------------------------
+
 case();
+
+// TEMP
+use <_misc.scad>;
+//battery_pack();

@@ -33,6 +33,10 @@ SHELF_PEG_HEIGHT = 4;
 SHELF_PEG_RADIUS_BASE = 2.5 / 2;
 SHELF_PEG_RADIUS_TOP = 1.75 / 2;
 
+SHELF_HOLE_WIDTH = CASE_WIDTH * 0.5;
+SHELF_HOLE_LENGTH = SHELF_LENGTH * 0.6;
+SHELF_HOLE_OFFSET_Y = 8;
+
 // -----------------------------------------------------------------------------
 
 // Lid
@@ -113,7 +117,23 @@ BATTERY_DIAMETER = 23;
 BATTERY_GUIDE_OFFSET_X = -5.5;
 BATTERY_GUIDE_WIDTH = 4;
 BATTERY_GUIDE_HEIGHT = 4;
-BATTERY_GUIDE_LENGTH = CASE_LENGTH * .65;
+BATTERY_GUIDE_OFFSET_Y = 30;
+BATTERY_GUIDE_LENGTH = 40;
+
+// -----------------------------------------------------------------------------
+
+// Floor hole
+FLOOR_HOLE_WIDTH = BATTERY_WIDTH * .6;
+FLOOR_HOLE_LENGTH = BATTERY_LENGTH * .8;
+
+// -----------------------------------------------------------------------------
+
+// Hatching
+
+HATCH_FRAME_OFFSET = 5;
+HATCH_SIZE = 3;
+HATCH_GAP = 5;
+SIDE_HATCH_LENGTH = CASE_LENGTH - FRONT_DOOR_OFFSET_Y * 2;
 
 // -----------------------------------------------------------------------------
 

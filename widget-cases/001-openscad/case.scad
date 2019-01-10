@@ -48,7 +48,7 @@ module _case_walls() {
 		difference() {
 			cube([WALL_THICKNESS, CASE_LENGTH, CASE_HEIGHT]);
 
-			_side_hatching();
+		//	_side_hatching();
 		}
 	
 	// Side wall (near side)
@@ -60,14 +60,14 @@ module _case_walls() {
 		difference() {
 			cube([WALL_THICKNESS, CASE_LENGTH, CASE_HEIGHT]);
 
-			_side_hatching();
+		//	_side_hatching();
 		}
 
 	// Back wall
 	difference() {
 		cube([CASE_WIDTH, WALL_THICKNESS, CASE_HEIGHT]);
 
-		_back_hatching();
+		//_back_hatching();
 	}
 }
 
@@ -80,6 +80,13 @@ module _side_hatching() {
 
 	difference() {
 		// Hatching
+		rotate([0, 45, 90])
+		union() {
+			for (x=[-50:HATCH_GAP:SIDE_HATCH_LENGTH]) {
+				translate([x, -WALL_THICKNESS - 1, -5])
+					cube([HATCH_SIZE, HATCH_SIZE + WALL_THICKNESS, 150]);
+			}
+		}
 
 		// Frame
 		difference() {

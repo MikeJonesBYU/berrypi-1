@@ -52,6 +52,30 @@ module selector_mount(type_label) {
 						SELECTOR_HOLE_RADIUS,
 						$fn=MOUNT_SEGMENTS
 					);
+
+			// Carve out notches
+			translate([
+				-SELECTOR_MOUNT_RADIUS - SELECTOR_MOUNT_THICKNESS,
+				-SELECTOR_MOUNT_NOTCH_SIZE / 2,
+				-2
+			])
+				cube([
+					SELECTOR_MOUNT_RADIUS * 2 + 10,
+					SELECTOR_MOUNT_NOTCH_SIZE,
+					SELECTOR_MOUNT_NOTCH_HEIGHT + 2
+				]);
+
+			translate([
+				SELECTOR_MOUNT_RADIUS - SELECTOR_MOUNT_THICKNESS - SELECTOR_MOUNT_NOTCH_SIZE / 2 + 0.5,
+				-SELECTOR_MOUNT_RADIUS / 2 - SELECTOR_MOUNT_NOTCH_SIZE / 2 - 5,
+				-2
+			])
+			rotate([0, 0, 90])
+				cube([
+					SELECTOR_MOUNT_RADIUS * 2 + 10,
+					SELECTOR_MOUNT_NOTCH_SIZE,
+					SELECTOR_MOUNT_NOTCH_HEIGHT + 2
+				]);
 		}
 	}
 }

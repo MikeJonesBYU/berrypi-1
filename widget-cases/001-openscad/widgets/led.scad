@@ -50,17 +50,17 @@ module _led_shelf() {
 	translate([
 		LED_SHELF_X,
 		LED_SHELF_Y,
-		LED_SHELF_Z,
+		MOUNT_HEIGHT - LED_SHELF_HEIGHT,
 	])
-		cube([LED_SHELF_WIDTH, LED_SHELF_HEIGHT, LED_SHELF_DEPTH]);
+		cube([LED_SHELF_WIDTH, LED_SHELF_WIDTH, LED_SHELF_HEIGHT]);
 
 	// Shelf for wiring
 	translate([
 		LED_SHELF2_X,
 		LED_SHELF2_Y,
-		LED_SHELF2_Z,
+		MOUNT_HEIGHT - LED_SHELF_HEIGHT,
 	])
-		cube([LED_SHELF_WIDTH, LED_SHELF_HEIGHT, LED_SHELF_DEPTH]);
+		cube([LED_SHELF_WIDTH, LED_SHELF_WIDTH, LED_SHELF_HEIGHT]);
 }
 
 // -----------------------------------------------------------------------------

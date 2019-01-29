@@ -27,9 +27,7 @@ if __name__ == '__main__':
     # Set up berry
     from berry.berries import BerryLED
     berry = BerryLED(
-        berry_type='led',
         live=False,
-        name='led_berry',
         guid=guid,
     )
 

@@ -14,6 +14,10 @@ server_ip_address = 0
 LIGHT_CHANGE_RATE_THRESHOLD = 10
 MAG_CHANGE_RATE_THRESHOLD = 2
 
+# How long to wait (in cycles) after a selection before the user can make
+# another selection
+SELECTION_DELAY_COUNT = 10
+
 
 class BerryClient():
     _berry = None
@@ -248,6 +252,7 @@ class BerryClient():
 
             i2c = busio.I2C(board.SCL, board.SDA)
             sensor = adafruit_tsl2561.TSL2561(i2c)
+            count = 0
 
             # Get initial reading by first waiting two seconds (so we ignore
             # the useless initial value) and then watch for 600ms (200ms three
@@ -265,8 +270,17 @@ class BerryClient():
 
                 # Check if we're above threshold and if so, send the message
                 change_rate = lux / average_lux
-                if change_rate > LIGHT_CHANGE_RATE_THRESHOLD:
+                if (
+                    change_rate > LIGHT_CHANGE_RATE_THRESHOLD
+                    and
+                    count == 0
+                ):
                     self.send_berry_selected_message()
+
+                    # Don't keep sending select messages until after the
+                    # selection delay is over (decrement this each pass through
+                    # the loop)
+                    count = SELECTION_DELAY_COUNT
 
                 # Update the average
                 # TODO: make this more elegant
@@ -276,6 +290,10 @@ class BerryClient():
 
                 # Wait 100ms
                 time.sleep(0.1)
+
+                # Delay count
+                if count > 0:
+                    count -= 1
         except Exception as ex:
             print('Light sensor thread died', ex)
 
@@ -292,6 +310,7 @@ class BerryClient():
 
             i2c = busio.I2C(board.SCL, board.SDA)
             sensor = adafruit_lsm303.LSM303(i2c)
+            count = 0
 
             # Get initial reading by first waiting two seconds (so we ignore
             # the useless initial value) and then watch for 600ms (200ms three
@@ -331,8 +350,13 @@ class BerryClient():
                     change_rate_y > MAG_CHANGE_RATE_THRESHOLD
                     or
                     change_rate_z > MAG_CHANGE_RATE_THRESHOLD
-                ):
+                ) and count == 0:
                     self.send_berry_selected_message()
+
+                    # Don't keep sending select messages until after the
+                    # selection delay is over (decrement this each pass through
+                    # the loop)
+                    count = SELECTION_DELAY_COUNT
 
                 # Update the average
                 # TODO: make this more elegant
@@ -345,6 +369,10 @@ class BerryClient():
 
                 # Wait 100ms
                 time.sleep(0.1)
+
+                # Delay count
+                if count > 0:
+                    count -= 1
         except Exception as ex:
             print('Magnet sensor thread died', ex)
 

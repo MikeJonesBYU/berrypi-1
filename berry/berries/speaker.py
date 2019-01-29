@@ -1,6 +1,7 @@
 """
 Speaker class.
 """
+import logging
 import subprocess
 
 from ..berrybase import BerryBase
@@ -15,9 +16,9 @@ class BerrySpeaker(BerryBase):
 
         super().__init__(**kwargs)
 
-    def initialize_gpio(self):
+    def _initialize_hardware(self):
         """
-        Initializes GPIO pins and handlers.
+        Initializes the widget hardware.
         """
         # Nothing to do
         return
@@ -33,4 +34,4 @@ class BerrySpeaker(BerryBase):
                 env={'AUDIODEV': 'hw:1'},
             )
         else:
-            print('Beeped (freq={}, dur={})'.format(freq, duration))
+            logging.info('Beeped (freq={}, dur={})'.format(freq, duration))

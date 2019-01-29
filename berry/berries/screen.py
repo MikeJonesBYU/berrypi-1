@@ -15,25 +15,31 @@ class BerryScreen(BerryBase):
 
         super().__init__(**kwargs)
 
-    def initialize_gpio(self):
+    def _initialize_hardware(self):
         """
-        Initializes GPIO pins and handlers. (Technically this is I2C and not
-        GPIO, btw.)
+        Initializes the widget hardware.
         """
         # Import
         try:
             from luma.core.interface.serial import i2c
             from luma.core.render import canvas
             from luma.oled.device import ssd1306
+        except Exception as ex:
+            logging.error('Error importing Luma: {}'.format(ex))
 
+            # Things failed, must be running locally, not on a widget, so don't
+            # bother initializing I2C
+            return
+
+        # Now initialize I2C
+        try:
             serial = i2c(port=1, address=0x3C)
             device = ssd1306(serial)
-
-            self._canvas = canvas(device)
-        except:
-            # Things failed, must be running locally, not on a berry, so don't
-            # bother initializing GPIO
+        except Exception as ex:
+            logging.error('Error initializing I2C/SSD1306: {}'.format(ex))
             return
+
+        self._canvas = canvas(device)
 
     def point(self, xy, fill=None):
         """

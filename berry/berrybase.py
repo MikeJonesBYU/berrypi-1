@@ -60,10 +60,10 @@ class BerryBase():
         # Import the handlers
         self.import_handlers()
 
-        # Initialize GPIO (if we're on a berry)
-        if self.live and hasattr(self, 'initialize_gpio'):
-            logging.info('Initializing GPIO')
-            self.initialize_gpio()
+        # Initialize hardware (if we're on an actual widget)
+        if self.live and hasattr(self, '_initialize_hardware'):
+            logging.info('Initializing hardware')
+            self._initialize_hardware()
 
     def _as_json(self):
         """
@@ -74,10 +74,9 @@ class BerryBase():
             'name': self.name,
             'type': self.berry_type,
             'ip': self.ip_address,
-            # 'handlers': self.methods(),
         }
 
-        logging.info('this berry as an object: {}'.format(json.dumps(berry)))
+        logging.info('Berry as an object: {}'.format(json.dumps(berry)))
 
         return berry
 
@@ -91,7 +90,7 @@ class BerryBase():
             'call_handler',
             'get_berry_name',
             'import_handlers',
-            'initialize_gpio',
+            'initialize_hardware',
             'load_handler_code',
             'methods',
             'reload_handlers',

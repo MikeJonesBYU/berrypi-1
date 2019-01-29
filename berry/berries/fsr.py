@@ -4,6 +4,7 @@ module (so that we can reload the module dynamically and update code).
 """
 from ..berrybase import BerryBase
 
+import logging
 import threading
 import time
 
@@ -21,18 +22,25 @@ class BerryFSR(BerryBase):
 
         self._average_force = 0.001
 
-    def initialize_gpio(self):
+    def _initialize_hardware(self):
         """
-        Initializes GPIO pins and handlers.
+        Initializes the widget hardware.
         """
         # Import
         try:
             from gpiozero import MCP3008
+        except Exception as ex:
+            logging.error('Error importing gpiozero: {}'.format(ex))
 
+            # Things failed, must be running locally, not on a widget, so don't
+            # bother initializing the MCP3008
+            return
+
+        # Initialize the MCP3008
+        try:
             self._sensor = MCP3008(channel=0)
-        except:
-            # Things failed, must be running locally, not on a berry, so don't
-            # bother initializing GPIO
+        except Exception as ex:
+            logging.error('Error initializing MCP3008: {}'.format(ex))
             return
 
         # Start force loop thread

@@ -15,20 +15,25 @@ class BerryLED(BerryBase):
 
         super().__init__(**kwargs)
 
-    def initialize_gpio(self):
+    def _initialize_hardware(self):
         """
-        Initializes GPIO pins and handlers.
+        Initializes the widget hardware.
         """
         # Import
         try:
             from gpiozero import LED
-        except:
-            # Things failed, must be running locally, not on a berry, so don't
+        except Exception as ex:
+            logging.error('Error importing gpiozero: {}'.format(ex))
+
+            # Things failed, must be running locally, not on a widget, so don't
             # bother initializing GPIO
             return
 
         # Hook up to gpiozero, using pin GP17
-        self._led = LED(17)
+        try:
+            self._led = LED(17)
+        except Exception as ex:
+            logging.error('Error initializing LED: {}'.format(ex))
 
     def is_lit(self):
         """

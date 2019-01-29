@@ -3,6 +3,7 @@ Accelerometer class, for LSM303. Each stub method calls the appropriate
 function in the handlers module (so that we can reload the module dynamically
 and update code).
 """
+import logging
 import math
 
 from ..berrybase import BerryBase
@@ -19,26 +20,28 @@ class BerryAccelerometer(BerryBase):
 
         super().__init__(**kwargs)
 
-    def initialize_gpio(self):
+    def _initialize_hardware(self):
         """
-        Initializes GPIO pins and handlers.
+        Initializes the widget hardware.
         """
         # Import
         try:
             import board
             import busio
-            import time
             import adafruit_lsm303
-
-            i2c = busio.I2C(board.SCL, board.SDA)
         except Exception as ex:
-            print('Exception loading accelerometer', ex)
-            # Things failed, must be running locally, not on a berry, so don't
-            # bother initializing GPIO
+            logging.error('Error importing Adafruit libraries: {}'.format(ex))
+
+            # Things failed, so we must be running locally, not on a widget;
+            # don't bother hooking up the LSM303
             return
 
-        # Hook up to LSM303
-        self._sensor = adafruit_lsm303.LSM303(i2c)
+        # Initialize I2C and LSM303
+        try:
+            i2c = busio.I2C(board.SCL, board.SDA)
+            self._sensor = adafruit_lsm303.LSM303(i2c)
+        except Exception as ex:
+            logging.error('Error initializing I2C/LSM303: {}'.format(ex))
 
     def _mag(self, tup):
         """

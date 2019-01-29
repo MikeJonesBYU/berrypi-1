@@ -16,24 +16,29 @@ class BerryButton(BerryBase):
 
         super().__init__(**kwargs)
 
-    def initialize_gpio(self):
+    def _initialize_hardware(self):
         """
-        Initializes GPIO pins and handlers.
+        Initializes the widget hardware.
         """
         # Import
         try:
             from gpiozero import Button
-        except:
-            # Things failed, must be running locally, not on a berry, so don't
+        except Exception as ex:
+            logging.error('Error importing gpiozero: {}'.format(ex))
+
+            # Things failed, must be running locally, not on a widget, so don't
             # bother initializing GPIO
             return
 
         # Hook up to gpiozero, using pin GP17
-        self._button = Button(17)
+        try:
+            self._button = Button(17)
 
-        # Hook in handlers
-        self._button.when_pressed = self.on_press
-        self._button.when_released = self.on_release
+            # Hook in handlers
+            self._button.when_pressed = self.on_press
+            self._button.when_released = self.on_release
+        except Exception as ex:
+            logging.error('Error initializing button: {}'.format(ex))
 
     def is_pressed(self):
         """

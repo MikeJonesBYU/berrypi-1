@@ -15,6 +15,8 @@ class BerryFSR(BerryBase):
     _test_force = 0.5  # Used for internal testing
 
     def __init__(self, **kwargs):
+        kwargs['berry_type'] = 'fsr'
+
         super().__init__(**kwargs)
 
         self._average_force = 0.001

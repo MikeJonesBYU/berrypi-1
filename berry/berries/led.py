@@ -11,6 +11,8 @@ class BerryLED(BerryBase):
     _test_state = False  # For internal testing
 
     def __init__(self, **kwargs):
+        kwargs['berry_type'] = 'led'
+
         super().__init__(**kwargs)
 
     def initialize_gpio(self):

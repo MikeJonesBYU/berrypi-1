@@ -15,6 +15,8 @@ class BerryAccelerometer(BerryBase):
     _test_state = (0.5, -0.2, 0.7)
 
     def __init__(self, **kwargs):
+        kwargs['berry_type'] = 'accelerometer'
+
         super().__init__(**kwargs)
 
     def initialize_gpio(self):

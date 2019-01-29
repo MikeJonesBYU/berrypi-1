@@ -1,19 +1,10 @@
 # Berry-specific config
 #
-# Instructions: update this to import the right class, then instantiate that
-# class inside get_berry().
-#
-# Copy this to _berry_config.py
+# Instructions: Copy this to _berry_config.py and then update line 12 to
+# instantiate the right class.
 
-from berry.berries import BerryButton
+from berry import berries
 
 
 def get_berry(guid):
-    # Test berry
-    berry = BerryButton(
-        berry_type='button',
-        live=True,
-        guid=guid,
-    )
-
-    return berry
+    return berries.BerryButton(live=False, guid=guid)

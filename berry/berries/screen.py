@@ -11,6 +11,8 @@ class BerryScreen(BerryBase):
     _canvas = None
 
     def __init__(self, **kwargs):
+        kwargs['berry_type'] = 'screen'
+
         super().__init__(**kwargs)
 
     def initialize_gpio(self):

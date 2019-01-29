@@ -11,6 +11,8 @@ class BerrySpeaker(BerryBase):
     _test_state = False  # For internal testing
 
     def __init__(self, **kwargs):
+        kwargs['berry_type'] = 'speaker'
+
         super().__init__(**kwargs)
 
     def initialize_gpio(self):

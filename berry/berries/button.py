@@ -12,6 +12,8 @@ class BerryButton(BerryBase):
     _test_state = False  # Used for internal testing
 
     def __init__(self, **kwargs):
+        kwargs['berry_type'] = 'button'
+
         super().__init__(**kwargs)
 
     def initialize_gpio(self):

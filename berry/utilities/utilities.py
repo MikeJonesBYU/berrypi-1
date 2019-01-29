@@ -3,7 +3,6 @@ Utility functions.
 """
 import logging
 import socket
-import threading
 
 
 # The port to listen on via UDP for registrations
@@ -17,6 +16,7 @@ SERVER_PORT = 4444
 
 # How much to log
 LOG_LEVEL = logging.DEBUG
+# LOG_LEVEL = logging.ERROR
 
 
 def get_my_ip_address():

@@ -47,8 +47,9 @@ def loop(state, remote, widget):
     """
     # -------------------------------------
     # Fill in your code here
-    print('Looping')
-    time.sleep(1)
+    pass
+    # print('Looping')
+    # time.sleep(1)
     # -------------------------------------
 
 

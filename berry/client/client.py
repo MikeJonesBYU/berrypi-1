@@ -212,6 +212,15 @@ class BerryClient():
             elif command == 'h':
                 # Test code handler
                 self._berry.reload_handlers()
+            elif command == '?':
+                # Test code handler
+                print('''s -- sends 'berry-selected' message to server
+t -- executes the on_test() handler for the berry
+b -- button press
+r -- button release
+h -- reload handlers
+z -- set state, takes JSON (example: `z { "key": 3290 }`)
+''')
             elif len(command) >= 1 and command[0] == 'z':
                 # Test updating state
                 json_data = command[1:].strip()
@@ -295,7 +304,7 @@ class BerryClient():
                 if count > 0:
                     count -= 1
         except Exception as ex:
-            print('Light sensor thread died', ex)
+            logging.error('Light sensor thread died: {}'.format(ex))
 
     def magnet_loop(self):
         """
@@ -374,7 +383,7 @@ class BerryClient():
                 if count > 0:
                     count -= 1
         except Exception as ex:
-            print('Magnet sensor thread died', ex)
+            logging.error('Magnet sensor thread died: {}'.format(ex))
 
     def call_remote_command(self, key, payload=None):
         """

@@ -94,5 +94,5 @@ class EditWindow(QWidget):
         # Send code back to client
         self._server.send_edited_code(payload)
 
-        # And close the window (doesn't work yet, it kills the whole app)
-        # self.close()
+        # And hide the window
+        self.hide()

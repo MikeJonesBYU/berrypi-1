@@ -6,7 +6,7 @@ import sys
 import threading
 from uuid import getnode
 
-from berry.client import BerryClient, get_berry
+from berry.client import BerryClient, get_widget
 from berry.utilities import CLIENT_PORT, LOG_LEVEL
 
 
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     guid = getnode().__str__() + str(port)
 
     # Get berry from config
-    berry = get_berry(guid=guid)
+    berry = get_widget(guid=guid)
 
     # Initialize the client
     client = BerryClient(berry=berry, port=port)

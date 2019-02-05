@@ -12,7 +12,7 @@ from . import remote
 from . import utilities
 
 
-BERRY_TYPES = [
+WIDGET_TYPES = [
     'button',
     'led',
     'screen',
@@ -21,11 +21,11 @@ BERRY_TYPES = [
     'speaker',
 ]
 
-BERRY_BASE_PATH = 'berry/client'
+WIDGET_BASE_PATH = 'berry/client'
 
-BERRY_NAME_PATH = '{}/_berry_name.txt'.format(BERRY_BASE_PATH)
-BERRY_HANDLERS_PATH = '{}/_handlers.py'.format(BERRY_BASE_PATH)
-BERRY_HANDLERS_TMP_PATH = '{}/_handlers_tmp.py'.format(BERRY_BASE_PATH)
+WIDGET_NAME_PATH = '{}/_widget_name.txt'.format(WIDGET_BASE_PATH)
+WIDGET_HANDLERS_PATH = '{}/_handlers.py'.format(WIDGET_BASE_PATH)
+WIDGET_HANDLERS_TMP_PATH = '{}/_handlers_tmp.py'.format(WIDGET_BASE_PATH)
 
 
 class BerryBase():
@@ -36,7 +36,7 @@ class BerryBase():
     live = False
 
     def __init__(self, berry_type, live, guid, name=None):
-        if berry_type in BERRY_TYPES:
+        if berry_type in WIDGET_TYPES:
             self.berry_type = berry_type
         else:
             logging.error('invalid type to berry constructor {}'.format(
@@ -191,7 +191,7 @@ class BerryBase():
         """
         Returns the handler code in client/handlers.py. Used for code editing.
         """
-        with open(BERRY_HANDLERS_PATH, 'r') as f:
+        with open(WIDGET_HANDLERS_PATH, 'r') as f:
             code = f.read()
 
         return code
@@ -200,8 +200,8 @@ class BerryBase():
         """
         Updates the handler code in client/handlers.py. Used for code editing.
         """
-        temp_path = BERRY_HANDLERS_TMP_PATH
-        dest_path = BERRY_HANDLERS_PATH
+        temp_path = WIDGET_HANDLERS_TMP_PATH
+        dest_path = WIDGET_HANDLERS_PATH
 
         # Write out to the temp copy
         with open(temp_path, 'w') as f:
@@ -224,9 +224,9 @@ class BerryBase():
 
     def get_berry_name(self):
         """
-        Reads in the berry name from client/berry_name.txt and returns it.
+        Reads in the widget name and returns it.
         """
-        with open(BERRY_NAME_PATH, 'r') as f:
+        with open(WIDGET_NAME_PATH, 'r') as f:
             name = f.read()
 
         self.name = name.strip()
@@ -235,11 +235,11 @@ class BerryBase():
 
     def save_berry_name(self, name):
         """
-        Saves the name to client/berry_name.txt.
+        Saves the name to disk.
         """
         self.name = name
 
-        with open(BERRY_NAME_PATH, 'w') as f:
+        with open(WIDGET_NAME_PATH, 'w') as f:
             f.write(self.name)
 
     def send_message_to_server(self, message):

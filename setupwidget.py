@@ -28,8 +28,8 @@ except OSError as ex:
 # Then update the config (changing the class name appropriately)
 print('Updating config')
 
-sample_config = 'berry/client/_berry_config_sample.py'
-output_config = 'berry/client/_berry_config.py'
+sample_config = 'berry/client/_widget_config_sample.py'
+output_config = 'berry/client/_widget_config.py'
 
 try:
     with open(sample_config, 'r') as f:

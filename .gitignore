@@ -1,6 +1,6 @@
 __pycache__/
 *.pyc
 
-_berry_config.py
-_berry_name.txt
+_widget_config.py
+_widget_name.txt
 _handlers.py

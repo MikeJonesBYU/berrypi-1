@@ -1,6 +1,6 @@
 # Berry-specific config
 #
-# Instructions: Copy this to _berry_config.py and then update line 10 to
+# Instructions: Copy this to _widget_config.py and then update line 10 to
 # instantiate the right class.
 
 from berry import berries

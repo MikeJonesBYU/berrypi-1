@@ -7,9 +7,6 @@ and delete this line.
 """
 import time
 
-# Uncomment this if you need to send messages around
-# from .client import send_message_to_server
-
 
 def on_press(state, remote, berry):
     """

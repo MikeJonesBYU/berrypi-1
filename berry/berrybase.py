@@ -64,6 +64,7 @@ class BerryBase():
         if self.live and hasattr(self, '_initialize_hardware'):
             logging.info('Initializing hardware')
             self._initialize_hardware()
+            logging.info('Done initializing hardware')
 
     def _as_json(self):
         """

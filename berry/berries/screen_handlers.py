@@ -8,7 +8,7 @@ and delete this line.
 import time
 
 
-def setup(state, remote, berry):
+def setup(state, remote, widget):
     """
     Run whenever the client code is loaded. Optional.
     """
@@ -18,7 +18,7 @@ def setup(state, remote, berry):
     # -------------------------------------
 
 
-def loop(state, remote, berry):
+def loop(state, remote, widget):
     """
     If present, looped over in its own thread. Use for widget logic where
     needed.
@@ -30,7 +30,7 @@ def loop(state, remote, berry):
     # -------------------------------------
 
 
-def on_state(state, remote, berry):
+def on_state(state, remote, widget):
     """
     Handler called whenever state is updated.
     """

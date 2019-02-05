@@ -1,0 +1,10 @@
+[Unit]
+Description=Ansible client
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/home/pi/code/startclient
+
+[Install]
+WantedBy=multi-user.target

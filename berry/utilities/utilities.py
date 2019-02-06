@@ -42,12 +42,14 @@ def send_with_tcp(message, recv_address, port):
     s.close()
 
 
-def blocking_receive_from_tcp(port):
+def blocking_receive_from_tcp(port, tcpsock=None):
     logging.info('Waiting to receive on port {}'.format(port))
 
-    tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    tcpsock.bind(('', port))
-    tcpsock.listen(1)
+    if tcpsock is None:
+        tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        tcpsock.bind(('', port))
+        tcpsock.listen(1)
 
     client, address = tcpsock.accept()
     client.settimeout(60)
@@ -64,14 +66,14 @@ def blocking_receive_from_tcp(port):
             else:
                 logging.info('Client at {} closed'.format(address))
                 client.close()
-                tcpsock.close()
+                # tcpsock.close()
                 break
         except Exception as e:
             logging.error('Exception: {} ({})'.format(e, type(e)))
             client.close()
-            return False
+            return False, tcpsock
 
     logging.info('Received: {}'.format(message))
     logging.info('From:     {}:{}'.format(address, port))
 
-    return message
+    return message, tcpsock

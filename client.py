@@ -42,12 +42,12 @@ if __name__ == '__main__':
         threading.Thread(target=client.magnet_loop).start()
 
     # Listen for a reply on the same port. TCP for replies.
-    response = client.find_a_server()
+    response, tcpsock = client.find_a_server()
 
     # Client loop (waiting for events or incoming messages)
     while True:
         # Blocking wait for incoming TCP messages
-        message = client.wait_for_message()
+        message = client.wait_for_message(tcpsock)
 
         # And process the message
         client.process_message(message=message)

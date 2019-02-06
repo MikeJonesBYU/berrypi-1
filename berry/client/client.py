@@ -59,7 +59,7 @@ class BerryClient():
         sock.close()
 
         # Wait for a TCP connection from the server.
-        response = utilities.blocking_receive_from_tcp(self._port)
+        response, _socket = utilities.blocking_receive_from_tcp(self._port)
 
         server_response = json.loads(response)
 
@@ -74,15 +74,15 @@ class BerryClient():
         # Start the loop() handler loop
         threading.Thread(target=self.main_loop).start()
 
-        return server_response
+        return server_response, _socket
 
-    def wait_for_message(self):
+    def wait_for_message(self, tcpsock):
         """
         Waits for messages to come through in TCP. Part of the main client
         loop.
         """
         # Wait for a TCP connection from the server.
-        return utilities.blocking_receive_from_tcp(self._port)
+        return utilities.blocking_receive_from_tcp(self._port, tcpsock)
 
     def process_message(self, message):
         """

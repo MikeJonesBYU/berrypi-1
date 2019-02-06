@@ -52,6 +52,7 @@ class ThreadedServer(QObject):
 
         # Set up sockets
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._udpsocket.bind(('', utilities.REGISTRATION_PORT))
         self._sock.bind((self._host, self._port))
@@ -218,11 +219,11 @@ class ThreadedServer(QObject):
                     'attribute': message['attribute'],
                 }
 
-                if 'key' in response:
-                    message['key'] = response['key']
+                if 'key' in message:
+                    response['key'] = message['key']
 
-                if 'payload' in response:
-                    message['payload'] = response['payload']
+                if 'payload' in message:
+                    response['payload'] = message['payload']
 
                 self.send_message_to_berry(guid, response)
 

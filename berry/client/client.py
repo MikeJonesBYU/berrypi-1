@@ -150,7 +150,7 @@ class BerryClient():
                 code()
 
         elif command == 'remote-response':
-            # Run the remote command on this client
+            # Parse the response from the remote
             response = message['response']
             key = message['key']
 

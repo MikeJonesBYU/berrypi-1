@@ -419,12 +419,19 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
         pop a response off the queue.
         """
         response = None
+        count = 0
         while True:
             try:
                 response = self._responses.get(key, []).pop()
                 break
             except IndexError:
                 pass
+
+            # Avoid an infinite loop (not sure yet if 10,000 is the right
+            # number, but it's something to start with)
+            count += 1
+            if count > 10000:
+                break
 
         return response
 

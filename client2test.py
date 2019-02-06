@@ -49,7 +49,7 @@ if __name__ == '__main__':
     # Client loop (waiting for events or incoming messages)
     while True:
         # Blocking wait for incoming TCP messages
-        message = client.wait_for_message(tcpsock)
+        message, tcpsock = client.wait_for_message(tcpsock)
 
         # And process the message
         client.process_message(message=message)

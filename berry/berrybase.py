@@ -22,10 +22,7 @@ WIDGET_TYPES = [
 ]
 
 WIDGET_BASE_PATH = 'berry/client'
-
-WIDGET_NAME_PATH = '{}/_widget_name.txt'.format(WIDGET_BASE_PATH)
-WIDGET_HANDLERS_PATH = '{}/_handlers.py'.format(WIDGET_BASE_PATH)
-WIDGET_HANDLERS_TMP_PATH = '{}/_handlers_tmp.py'.format(WIDGET_BASE_PATH)
+WIDGET_IMPORT_PATH = 'berry.client._handlers'
 
 
 class BerryBase():
@@ -35,7 +32,8 @@ class BerryBase():
     ip_address = 'none'
     live = False
 
-    def __init__(self, berry_type, live, guid, name=None):
+    def __init__(self, berry_type, live, guid, name=None, path=None,
+                import_path=None):
         if berry_type in WIDGET_TYPES:
             self.berry_type = berry_type
         else:
@@ -49,6 +47,21 @@ class BerryBase():
 
         # Whether the berry is live (on a Pi) or not (testing locally)
         self.live = live
+
+        # Set up default path
+        if path is None:
+            path = WIDGET_BASE_PATH
+
+        # And configure paths
+        self._widget_name_path = '{}/_widget_name.txt'.format(path)
+        self._widget_handlers_path = '{}/_handlers.py'.format(path)
+        self._widget_handlers_tmp_path = '{}/_handlers_tmp.py'.format(path)
+
+        # Set up default import path
+        if import_path is None:
+            self._widget_import_path = WIDGET_IMPORT_PATH
+        else:
+            self._widget_import_path = import_path
 
         # Load the berry name from the parameter if present or from disk
         if name is not None:
@@ -118,7 +131,7 @@ class BerryBase():
         conveniently makes it far easier to reference the imported handlers
         in the subclasses).
         """
-        self._handlers = importlib.import_module('berry.client._handlers')
+        self._handlers = importlib.import_module(self._widget_import_path)
 
     def reload_handlers(self):
         """
@@ -191,7 +204,7 @@ class BerryBase():
         """
         Returns the handler code in client/handlers.py. Used for code editing.
         """
-        with open(WIDGET_HANDLERS_PATH, 'r') as f:
+        with open(self._widget_handlers_path, 'r') as f:
             code = f.read()
 
         return code
@@ -200,8 +213,8 @@ class BerryBase():
         """
         Updates the handler code in client/handlers.py. Used for code editing.
         """
-        temp_path = WIDGET_HANDLERS_TMP_PATH
-        dest_path = WIDGET_HANDLERS_PATH
+        temp_path = self._widget_handlers_tmp_path
+        dest_path = self._widget_handlers_path
 
         # Write out to the temp copy
         with open(temp_path, 'w') as f:
@@ -226,7 +239,7 @@ class BerryBase():
         """
         Reads in the widget name and returns it.
         """
-        with open(WIDGET_NAME_PATH, 'r') as f:
+        with open(self._widget_name_path, 'r') as f:
             name = f.read()
 
         self.name = name.strip()
@@ -239,7 +252,7 @@ class BerryBase():
         """
         self.name = name
 
-        with open(WIDGET_NAME_PATH, 'w') as f:
+        with open(self._widget_name_path, 'w') as f:
             f.write(self.name)
 
     def send_message_to_server(self, message):
@@ -255,3 +268,10 @@ class BerryBase():
         """
         # Run the client's on_state() function if it exists
         self.call_handler('on_state')
+
+    def on_test(self):
+        """
+        Function calling the on_test() handler, used for debugging.
+        """
+        # Run the client's on_test() function if it exists
+        self.call_handler('on_test')

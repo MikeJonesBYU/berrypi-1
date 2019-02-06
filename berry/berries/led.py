@@ -81,23 +81,3 @@ class BerryLED(BerryBase):
 
         # For testing
         self._test_state = not self._test_state
-
-    def on_test(self):
-        """
-        Stub for the dummy on_test handler.
-        """
-        logging.info('on_test()')
-
-        # Call the user handler if it exists
-        self.call_handler('on_test')
-
-        # Send event message to server (for any registered clients)
-        message = {
-            'command': 'event',
-            'event': 'on_test',
-            'name': self.name,
-        }
-        self.send_message_to_server(message)
-
-        # For testing
-        self._test_state = False

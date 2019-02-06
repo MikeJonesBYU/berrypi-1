@@ -109,7 +109,7 @@ class BerryClient():
             # Run the remote command on this client
             attribute = message['attribute']
             source = message['source']
-            key = message['key']
+            key = message['key'] if 'key' in message else None
             payload = message['payload'] if 'payload' in message else None
 
             # Check if the berry object has the attribute
@@ -451,7 +451,10 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
         """
         Returns code for a key. Used in user handlers.
         """
-        return self._code[key]
+        if key in self._code:
+            return self._code[key]
+        else:
+            return None
 
     def update_state(self, data):
         """

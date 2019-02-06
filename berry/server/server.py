@@ -216,8 +216,10 @@ class ThreadedServer(QObject):
                     'command': 'remote-command',
                     'source': message['source'],
                     'attribute': message['attribute'],
-                    'key': message['key'],
                 }
+
+                if 'key' in response:
+                    message['key'] = response['key']
 
                 if 'payload' in response:
                     message['payload'] = response['payload']
@@ -253,13 +255,15 @@ class ThreadedServer(QObject):
                 'key': key,
             }
 
-            # Send the message to each registered berry
-            registered_berries = self._registered_berries[key].keys()
-            for berry in registered_berries:
-                berry = self.get_berry(name=berry)
-                guid = berry['guid']
+            # Send the message to each registered berry (make sure first that
+            # there is at least one registered berry)
+            if key in self._registered_berries:
+                registered_berries = self._registered_berries[key].keys()
+                for berry in registered_berries:
+                    berry = self.get_berry(name=berry)
+                    guid = berry['guid']
 
-                self.send_message_to_berry(guid, message)
+                    self.send_message_to_berry(guid, message)
 
         elif command == 'update-state':
             # Update the shared state

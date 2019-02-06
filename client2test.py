@@ -7,7 +7,7 @@ import threading
 from uuid import getnode
 
 from berry.client import BerryClient
-from berry.utilities import CLIENT_PORT, LOG_LEVEL
+from berry.utilities import LOG_LEVEL
 
 
 logging.getLogger().setLevel(LOG_LEVEL)
@@ -25,10 +25,12 @@ if __name__ == '__main__':
     guid = getnode().__str__() + str(port)
 
     # Set up berry
-    from berry.berries import BerryLED
-    berry = BerryLED(
+    from berry import berries
+    berry = berries.BerryButton(
         live=False,
         guid=guid,
+        path='berry/client2',
+        import_path='berry.client2._handlers',
     )
 
     # Initialize the client

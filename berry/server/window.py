@@ -3,7 +3,7 @@ Berry window class. Used for editing code
 """
 import logging
 
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import (
     QLabel,
     QLineEdit,
@@ -24,8 +24,14 @@ class EditWindow(QWidget):
         self.init_ui()
 
     def init_ui(self):
+        font = QtGui.QFont('Monaco')
+        font.setPointSize(21)
+
         self._name_textbox = QLineEdit()
         self._code_textbox = QTextEdit()
+
+        self._name_textbox.setFont(font)
+        self._code_textbox.setFont(font)
 
         self._save_button = QPushButton("Save Changes")
         self._save_button.clicked.connect(self.save_code_handler)

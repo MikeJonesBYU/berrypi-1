@@ -14,6 +14,13 @@ server_ip_address = 0
 LIGHT_CHANGE_RATE_THRESHOLD = 10
 MAG_CHANGE_RATE_THRESHOLD = 2
 
+# How long to wait between sensor checks
+INITIAL_LIGHT_SENSOR_DELAY = 0.1
+LIGHT_SENSOR_DELAY = 0.1
+
+INITIAL_MAGNET_SENSOR_DELAY = 0.1
+MAGNET_SENSOR_DELAY = 0.1
+
 # How long to wait (in cycles) after a selection before the user can make
 # another selection
 SELECTION_DELAY_COUNT = 10
@@ -270,7 +277,7 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
             lux_readings = []
             for i in range(0, 3):
                 lux_readings.insert(0, sensor.lux)
-                time.sleep(0.2)
+                time.sleep(INITIAL_LIGHT_SENSOR_DELAY)
 
             average_lux = sum(lux_readings) / 3.0
 
@@ -297,8 +304,8 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
                 lux_readings.pop()
                 average_lux = sum(lux_readings) / 3.0
 
-                # Wait 100ms
-                time.sleep(0.1)
+                # Wait
+                time.sleep(LIGHT_SENSOR_DELAY)
 
                 # Delay count
                 if count > 0:
@@ -328,7 +335,7 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
             mag_readings = []
             for i in range(0, 3):
                 mag_readings.insert(0, sensor.magnetic)
-                time.sleep(0.2)
+                time.sleep(INITIAL_MAGNET_SENSOR_DELAY)
 
             average_x = sum([r[0] for r in mag_readings]) / 3.0
             average_y = sum([r[1] for r in mag_readings]) / 3.0
@@ -376,8 +383,8 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
                 average_y = sum([r[1] for r in mag_readings]) / 3.0
                 average_z = sum([r[2] for r in mag_readings]) / 3.0
 
-                # Wait 100ms
-                time.sleep(0.1)
+                # Wait
+                time.sleep(MAGNET_SENSOR_DELAY)
 
                 # Delay count
                 if count > 0:

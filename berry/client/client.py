@@ -11,7 +11,7 @@ from .. import utilities
 
 server_ip_address = 0
 
-LIGHT_CHANGE_RATE_THRESHOLD = 10
+LIGHT_CHANGE_RATE_THRESHOLD = 4
 MAG_CHANGE_RATE_THRESHOLD = 2
 
 # How long to wait between sensor checks
@@ -273,7 +273,7 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
             # Get initial reading by first waiting two seconds (so we ignore
             # the useless initial value) and then watch for 600ms (200ms three
             # times) and average the values together
-            time.sleep(2)
+            time.sleep(1)
             lux_readings = []
             for i in range(0, 3):
                 lux_readings.insert(0, sensor.lux)
@@ -284,25 +284,26 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
             while True:
                 lux = sensor.lux
 
-                # Check if we're above threshold and if so, send the message
-                change_rate = lux / average_lux
-                if (
-                    change_rate > LIGHT_CHANGE_RATE_THRESHOLD
-                    and
-                    count == 0
-                ):
-                    self.send_berry_selected_message()
+                if lux is not None:
+                    # Check if we're above threshold and if so, send the message
+                    change_rate = lux / average_lux
+                    if (
+                        change_rate > LIGHT_CHANGE_RATE_THRESHOLD
+                        and
+                        count == 0
+                    ):
+                        self.send_berry_selected_message()
 
-                    # Don't keep sending select messages until after the
-                    # selection delay is over (decrement this each pass through
-                    # the loop)
-                    count = SELECTION_DELAY_COUNT
+                        # Don't keep sending select messages until after the
+                        # selection delay is over (decrement this each pass through
+                        # the loop)
+                        count = SELECTION_DELAY_COUNT
 
-                # Update the average
-                # TODO: make this more elegant
-                lux_readings.insert(0, lux)
-                lux_readings.pop()
-                average_lux = sum(lux_readings) / 3.0
+                    # Update the average
+                    # TODO: make this more elegant
+                    lux_readings.insert(0, lux)
+                    lux_readings.pop()
+                    average_lux = sum(lux_readings) / 3.0
 
                 # Wait
                 time.sleep(LIGHT_SENSOR_DELAY)
@@ -331,7 +332,7 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
             # Get initial reading by first waiting two seconds (so we ignore
             # the useless initial value) and then watch for 600ms (200ms three
             # times) and average the values together
-            time.sleep(2)
+            time.sleep(1)
             mag_readings = []
             for i in range(0, 3):
                 mag_readings.insert(0, sensor.magnetic)
@@ -344,44 +345,45 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
             while True:
                 mag = sensor.magnetic
 
-                # Check if we're above threshold and if so, send the message
-                try:
-                    change_rate_x = abs(mag[0] / average_x)
-                except Exception:
-                    change_rate_x = 0
+                if mag is not None:
+                    # Check if we're above threshold and if so, send the message
+                    try:
+                        change_rate_x = abs(mag[0] / average_x)
+                    except Exception:
+                        change_rate_x = 0
 
-                try:
-                    change_rate_y = abs(mag[1] / average_y)
-                except Exception:
-                    change_rate_y = 0
+                    try:
+                        change_rate_y = abs(mag[1] / average_y)
+                    except Exception:
+                        change_rate_y = 0
 
-                try:
-                    change_rate_z = abs(mag[2] / average_z)
-                except Exception:
-                    change_rate_z = 0
+                    try:
+                        change_rate_z = abs(mag[2] / average_z)
+                    except Exception:
+                        change_rate_z = 0
 
-                if (
-                    change_rate_x > MAG_CHANGE_RATE_THRESHOLD
-                    or
-                    change_rate_y > MAG_CHANGE_RATE_THRESHOLD
-                    or
-                    change_rate_z > MAG_CHANGE_RATE_THRESHOLD
-                ) and count == 0:
-                    self.send_berry_selected_message()
+                    if (
+                        change_rate_x > MAG_CHANGE_RATE_THRESHOLD
+                        or
+                        change_rate_y > MAG_CHANGE_RATE_THRESHOLD
+                        or
+                        change_rate_z > MAG_CHANGE_RATE_THRESHOLD
+                    ) and count == 0:
+                        self.send_berry_selected_message()
 
-                    # Don't keep sending select messages until after the
-                    # selection delay is over (decrement this each pass through
-                    # the loop)
-                    count = SELECTION_DELAY_COUNT
+                        # Don't keep sending select messages until after the
+                        # selection delay is over (decrement this each pass through
+                        # the loop)
+                        count = SELECTION_DELAY_COUNT
 
-                # Update the average
-                # TODO: make this more elegant
-                mag_readings.insert(0, mag)
-                mag_readings.pop()
+                    # Update the average
+                    # TODO: make this more elegant
+                    mag_readings.insert(0, mag)
+                    mag_readings.pop()
 
-                average_x = sum([r[0] for r in mag_readings]) / 3.0
-                average_y = sum([r[1] for r in mag_readings]) / 3.0
-                average_z = sum([r[2] for r in mag_readings]) / 3.0
+                    average_x = sum([r[0] for r in mag_readings]) / 3.0
+                    average_y = sum([r[1] for r in mag_readings]) / 3.0
+                    average_z = sum([r[2] for r in mag_readings]) / 3.0
 
                 # Wait
                 time.sleep(MAGNET_SENSOR_DELAY)

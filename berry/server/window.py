@@ -73,6 +73,7 @@ class EditWindow(QWidget):
         self._code_textbox.setText(payload['code'])
 
         self.show()
+        self._code_textbox.setFocus()
         self.raise_()
 
     @QtCore.pyqtSlot(str)

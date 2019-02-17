@@ -7,7 +7,7 @@ import time
 from .client import send_message_to_server
 
 
-def on_press(state, remote, berry):
+def on_press(global_state, remote, berry):
     """
     Handler called when the button is pressed. The remote parameter gives
     access to other berries' functionality.
@@ -17,7 +17,7 @@ def on_press(state, remote, berry):
     remote.led_berry.off()
 
 
-def on_release(state, remote, berry):
+def on_release(global_state, remote, berry):
     """
     Handler called when the button is released. The remote parameter gives
     access to other berries' functionality.
@@ -27,14 +27,14 @@ def on_release(state, remote, berry):
     remote.led_berry.on()
 
 
-def setup(state, remote, berry):
+def setup(global_state, remote, berry):
     """
     Run whenever the client code is loaded. Optional.
     """
     logging.info('setup')
 
 
-def loop(state, remote, berry):
+def loop(global_state, remote, berry):
     """
     If present, looped over in its own thread. Use for widget logic where
     needed.
@@ -43,9 +43,9 @@ def loop(state, remote, berry):
     time.sleep(1)
 
 
-def on_state(state, remote, berry):
+def on_global_state_change(global_state, remote, berry):
     """
-    Handler called whenever state is updated.
+    Handler called whenever global state is updated.
     """
-    val = state.get('value')
-    logging.info('on_state, val = {}'.format(val))
+    val = global_state.get('value')
+    logging.info('on_global_state_change, val = {}'.format(val))

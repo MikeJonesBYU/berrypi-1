@@ -261,13 +261,14 @@ class BerryBase():
         """
         self._client.send_message_to_server(message)
 
-    def on_state(self):
+    def on_global_state_change(self):
         """
-        Function allowing the user code to implement an on_state() handler
-        that's called whenever the client receives a new state update.
+        Function allowing the user code to implement an
+        on_global_state_change() handler that's called whenever the client
+        receives a new state update.
         """
-        # Run the client's on_state() function if it exists
-        self.call_handler('on_state')
+        # Run the client's on_global_state_change() function if it exists
+        self.call_handler('on_global_state_change')
 
     def on_test(self):
         """

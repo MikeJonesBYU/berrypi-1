@@ -13,8 +13,7 @@ def loop(global_state, remote, widget):
 
 def on_global_state_change(global_state, remote, widget):
     # Called whenever the state is updated
-    val = global_state.get('value')
-    print(val)
+    pass
 
 
 def on_press(global_state, remote, widget):

@@ -13,29 +13,47 @@ output_config = 'berry/client/_widget_config.py'
 
 widget_name_file = 'berry/client/_widget_name.txt'
 
+setup_path = 'widget.cfg'
+
 ###############################################################################
 
-if len(sys.argv) < 2:
-    print('Usage: python3 setupwidget.py [TYPE] [NUM]')
-    print('Types: button | led | fsr | accelerometer | speaker | screen')
-    sys.exit(-1)
+num = None
 
-# Get the slug
-slug = sys.argv[1]
-src_path = src_path.replace('SLUG', slug)
+if len(sys.argv) >= 2:
+    # Use command-line parameters
 
-# Get the number, if present
-if len(sys.argv) >= 3:
-    num = sys.argv[2]
+    # Get the slug
+    slug = sys.argv[1]
+
+    # Get the number, if present
+    if len(sys.argv) >= 3:
+        num = sys.argv[2]
 else:
-    num = None
+    # Try to use config, otherwise print usage
+    try:
+        with open(setup_path, 'r') as f:
+            lines = f.readlines()
+
+        slug = lines[0].strip()
+
+        if len(lines) > 1:
+            num = lines[1].strip()
+
+    except FileNotFoundError:
+        print('Usage: python3 setupwidget.py [TYPE] [NUM]')
+        print('Types: button | led | fsr | accelerometer | speaker | screen')
+        sys.exit(-1)
+
+###############################################################################
+
+src_path = src_path.replace('SLUG', slug)
 
 # Prep the widget name (with optional number)
 widget_name = slug
 if num is not None:
     widget_name += str(num)
 
-print('Setting up {} widget'.format(slug))
+print('Setting up widget: {}'.format(widget_name))
 
 ###############################################################################
 
@@ -78,7 +96,7 @@ except OSError as ex:
 ###############################################################################
 
 # Then update the widget name
-print('Updating widget name')
+print('Updating widget name: {}'.format(widget_name))
 
 try:
     with open(widget_name_file, 'w') as f:

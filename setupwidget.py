@@ -49,11 +49,12 @@ else:
 src_path = src_path.replace('SLUG', slug)
 
 # Prep the widget name (with optional number)
-widget_name = slug
 if num is not None:
-    widget_name += str(num)
+    widget_name = 'widget{}'.format(num)
+else:
+    widget_name = slug
 
-print('Setting up widget: {}'.format(widget_name))
+print('Setting up widget: {} as {}'.format(widget_name, slug))
 
 ###############################################################################
 

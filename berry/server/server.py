@@ -9,6 +9,8 @@ import threading
 from PyQt5 import QtCore
 from PyQt5.QtCore import QObject
 
+import pygame
+
 from .. import utilities
 
 
@@ -59,6 +61,9 @@ class ThreadedServer(QObject):
 
         # Start up a separate thread to listen for broadcasts from new berries.
         threading.Thread(target=self.listen_for_new_berries).start()
+
+        # Import pygame mixer for sounds
+        pygame.mixer.init()
 
     def listen_for_new_berries(self):
         while True:
@@ -185,9 +190,15 @@ class ThreadedServer(QObject):
                     message['code'],
                 )
 
+                print('playing beep')
+                threading.Thread(target=self._play_open_beep).start()
+
             elif self._mode == self.EDIT_MODE:
                 # Insert the berry's name into the code editing window
                 self._insert_name_signal.emit(message['name'])
+
+                print('playing beep')
+                threading.Thread(target=self._play_insert_name_beep).start()
 
         elif command == 'remote-command':
             # Send remote command message to destination berry
@@ -323,6 +334,9 @@ class ThreadedServer(QObject):
         """
         Sends the edited code back to the client via the code-save message.
         """
+        # Play the beep
+        self._play_save_changes_beep()
+
         message = {
             'command': 'code-save',
             'name': payload['name'],
@@ -333,3 +347,35 @@ class ThreadedServer(QObject):
 
         # Reset to normal mode now that we're no longer editing code
         self._mode = self.NORMAL_MODE
+
+    def _play_open_beep(self):
+        """
+        Plays the beep for when the code window is opened.
+        """
+        try:
+            s = pygame.mixer.Sound('berry/server/sounds/sfx_coin_cluster3.wav')
+            s.play()
+        except:
+            logging.error('\n   *** ERROR playing open beep')
+
+    def _play_insert_name_beep(self):
+        """
+        Plays the beep for when the name is inserted into the editor.
+        """
+        try:
+            s = pygame.mixer.Sound('berry/server/sounds/sfx_coin_double4.wav')
+            s.play()
+        except Exception as ex:
+            logging.error('\n   *** ERROR playing insert name beep')
+
+    def _play_save_changes_beep(self):
+        """
+        Plays the beep for when changes are saved.
+        """
+        try:
+            s = pygame.mixer.Sound(
+                'berry/server/sounds/sfx_sound_neutral2.wav',
+            )
+            s.play()
+        except Exception as ex:
+            logging.error('\n   *** ERROR playing save changes beep')

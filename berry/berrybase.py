@@ -147,16 +147,22 @@ class BerryBase():
         """
         try:
             new_handlers = importlib.reload(self._handlers)
+            self._handlers = new_handlers
+
         except SyntaxError as ex:
-            new_handlers = {}
+            self._handlers = {}
             logging.error(
                 '\n   *** ERROR, syntax error reloading handlers: {}'.format(
                     ex,
                 ),
             )
 
-        self._handlers = new_handlers
+        except TypeError as ex:
+            # Reloading handlers that were never loaded to begin with, so import
+            # them instead
+            self.import_handlers()
 
+        # Now that we've got the handlers, set up the client
         self.setup_client()
 
     def setup_client(self):

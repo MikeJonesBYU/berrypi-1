@@ -25,7 +25,7 @@ class BerryScreen(BerryBase):
             from luma.core.render import canvas
             from luma.oled.device import ssd1306
         except Exception as ex:
-            logging.error('Error importing Luma: {}'.format(ex))
+            logging.error('\n   *** ERROR importing Luma: {}'.format(ex))
 
             # Things failed, must be running locally, not on a widget, so don't
             # bother initializing I2C
@@ -36,7 +36,12 @@ class BerryScreen(BerryBase):
             serial = i2c(port=1, address=0x3C)
             device = ssd1306(serial)
         except Exception as ex:
-            logging.error('Error initializing I2C/SSD1306: {}'.format(ex))
+            logging.error(
+                '\n   *** ERROR initializing I2C/SSD1306: {}'.format(
+                    ex,
+                ),
+            )
+
             return
 
         self._canvas = canvas(device)

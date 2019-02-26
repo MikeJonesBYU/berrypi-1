@@ -37,9 +37,11 @@ class BerryBase():
         if berry_type in WIDGET_TYPES:
             self.berry_type = berry_type
         else:
-            logging.error('invalid type to berry constructor {}'.format(
-                berry_type,
-            ))
+            logging.error(
+                '\n   *** ERROR, invalid type to berry constructor {}'.format(
+                    berry_type,
+                ),
+            )
             self.berry_type = 'invalid'
 
         self.guid = guid
@@ -131,13 +133,28 @@ class BerryBase():
         conveniently makes it far easier to reference the imported handlers
         in the subclasses).
         """
-        self._handlers = importlib.import_module(self._widget_import_path)
+        try:
+            self._handlers = importlib.import_module(self._widget_import_path)
+        except SyntaxError as ex:
+            self._handlers = {}
+            logging.error(
+                '\n   *** ERROR, syntax error loading handlers: {}'.format(ex),
+            )
 
     def reload_handlers(self):
         """
         Reloads the berry's handlers from client/handlers.
         """
-        new_handlers = importlib.reload(self._handlers)
+        try:
+            new_handlers = importlib.reload(self._handlers)
+        except SyntaxError as ex:
+            new_handlers = {}
+            logging.error(
+                '\n   *** ERROR, syntax error reloading handlers: {}'.format(
+                    ex,
+                ),
+            )
+
         self._handlers = new_handlers
 
         self.setup_client()
@@ -176,15 +193,23 @@ class BerryBase():
         remote_berries = remote.RemoteBerries(self._client)
 
         # Get the handler function from the berry.client.handlers module
-        handler = getattr(self._handlers, name)
+        try:
+            handler = getattr(self._handlers, name)
+        except AttributeError:
+            handler = None
 
         if not handler:
             if name == 'setup':
                 # Setup is optional, so just return without an error
                 return
 
+            if name == 'loop':
+                # No loop handler
+                self._client._looping = False
+
             # Raise an exception since the handler doesn't exist
-            raise Exception('Handler not found')
+            logging.error('\n   *** ERROR, handler not found: {}'.format(name))
+            return None
 
         # Call the handler, passing in the state and the RemoteBerries instance
         # and any other arguments
@@ -225,7 +250,7 @@ class BerryBase():
             disk_code = f.read()
 
         if code != disk_code:
-            logging.error('Code written to disk doesn\'t match, try again')
+            logging.error('\n   *** ERROR, code written to disk doesn\'t match')
             return
 
         # Move the temp copy over the real copy

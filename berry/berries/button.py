@@ -24,7 +24,7 @@ class BerryButton(BerryBase):
         try:
             from gpiozero import Button
         except Exception as ex:
-            logging.error('Error importing gpiozero: {}'.format(ex))
+            logging.error('\n   *** ERROR importing gpiozero: {}'.format(ex))
 
             # Things failed, must be running locally, not on a widget, so don't
             # bother initializing GPIO
@@ -38,7 +38,7 @@ class BerryButton(BerryBase):
             self._button.when_pressed = self.on_press
             self._button.when_released = self.on_release
         except Exception as ex:
-            logging.error('Error initializing button: {}'.format(ex))
+            logging.error('\n   *** ERROR initializing button: {}'.format(ex))
 
     def is_pressed(self):
         """

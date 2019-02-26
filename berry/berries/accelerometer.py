@@ -30,7 +30,11 @@ class BerryAccelerometer(BerryBase):
             import busio
             import adafruit_lsm303
         except Exception as ex:
-            logging.error('Error importing Adafruit libraries: {}'.format(ex))
+            logging.error(
+                '\n   *** ERROR importing Adafruit libraries: {}'.format(
+                    ex,
+                ),
+            )
 
             # Things failed, so we must be running locally, not on a widget;
             # don't bother hooking up the LSM303
@@ -41,7 +45,9 @@ class BerryAccelerometer(BerryBase):
             i2c = busio.I2C(board.SCL, board.SDA)
             self._sensor = adafruit_lsm303.LSM303(i2c)
         except Exception as ex:
-            logging.error('Error initializing I2C/LSM303: {}'.format(ex))
+            logging.error(
+                '\n   *** ERROR initializing I2C/LSM303: {}'.format(ex),
+            )
 
     def _mag(self, tup):
         """

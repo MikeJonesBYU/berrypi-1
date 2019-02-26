@@ -30,7 +30,7 @@ class BerryFSR(BerryBase):
         try:
             from gpiozero import MCP3008
         except Exception as ex:
-            logging.error('Error importing gpiozero: {}'.format(ex))
+            logging.error('\n   *** ERROR importing gpiozero: {}'.format(ex))
 
             # Things failed, must be running locally, not on a widget, so don't
             # bother initializing the MCP3008
@@ -40,7 +40,7 @@ class BerryFSR(BerryBase):
         try:
             self._sensor = MCP3008(channel=0)
         except Exception as ex:
-            logging.error('Error initializing MCP3008: {}'.format(ex))
+            logging.error('\n   *** ERROR initializing MCP3008: {}'.format(ex))
             return
 
         # Start force loop thread

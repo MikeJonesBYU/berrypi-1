@@ -32,12 +32,14 @@ class BerryClient():
     _code = None
     _responses = None
     _state = None
+    _looping = True
 
     def __init__(self, berry, port):
         self._berry = berry
         self._berry._client = self
         self._port = int(port)
         self._state = ClientState(client=self)
+        self._looping = True
 
         # Maps berry/event handlers to functions, for use in user code
         self._code = {}
@@ -98,7 +100,7 @@ class BerryClient():
         message = json.loads(message)
 
         if 'command' not in message:
-            logging.error('Error, message missing command')
+            logging.error('\n   *** ERROR, message missing command')
             return
 
         command = message['command']
@@ -185,8 +187,9 @@ class BerryClient():
         """
         # Start main loop thread (loop() handler)
         while True:
-            # Call loop() handler
-            self._berry.loop_client()
+            if self._looping:
+                # Call loop() handler
+                self._berry.loop_client()
 
     def input_loop(self):
         """
@@ -312,7 +315,11 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
                 if count > 0:
                     count -= 1
         except Exception as ex:
-            logging.error('Light sensor thread died: {}'.format(ex))
+            logging.error(
+                '\n   *** ERROR, light sensor thread died: {}'.format(
+                    ex,
+                ),
+            )
 
     def magnet_loop(self):
         """
@@ -392,7 +399,11 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
                 if count > 0:
                     count -= 1
         except Exception as ex:
-            logging.error('Magnet sensor thread died: {}'.format(ex))
+            logging.error(
+                '\n   *** ERROR, magnet sensor thread died: {}'.format(
+                    ex,
+                ),
+            )
 
     def call_remote_command(self, key, payload=None):
         """

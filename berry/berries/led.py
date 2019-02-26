@@ -23,7 +23,7 @@ class BerryLED(BerryBase):
         try:
             from gpiozero import LED
         except Exception as ex:
-            logging.error('Error importing gpiozero: {}'.format(ex))
+            logging.error('\n   *** ERROR importing gpiozero: {}'.format(ex))
 
             # Things failed, must be running locally, not on a widget, so don't
             # bother initializing GPIO
@@ -33,7 +33,7 @@ class BerryLED(BerryBase):
         try:
             self._led = LED(17)
         except Exception as ex:
-            logging.error('Error initializing LED: {}'.format(ex))
+            logging.error('\n   *** ERROR initializing LED: {}'.format(ex))
 
     def is_lit(self):
         """

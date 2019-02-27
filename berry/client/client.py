@@ -22,8 +22,8 @@ INITIAL_MAGNET_SENSOR_DELAY = 0.1
 MAGNET_SENSOR_DELAY = 0.1
 
 # How long to wait (in cycles) after a selection before the user can make
-# another selection
-SELECTION_DELAY_COUNT = 10
+# another selection of this widget
+SELECTION_DELAY_COUNT = 25
 
 
 class BerryClient():

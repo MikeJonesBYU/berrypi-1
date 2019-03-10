@@ -221,22 +221,24 @@ class ThreadedServer(QObject):
             else:
                 # Get the berry GUID
                 berry = self.get_berry(name=message['destination'])
-                guid = berry['guid']
 
-                # Prep the message to the destination berry
-                response = {
-                    'command': 'remote-command',
-                    'source': message['source'],
-                    'attribute': message['attribute'],
-                }
+                if berry is not None:
+                    guid = berry['guid']
 
-                if 'key' in message:
-                    response['key'] = message['key']
+                    # Prep the message to the destination berry
+                    response = {
+                        'command': 'remote-command',
+                        'source': message['source'],
+                        'attribute': message['attribute'],
+                    }
 
-                if 'payload' in message:
-                    response['payload'] = message['payload']
+                    if 'key' in message:
+                        response['key'] = message['key']
 
-                self.send_message_to_berry(guid, response)
+                    if 'payload' in message:
+                        response['payload'] = message['payload']
+
+                    self.send_message_to_berry(guid, response)
 
         elif command == 'remote-response':
             # Send response message back to the source berry

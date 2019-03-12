@@ -32,8 +32,12 @@ class RemoteBerries(object):
         if attr.startswith('_'):
             return super().getattr(attr)
 
+        # walk me through this one mdj.
+        # if the name doesn't exist, create it?  in __init__
+        # if the name does exist, get it?  in __getattr__
         return self.BerryProps(attr, self._client)
 
+    # need a better name here.  mdj. 
     class BerryProps(object):
         """
         Class for handling method/property-level attribute access.
@@ -81,6 +85,7 @@ class RemoteBerries(object):
 
             # Wrap our response in an empty function so that it can be callable
             # by the user code (otherwise it'll die)
+            # mdj walk me through this...
             def response_wrapper():
                 return response
 

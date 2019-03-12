@@ -34,6 +34,7 @@ if __name__ == '__main__':
     threading.Thread(target=client.input_loop).start()
 
     # Start threads for sensors
+    # where does this get set? mdj
     if berry.live:
         # Start light loop thread
         threading.Thread(target=client.light_loop).start()

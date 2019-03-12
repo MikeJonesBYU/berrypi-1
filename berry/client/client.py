@@ -23,6 +23,7 @@ MAGNET_SENSOR_DELAY = 0.1
 
 # How long to wait (in cycles) after a selection before the user can make
 # another selection of this widget
+# is this like debouncing a switch?  mdj
 SELECTION_DELAY_COUNT = 25
 
 
@@ -289,6 +290,7 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
 
                 if lux is not None:
                     # Check if we're above threshold and if so, send the message
+                    # we can baseline this and maybe avoid the dark to light false positive. mdj
                     change_rate = lux / average_lux
                     if (
                         change_rate > LIGHT_CHANGE_RATE_THRESHOLD
@@ -449,6 +451,7 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
 
             # Avoid an infinite loop (not sure yet if 10,000 is the right
             # number, but it's something to start with)
+            # any sources of instability here?  Mdj
             count += 1
             if count > 10000:
                 break

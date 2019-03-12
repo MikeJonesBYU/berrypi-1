@@ -38,6 +38,11 @@ class RemoteBerries(object):
         if attr.startswith('_'):
             return super().getattr(attr)
 
+        # walk me through this one mdj.  what's the _client?
+        # the _ prefix means "this is an attribute for the local class and souldn't
+        # be forwarded on to hte server"?  mdj
+        # _client is the code to communiate with the server and gets passed around to the different
+        # parts of the code here mdj
         print('get remote', attr)
         return self.BerryProps(attr, self._client)
 
@@ -48,6 +53,8 @@ class RemoteBerries(object):
         _name = None
         _client = None
 
+        # is _name the variable name or the name of that type of berry?
+        # I would guess variable name mdj.
         def __init__(self, berry_name, client):
             self._name = berry_name
             self._client = client
@@ -66,6 +73,8 @@ class RemoteBerries(object):
             if attr.startswith('_'):
                 return super().getattr(attr)
 
+            # I'm really verbose so I would have put in a command name,
+            # but so far I can parse your commands. mdj
             message = {
                 'berry': self._name,
                 'attribute': attr,
@@ -97,6 +106,7 @@ class RemoteBerries(object):
             if callable(value):
                 # Save a reference to the code so we can call it when the
                 # event is triggered
+                # what does the f do here? mdj
                 key = f'{self._name}|{attr}'
                 self._client.code[key] = value
 
@@ -120,6 +130,7 @@ client = ClientTest()
 berries = RemoteBerries(client)
 
 
+# for testing I assume? or default functions implemented by all berries? mdj
 def my_func(payload):
     print('in my_func')
     if 'number' in payload:

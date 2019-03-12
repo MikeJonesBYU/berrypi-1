@@ -43,6 +43,15 @@ class RemoteBerries(object):
         # be forwarded on to hte server"?  mdj
         # _client is the code to communiate with the server and gets passed around to the different
         # parts of the code here mdj
+
+        # [bmc] This isn't the real code, but it looks like you figured it out.
+        # (This was the early experiment for it.)
+        # [bmc] That said, _client is a reference to the BerryClient instance
+        # (see berry/client/client.py) that runs the widget.
+        # [bmc] _ is a Python convention that means "this is private to this
+        # class", but yes, we also exclude any underscored properties from
+        # being passed through the remote system, otherwise we wouldn't be able
+        # to use _client.
         print('get remote', attr)
         return self.BerryProps(attr, self._client)
 
@@ -55,6 +64,8 @@ class RemoteBerries(object):
 
         # is _name the variable name or the name of that type of berry?
         # I would guess variable name mdj.
+        # [bmc] It's the widget name (e.g., button1), and yeah, I still need to
+        # go in and rename all the "berry" stuff to be "widget"
         def __init__(self, berry_name, client):
             self._name = berry_name
             self._client = client
@@ -75,6 +86,8 @@ class RemoteBerries(object):
 
             # I'm really verbose so I would have put in a command name,
             # but so far I can parse your commands. mdj
+            # [bmc] Ignore this; berry/remote.py has the real code (which does
+            # have a command name)
             message = {
                 'berry': self._name,
                 'attribute': attr,
@@ -107,6 +120,9 @@ class RemoteBerries(object):
                 # Save a reference to the code so we can call it when the
                 # event is triggered
                 # what does the f do here? mdj
+                # [bmc] It's a Python 3.6+ format string, where you can use
+                # Python expressions inside curly brackets for string
+                # interpolation
                 key = f'{self._name}|{attr}'
                 self._client.code[key] = value
 
@@ -131,6 +147,8 @@ berries = RemoteBerries(client)
 
 
 # for testing I assume? or default functions implemented by all berries? mdj
+# [bmc] Ignore, this was just my initial experiment to make sure the remote
+# stuff worked before I put it into berry/remote.py
 def my_func(payload):
     print('in my_func')
     if 'number' in payload:

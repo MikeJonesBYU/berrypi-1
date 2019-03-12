@@ -24,6 +24,10 @@ MAGNET_SENSOR_DELAY = 0.1
 # How long to wait (in cycles) after a selection before the user can make
 # another selection of this widget
 # is this like debouncing a switch?  mdj
+# [bmc] Sort of. Because a selection is triggered by a change of some kind, it
+# can happen multiple times during the same selection action (e.g., the user
+# waves a magnet and it selects four times during that wave because of how the
+# magnet values come back)
 SELECTION_DELAY_COUNT = 25
 
 
@@ -291,6 +295,7 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
                 if lux is not None:
                     # Check if we're above threshold and if so, send the message
                     # we can baseline this and maybe avoid the dark to light false positive. mdj
+                    # [bmc] Yeah, agreed.
                     change_rate = lux / average_lux
                     if (
                         change_rate > LIGHT_CHANGE_RATE_THRESHOLD
@@ -452,6 +457,12 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
             # Avoid an infinite loop (not sure yet if 10,000 is the right
             # number, but it's something to start with)
             # any sources of instability here?  Mdj
+            # [bmc] This is more so it keeps working even if something else
+            # goes wrong elsewhere in the system (i.e., with the server or with
+            # the other client), without needing a restart. Those things
+            # shouldn't happen, but I'm paranoid. (If the other client dies,
+            # there's not necessarily an easy way to tell from this client's
+            # perspective; a timeout seemed a more elegant way to handle it.)
             count += 1
             if count > 10000:
                 break

@@ -36,9 +36,19 @@ class RemoteBerries(object):
         # if the name doesn't exist, create it?  in __init__
         # if that's the case, how does the getattr get called after the init?
         # if the name does exist, get it?  in __getattr__
+
+        # [bmc] The __init__ just attaches the client (the widget) so that we
+        # can send a message to the server later on.
+        # [bmc] __getattr__ gets called whenever the name is accessed, whether
+        # or not it exists (so remote.jefopwjfpowej gets called the same as
+        # remote.ledwidget). What we do is take the name (`attr`) and create a
+        # new BerryProps instance that knows about that name and has a ref to
+        # the client. The name is just a string and isn't "created" in any real
+        # sense.
         return self.BerryProps(attr, self._client)
 
     # need a better name here.  mdj.
+    # [bmc] Agreed, definitely. RemoteInner? RemoteProperty? RemoteWidgetProps?
     class BerryProps(object):
         """
         Class for handling method/property-level attribute access.
@@ -87,6 +97,11 @@ class RemoteBerries(object):
             # Wrap our response in an empty function so that it can be callable
             # by the user code (otherwise it'll die)
             # mdj walk me through this...
+            # [bmc] In remote.ledwidget.on(), the `on` object needs to be a
+            # callable, otherwise the () part will cause it to die. If we just
+            # returned the response itself, we wouldn't be returning a callable,
+            # and it would die. So we return a function that (on being called)
+            # returns the response (via a closure).
             def response_wrapper():
                 return response
 

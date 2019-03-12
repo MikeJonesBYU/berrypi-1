@@ -35,6 +35,10 @@ if __name__ == '__main__':
 
     # Start threads for sensors
     # where does this get set? mdj
+    # [bmc] In berry/client/_widget_config.py, there's a get_widget() function
+    # that instantiates a Berry[Widget] class (like BerryButton), and one of
+    # the constructor parameters there is `live`. This gets set for real in
+    # berry/berrybase.py in the constructor there.
     if berry.live:
         # Start light loop thread
         threading.Thread(target=client.light_loop).start()

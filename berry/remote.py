@@ -34,10 +34,11 @@ class RemoteBerries(object):
 
         # walk me through this one mdj.
         # if the name doesn't exist, create it?  in __init__
+        # if that's the case, how does the getattr get called after the init?
         # if the name does exist, get it?  in __getattr__
         return self.BerryProps(attr, self._client)
 
-    # need a better name here.  mdj. 
+    # need a better name here.  mdj.
     class BerryProps(object):
         """
         Class for handling method/property-level attribute access.

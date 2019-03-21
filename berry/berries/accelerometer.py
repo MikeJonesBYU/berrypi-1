@@ -28,7 +28,7 @@ class BerryAccelerometer(BerryBase):
         try:
             import board
             import busio
-            import adafruit_lsm303
+            import adafruit_lis3dh
         except Exception as ex:
             logging.error(
                 '\n   *** ERROR importing Adafruit libraries: {}'.format(
@@ -37,13 +37,13 @@ class BerryAccelerometer(BerryBase):
             )
 
             # Things failed, so we must be running locally, not on a widget;
-            # don't bother hooking up the LSM303
+            # don't bother hooking up the LIS3DH
             return
 
-        # Initialize I2C and LSM303
+        # Initialize I2C and LIS3DH
         try:
             i2c = busio.I2C(board.SCL, board.SDA)
-            self._sensor = adafruit_lsm303.LSM303(i2c)
+            self._sensor = adafruit_lis3dh.LIS3DH_I2C(i2c)
         except Exception as ex:
             logging.error(
                 '\n   *** ERROR initializing I2C/LSM303: {}'.format(ex),
@@ -61,16 +61,6 @@ class BerryAccelerometer(BerryBase):
         """
         if self.live:
             return self._mag(self.acceleration())
-
-        return self._mag(self._test_state)
-
-    def raw_magnitude(self):
-        """
-        Part of accelerometer API. Returns magnitude of raw accelerometer
-        reading.
-        """
-        if self.live:
-            return self._mag(self.raw_acceleration())
 
         return self._mag(self._test_state)
 
@@ -114,15 +104,6 @@ class BerryAccelerometer(BerryBase):
 
         return self._test_state
 
-    def raw_acceleration(self):
-        """
-        Part of accelerometer API. Returns raw value of accelerometer reading.
-        """
-        if self.live:
-            return self._sensor.raw_acceleration
-
-        return self._test_state
-
     def x(self):
         """
         Part of accelerometer API. Returns x value of accelerometer reading.
@@ -130,16 +111,6 @@ class BerryAccelerometer(BerryBase):
         if self.live:
             x, _, _ = self.acceleration()
             return x
-
-        return self._test_state[0]
-
-    def raw_x(self):
-        """
-        Part of accelerometer API. Returns raw x value of accelerometer reading.
-        """
-        if self.live:
-            raw_x, _, _ = self.raw_acceleration()
-            return raw_x
 
         return self._test_state[0]
 
@@ -153,16 +124,6 @@ class BerryAccelerometer(BerryBase):
 
         return self._test_state[1]
 
-    def raw_y(self):
-        """
-        Part of accelerometer API. Returns raw x value of accelerometer reading.
-        """
-        if self.live:
-            raw_y, _, _ = self.raw_acceleration()
-            return raw_y
-
-        return self._test_state[1]
-
     def z(self):
         """
         Part of accelerometer API. Returns x value of accelerometer reading.
@@ -170,15 +131,5 @@ class BerryAccelerometer(BerryBase):
         if self.live:
             z, _, _ = self.acceleration()
             return z
-
-        return self._test_state[2]
-
-    def raw_z(self):
-        """
-        Part of accelerometer API. Returns raw x value of accelerometer reading.
-        """
-        if self.live:
-            raw_z, _, _ = self.raw_acceleration()
-            return raw_z
 
         return self._test_state[2]

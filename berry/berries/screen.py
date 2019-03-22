@@ -34,7 +34,7 @@ class BerryScreen(BerryBase):
         # Now initialize I2C
         try:
             serial = i2c(port=1, address=0x3C)
-            device = ssd1306(serial)
+            self._device = ssd1306(serial)
         except Exception as ex:
             logging.error(
                 '\n   *** ERROR initializing I2C/SSD1306: {}'.format(
@@ -44,7 +44,14 @@ class BerryScreen(BerryBase):
 
             return
 
-        self._canvas = canvas(device)
+        self._canvas = canvas(self._device)
+
+    def clear(self):
+        """
+        Clears the screen.
+        """
+        with self._canvas as draw:
+            draw.rectangle(self._device.bounding_box, fill="black")
 
     def point(self, xy, fill=None):
         """

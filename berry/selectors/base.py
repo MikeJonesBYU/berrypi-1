@@ -18,14 +18,12 @@ class SelectBase():
         """
         Starts the loop thread. Can be overridden to not do this (for buttons).
         """
-        logging.info('setting up loop in base')
         threading.Thread(target=self.loop).start()
 
     def loop(self):
         """
         Overridden by child class.
         """
-        logging.info('looping in base')
         pass
 
     def select(self):

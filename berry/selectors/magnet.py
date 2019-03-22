@@ -15,14 +15,16 @@ MAGNET_SENSOR_DELAY = 0.1
 
 class MagnetSelect(SelectBase):
 
-    # No need to override setup(), since it already starts the thread
+    def setup(self):
+        logging.info('Setting up magnet selector')
+        super().setup()
 
     def loop(self):
         """
         Magnet sensor loop. Watches the LSM303 magnetometer values and, if they
         jump by a great enough threshold, initiates the berry-selected message.
         """
-        logging.info('looping magnet now')
+        logging.info('Entering magnet selection loop')
 
         try:
             import board

@@ -15,14 +15,16 @@ LIGHT_SENSOR_DELAY = 0.1
 
 class LightSelect(SelectBase):
 
-    # No need to override setup(), since it already starts the thread
+    def setup(self):
+        logging.info('Setting up light selector')
+        super().setup()
 
     def loop(self):
         """
         Light sensor loop. Watches the TSL2561 lux value and, if it jumps by
         a great enough threshold, initiates the berry-selected message.
         """
-        logging.info('looping light now')
+        logging.info('Entering light selection loop')
 
         try:
             import board

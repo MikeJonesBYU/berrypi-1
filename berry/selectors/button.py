@@ -12,6 +12,7 @@ class ButtonSelect(SelectBase):
         """
         Run on initialization. Sets up button handlers.
         """
+        logging.info('Setting up button selector')
         # Import
         try:
             from gpiozero import Button

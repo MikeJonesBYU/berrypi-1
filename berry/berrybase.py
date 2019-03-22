@@ -292,6 +292,12 @@ class BerryBase():
         """
         self._client.send_message_to_server(message)
 
+    def send_email(self, to, subject, body):
+        """
+        Wrapper for sending an email via the server.
+        """
+        self._client.send_email(to, subject, body)
+
     def on_global_state_change(self):
         """
         Function allowing the user code to implement an

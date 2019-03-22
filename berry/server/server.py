@@ -190,14 +190,12 @@ class ThreadedServer(QObject):
                     message['code'],
                 )
 
-                print('playing beep')
                 threading.Thread(target=self._play_open_beep).start()
 
             elif self._mode == self.EDIT_MODE:
                 # Insert the berry's name into the code editing window
                 self._insert_name_signal.emit(message['name'])
 
-                print('playing beep')
                 threading.Thread(target=self._play_insert_name_beep).start()
 
         elif command == 'remote-command':
@@ -293,6 +291,14 @@ class ThreadedServer(QObject):
             # Send the message to all berries
             self.broadcast_message(message)
 
+        elif command == 'send-email':
+            # Update the shared state
+            to = message['to']
+            subject = message['subject']
+            body = message['body']
+
+            self._send_email(to, subject, body)
+
         else:
             # Anything else
             pass
@@ -381,3 +387,20 @@ class ThreadedServer(QObject):
             s.play()
         except Exception as ex:
             logging.error('\n   *** ERROR playing save changes beep')
+
+    def _send_email(self, to, subject, body):
+        """
+        Sends a simple email.
+        """
+        import smtplib
+        from email.message import EmailMessage
+
+        msg = EmailMessage()
+        msg.set_content(body)
+        msg['Subject'] = subject
+        msg['To'] = to
+        msg['From'] = 'ben.crowder@gmail.com'
+
+        s = smtplib.SMTP('localhost')
+        s.send_message(msg)
+        s.quit()

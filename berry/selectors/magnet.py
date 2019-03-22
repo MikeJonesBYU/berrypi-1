@@ -3,7 +3,7 @@ Magnet selection class, using LSM303.
 """
 import logging
 
-from .base import SelectBase
+from .base import SelectBase, SELECTION_DELAY_COUNT
 
 
 MAG_CHANGE_RATE_THRESHOLD = 2

@@ -3,7 +3,7 @@ Light selection class, using TSL2561.
 """
 import logging
 
-from .base import SelectBase
+from .base import SelectBase, SELECTION_DELAY_COUNT
 
 
 LIGHT_CHANGE_RATE_THRESHOLD = 4

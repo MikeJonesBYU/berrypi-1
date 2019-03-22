@@ -38,3 +38,23 @@ class BerrySpeaker(BerryBase):
                 logging.error('\n   *** ERROR beeping: {}'.format(ex))
         else:
             logging.info('Beeped (freq={}, dur={})'.format(freq, duration))
+
+    def speak(self, text):
+        """
+        Says whatever is in text, using espeak.
+        """
+        try:
+            if self.live:
+                subprocess.run(
+                    ['espeak', str(text)],
+                    stderr=None,
+                    env={'AUDIODEV': 'hw:1'},
+                )
+            else:
+                subprocess.run(
+                    ['say', '-v', 'Karen', str(text)],
+                    stderr=None,
+                    env={'AUDIODEV': 'hw:1'},
+                )
+        except Exception as ex:
+            logging.error('\n   *** ERROR speaking: {}'.format(ex))

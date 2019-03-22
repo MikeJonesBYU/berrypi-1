@@ -17,6 +17,7 @@ setup_path = 'widget.cfg'
 
 ###############################################################################
 
+selector = 'light'
 num = None
 
 if len(sys.argv) >= 2:
@@ -25,9 +26,13 @@ if len(sys.argv) >= 2:
     # Get the slug
     slug = sys.argv[1]
 
-    # Get the number, if present
+    # Get the selector, if present
     if len(sys.argv) >= 3:
-        num = sys.argv[2]
+        selector = sys.argv[2]
+
+    # Get the number, if present
+    if len(sys.argv) >= 4:
+        num = sys.argv[3]
 else:
     # Try to use config, otherwise print usage
     try:
@@ -37,11 +42,15 @@ else:
         slug = lines[0].strip()
 
         if len(lines) > 1:
-            num = lines[1].strip()
+            selector = lines[1].strip()
+
+        if len(lines) > 2:
+            num = lines[2].strip()
 
     except FileNotFoundError:
-        print('Usage: python3 setupwidget.py [TYPE] [NUM]')
+        print('Usage: python3 setupwidget.py [TYPE] [SELECTOR] [NUM]')
         print('Types: button | led | fsr | accelerometer | speaker | screen')
+        print('Selectors: light | magnet | button')
         sys.exit(-1)
 
 ###############################################################################
@@ -54,7 +63,7 @@ if num is not None:
 else:
     widget_name = slug
 
-print('Setting up widget: {} as {}'.format(widget_name, slug))
+print('Setting up widget: {} as {} ({})'.format(widget_name, slug, selector))
 
 ###############################################################################
 
@@ -77,6 +86,7 @@ try:
 except OSError as ex:
     print('Error reading sample config: {}'.format(ex))
 
+# Replace component
 replacements = {
     'button': 'Button',
     'led': 'LED',
@@ -87,6 +97,9 @@ replacements = {
 }
 
 text = text.replace('BerryButton', 'Berry{}'.format(replacements[slug]))
+
+# Replace selector name
+text = text.replace('LightSelect', '{}Select'.format(selector.title()))
 
 try:
     with open(output_config, 'w') as f:

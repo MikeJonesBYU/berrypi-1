@@ -8,3 +8,7 @@ from berry import berries
 
 def get_widget(guid):
     return berries.BerryButton(live=True, guid=guid)
+
+def get_selector(widget):
+    from berry.selectors import LightSelect
+    return LightSelect(widget)

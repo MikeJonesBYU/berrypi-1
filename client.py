@@ -6,6 +6,8 @@ import sys
 import threading
 from uuid import getnode
 
+#from berry.selectors import LightSelect, MagnetSelect, ButtonSelect
+from berry.selectors import LightSelect
 from berry.client import BerryClient, get_widget
 from berry.utilities import CLIENT_PORT, LOG_LEVEL
 

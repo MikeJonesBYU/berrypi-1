@@ -8,7 +8,7 @@ from uuid import getnode
 
 #from berry.selectors import LightSelect, MagnetSelect, ButtonSelect
 from berry.selectors import LightSelect
-from berry.client import BerryClient, get_widget
+from berry.client import BerryClient, get_widget, get_selector
 from berry.utilities import CLIENT_PORT, LOG_LEVEL
 
 
@@ -35,13 +35,11 @@ if __name__ == '__main__':
     # Start debug input mode thread
     threading.Thread(target=client.input_loop).start()
 
-    # Start threads for sensors
+    # Start thread for selector, if needed
     if berry.live:
-        # Start light loop thread
-        threading.Thread(target=client.light_loop).start()
-
-        # Start magnet loop thread
-        threading.Thread(target=client.magnet_loop).start()
+        # Get selector
+        selector = get_selector(client)
+        selector.setup()
 
     # Listen for a reply on the same port. TCP for replies.
     response, tcpsock = client.find_a_server()

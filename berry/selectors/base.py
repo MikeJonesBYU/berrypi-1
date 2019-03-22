@@ -1,6 +1,7 @@
 """
 SelectBase class used as a base class for selection methods.
 """
+import logging
 import threading
 
 

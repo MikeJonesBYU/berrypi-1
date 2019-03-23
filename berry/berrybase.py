@@ -17,6 +17,7 @@ WIDGET_TYPES = [
     'led',
     'screen',
     'accelerometer',
+    'distance',
     'fsr',  # force sensitive resistor
     'speaker',
 ]

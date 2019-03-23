@@ -49,7 +49,7 @@ else:
 
     except FileNotFoundError:
         print('Usage: python3 setupwidget.py [TYPE] [SELECTOR] [NUM]')
-        print('Types: button | led | fsr | accelerometer | speaker | screen')
+        print('Types: button | led | fsr | distance | accelerometer | speaker | screen')
         print('Selectors: light | magnet | button')
         sys.exit(-1)
 
@@ -91,6 +91,7 @@ replacements = {
     'button': 'Button',
     'led': 'LED',
     'fsr': 'FSR',
+    'distance': 'Distance',
     'accelerometer': 'Accelerometer',
     'speaker': 'Speaker',
     'screen': 'Screen',

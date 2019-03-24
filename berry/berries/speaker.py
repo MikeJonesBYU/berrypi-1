@@ -68,7 +68,6 @@ class BerrySpeaker(BerryBase):
                 subprocess.run(
                     ['play', filename],  # noqa
                     stderr=None,
-                    env={'AUDIODEV': 'hw:1'},
                 )
             except Exception as ex:
                 logging.error('\n   *** ERROR playing mp3: {}'.format(ex))

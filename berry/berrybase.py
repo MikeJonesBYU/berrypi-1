@@ -197,7 +197,7 @@ class BerryBase():
         state = self._client.get_state()
 
         # Instantiate RemoteBerries
-        remote_berries = remote.RemoteBerries(self._client)
+        remote_widgets = remote.RemoteBerries(self._client)
 
         # Get the handler function from the berry.client.handlers module
         try:
@@ -222,9 +222,9 @@ class BerryBase():
         # and any other arguments
         try:
             return handler(
-                state,
-                remote_berries,
                 self,  # the berry itself
+                state,
+                remote_widgets,
                 *args,
                 **kwargs,
             )

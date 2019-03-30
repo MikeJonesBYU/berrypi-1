@@ -136,7 +136,12 @@ class BerryClient():
                         response = attr()
                 else:
                     # Not a function
-                    response = attr
+                    if payload:
+                        # Payload, so we're setting the attribute
+                        setattr(self._berry, attribute, payload)
+                    else:
+                        # Not a function
+                        response = attr
             else:
                 response = None
 

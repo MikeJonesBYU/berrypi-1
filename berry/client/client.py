@@ -166,13 +166,24 @@ class BerryClient():
         elif command == 'remote-response':
             # Parse the response from the remote
             response = message['response']
-            key = message['key']
 
-            # Make sure response key exists
-            self.create_response_key(key)
+            if 'error' in response:
+                if response['error'] == 'widget-not-found':
+                    raise Exception(
+                        'Widget {} not found'.format(response['name']),
+                    )
+                else:
+                    raise Exception(
+                        'Generic error: {}'.format(response['error']),
+                    )
+            else:
+                key = message['key']
 
-            # Add the response to the _responses dictionary
-            self.add_response(key, response)
+                # Make sure response key exists
+                self.create_response_key(key)
+
+                # Add the response to the _responses dictionary
+                self.add_response(key, response)
 
         elif command == 'update-state':
             # Replace the client's state with the new, updated state

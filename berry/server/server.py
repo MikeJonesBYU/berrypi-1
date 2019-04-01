@@ -237,6 +237,20 @@ class ThreadedServer(QObject):
                         response['payload'] = message['payload']
 
                     self.send_message_to_berry(guid, response)
+                else:
+                    # Nack the request
+                    response = {
+                        'command': 'remote-response',
+                        'response': {
+                            'error': 'widget-not-found',
+                            'name': message['destination'],
+                        }
+                    }
+
+                    widget = self.get_berry(name=message['source'])
+                    guid = widget['guid']
+
+                    self.send_message_to_berry(guid, response)
 
         elif command == 'remote-response':
             # Send response message back to the source berry

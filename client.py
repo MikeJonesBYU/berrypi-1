@@ -49,5 +49,8 @@ if __name__ == '__main__':
         # Blocking wait for incoming TCP messages
         message, tcpsock = client.wait_for_message(tcpsock)
 
-        # And process the message
-        client.process_message(message=message)
+        # And process the message in a new thread
+        threading.Thread(
+            target=client.process_message,
+            kwargs={ 'message': message },
+        ).start()

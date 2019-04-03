@@ -8,6 +8,8 @@ from .base import SelectBase, SELECTION_DELAY_COUNT
 
 LIGHT_CHANGE_RATE_THRESHOLD = 4
 
+LIGHT_NUMBER_VALUES = 40
+
 # How long to wait between sensor checks
 INITIAL_LIGHT_SENSOR_DELAY = 0.1
 LIGHT_SENSOR_DELAY = 0.1
@@ -36,16 +38,16 @@ class LightSelect(SelectBase):
             sensor = adafruit_tsl2561.TSL2561(i2c)
             count = 0
 
-            # Get initial reading by first waiting two seconds (so we ignore
-            # the useless initial value) and then watch for 600ms (200ms three
-            # times) and average the values together
+            # Get initial reading by first waiting a bit (so we ignore the
+            # useless initial value), then gathering the initial set of values
+            # and averaging them together
             time.sleep(1)
             lux_readings = []
-            for i in range(0, 3):
+            for i in range(0, LIGHT_NUMBER_VALUES):
                 lux_readings.insert(0, sensor.lux)
                 time.sleep(INITIAL_LIGHT_SENSOR_DELAY)
 
-            average_lux = sum(lux_readings) / 3.0
+            average_lux = sum(lux_readings) / float(LIGHT_NUMBER_VALUES)
 
             while True:
                 lux = sensor.lux
@@ -69,7 +71,7 @@ class LightSelect(SelectBase):
                     # TODO: make this more elegant
                     lux_readings.insert(0, lux)
                     lux_readings.pop()
-                    average_lux = sum(lux_readings) / 3.0
+                    average_lux = sum(lux_readings) / float(LIGHT_NUMBER_VALUES)
 
                 # Wait
                 time.sleep(LIGHT_SENSOR_DELAY)

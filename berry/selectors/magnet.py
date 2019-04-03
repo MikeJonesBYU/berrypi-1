@@ -6,7 +6,9 @@ import logging
 from .base import SelectBase, SELECTION_DELAY_COUNT
 
 
-MAG_CHANGE_RATE_THRESHOLD = 2
+MAG_CHANGE_RATE_THRESHOLD = 4
+
+MAG_NUMBER_VALUES = 40
 
 # How long to wait between sensor checks
 INITIAL_MAGNET_SENSOR_DELAY = 0.1
@@ -41,13 +43,13 @@ class MagnetSelect(SelectBase):
             # times) and average the values together
             time.sleep(1)
             mag_readings = []
-            for i in range(0, 3):
+            for i in range(0, MAG_NUMBER_VALUES):
                 mag_readings.insert(0, sensor.magnetic)
                 time.sleep(INITIAL_MAGNET_SENSOR_DELAY)
 
-            average_x = sum([r[0] for r in mag_readings]) / 3.0
-            average_y = sum([r[1] for r in mag_readings]) / 3.0
-            average_z = sum([r[2] for r in mag_readings]) / 3.0
+            average_x = sum([r[0] for r in mag_readings]) / float(MAG_NUMBER_VALUES)
+            average_y = sum([r[1] for r in mag_readings]) / float(MAG_NUMBER_VALUES)
+            average_z = sum([r[2] for r in mag_readings]) / float(MAG_NUMBER_VALUES)
 
             while True:
                 mag = sensor.magnetic
@@ -88,9 +90,9 @@ class MagnetSelect(SelectBase):
                     mag_readings.insert(0, mag)
                     mag_readings.pop()
 
-                    average_x = sum([r[0] for r in mag_readings]) / 3.0
-                    average_y = sum([r[1] for r in mag_readings]) / 3.0
-                    average_z = sum([r[2] for r in mag_readings]) / 3.0
+                    average_x = sum([r[0] for r in mag_readings]) / float(MAG_NUMBER_VALUES)
+                    average_y = sum([r[1] for r in mag_readings]) / float(MAG_NUMBER_VALUES)
+                    average_z = sum([r[2] for r in mag_readings]) / float(MAG_NUMBER_VALUES)
 
                 # Wait
                 time.sleep(MAGNET_SENSOR_DELAY)

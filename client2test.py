@@ -6,7 +6,8 @@ import sys
 import threading
 from uuid import getnode
 
-from berry.client import BerryClient
+#from berry.client import BerryClient
+from berry.client_for_testing import BerryClient
 from berry.utilities import LOG_LEVEL
 
 
@@ -29,8 +30,8 @@ if __name__ == '__main__':
     berry = berries.BerryButton(
         live=False,
         guid=guid,
-        path='berry/client2',
-        import_path='berry.client2._handlers',
+        path='berry/client_for_testing',
+        import_path='berry.client_for_testing._handlers',
     )
 
     # Initialize the client

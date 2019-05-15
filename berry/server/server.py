@@ -151,7 +151,7 @@ class ThreadedServer(QObject):
                 data = client.recv(size)
                 if data:
                     # Set the response to echo back the received data
-                    logging.info('\nReceived: ' + data.decode('utf-8'))
+                    #logging.info('\nReceived: ' + data.decode('utf-8'))
                     message += data.decode('utf-8')
                 else:
                     logging.info('Client at ' + address.__str__() + ' closed')
@@ -177,8 +177,9 @@ class ThreadedServer(QObject):
             return
 
         command = message['command']
-
+        logging.info(command)
         if command == 'berry-selected':
+            logging.info("berry selected!")
             if self._mode == self.NORMAL_MODE:
                 # Set mode (so we don't keep opening the window)
                 self._mode = self.EDIT_MODE

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+
+_widget_config.py
+_widget_name.txt
+_handlers.py
+
+widget.cfg

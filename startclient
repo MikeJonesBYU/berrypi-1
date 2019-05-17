@@ -1,0 +1,2 @@
+#!/bin/sh
+cd /home/pi/code && /usr/bin/python3 client.py

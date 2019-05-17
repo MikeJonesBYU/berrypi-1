@@ -1,6 +1,21 @@
 # berrypi
 berries with raspberry pi. 
 
+
+## Running a Client
+
+* The client runs on a raspberry pi.  Unless you are testing, in which case it runs on a laptop or something.
+* make a script at the top level (same directory as this file) which loads and starts the berry.  The file `./client2text.py` is a good example. 
+* you'll also need a directory which contains the definitions and handlers for your new berry.  The script in `./client2test.py`, loads a berry out of the `./client_for_testing` directory.  This is a good example of a berry configuration directory. 
+    * the idea is that on a specific raspberry pi, you'd modify the `client.py` script to read from a berry config directory that specifies how the berry on that raspberry pi works. 
+    * The script `./startclient` contains a simple command to start the client using `client.py` and a python3 interpreter.
+    
+
+## Running a Server
+
+* the server runs on a laptop. 
+* just run the `./server.py` file using a python3 interpreter.
+
 ## setting up the pi
 * it should be a raspberry pi zero w.  
 * you'll need the os on a micro sd card see https://learn.adafruit.com/introducing-the-raspberry-pi-zero/setting-up-your-sd-card

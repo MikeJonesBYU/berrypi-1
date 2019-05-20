@@ -106,7 +106,10 @@ class ThreadedServer(QObject):
         """
         Registers a new berry.
         """
-        berry = json.loads(data.decode('utf-8'))
+        if (not isinstance(data,str)):
+            data = data.decode('utf-8')
+        berry = json.loads(data)
+        json.loads
 
         logging.info('Registering berry (name=' + berry['name'] + ')')
 
@@ -150,8 +153,7 @@ class ThreadedServer(QObject):
             try:
                 data = client.recv(size)
                 if data:
-                    # Set the response to echo back the received data
-                    #logging.info('\nReceived: ' + data.decode('utf-8'))
+                    # logging.info('\nReceived: ' + data.decode('utf-8'))
                     message += data.decode('utf-8')
                 else:
                     logging.info('Client at ' + address.__str__() + ' closed')
@@ -163,7 +165,6 @@ class ThreadedServer(QObject):
                 return False
 
         logging.info('Out of receive loop')
-
         self.process_message(message)
 
     def process_message(self, message):
@@ -178,6 +179,16 @@ class ThreadedServer(QObject):
 
         command = message['command']
         logging.info(command)
+        if command == 'newberry-via-fixedip':
+            logging.info("new berry connected via fixed ip")
+            self.register_new_berry(json.dumps(message['berry-body']))
+            response = {
+                'command': 'fixedip-ack',
+                'ip': utilities.get_my_ip_address(),
+                'source': message['source']
+            }
+            guid = message['berry-body']['guid']
+            self.send_message_to_berry(guid, response)
         if command == 'berry-selected':
             logging.info("berry selected!")
             if self._mode == self.NORMAL_MODE:
@@ -329,6 +340,9 @@ class ThreadedServer(QObject):
         if berry is None:
             return
 
+        # where does the port come from here?  mdj 5/20/2019
+        # it is in <github>\berrypi\berry\client_for_testing\client.py
+        # in package_self_as_json.
         utilities.send_with_tcp(
             json.dumps(message),
             berry['ip'],

@@ -6,6 +6,8 @@ from .utilities import (
     send_with_tcp,
     blocking_receive_from_tcp,
     CLIENT_PORT,
+    FIXED_SERVER_IP_ADDRESS,
+
     REGISTRATION_PORT,
     SERVER_PORT,
     LOG_LEVEL,

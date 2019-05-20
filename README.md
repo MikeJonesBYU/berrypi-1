@@ -9,7 +9,9 @@ berries with raspberry pi.
 * you'll also need a directory which contains the definitions and handlers for your new berry.  The script in `./client2test.py`, loads a berry out of the `./client_for_testing` directory.  This is a good example of a berry configuration directory. 
     * the idea is that on a specific raspberry pi, you'd modify the `client.py` script to read from a berry config directory that specifies how the berry on that raspberry pi works. 
     * The script `./startclient` contains a simple command to start the client using `client.py` and a python3 interpreter.
-    
+* if you are going to run run a client wihtout UDP, use the `./client_no_upd.py` file to start the client.  This starts the client without UDP using a hard-coded IP address for teh server.  This is convenient when UDP is blocked. 
+    * put the servers fixed IP address in `./utilities/utilities.py` as `FIXED_SERVER_IP_ADDRESS`
+    * tip:  if you want to run the client and the server on the same machine for debugging, set the server IP address as the loopback address `127.0.0.1`
 
 ## Running a Server
 

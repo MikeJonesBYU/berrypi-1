@@ -9,13 +9,17 @@ from uuid import getnode
 #from berry.client import BerryClient
 from berry.client_for_testing import BerryClient
 from berry.utilities import LOG_LEVEL
-
+from berry.utilities import FIXED_SERVER_IP_ADDRESS
+from berry.utilities import SERVER_PORT
 
 logging.getLogger().setLevel(LOG_LEVEL)
 
 
 if __name__ == '__main__':
     # Get the port number to run this client on
+    # I believe this port is unique to a berry.  It's the
+    # port this specific berry users to listen for messages from
+    # the server -- mdj 5/20
     try:
         port = int(sys.argv[1])
     except:
@@ -45,8 +49,8 @@ if __name__ == '__main__':
         threading.Thread(target=client.light_loop).start()
 
     # Listen for a reply on the same port. TCP for replies.
-    response, tcpsock = client.find_a_server()
-
+    # response, tcpsock = client.find_a_server()
+    response, tcpsock = client.use_this_server(FIXED_SERVER_IP_ADDRESS)
     # Client loop (waiting for events or incoming messages)
     while True:
         # Blocking wait for incoming TCP messages

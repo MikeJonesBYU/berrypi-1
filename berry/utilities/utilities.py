@@ -11,8 +11,12 @@ REGISTRATION_PORT = 5555
 # The default client port
 CLIENT_PORT = 24601
 
-# The port to run the server on
+# If the client sends a message to ther server via tcp it will
+# be on this port. todo: check if that's true.
 SERVER_PORT = 4444
+
+# if we are going hardcoded server, use this ip address.
+FIXED_SERVER_IP_ADDRESS = "127.0.0.1"
 
 # How much to log
 LOG_LEVEL = logging.DEBUG
@@ -31,6 +35,7 @@ def get_my_ip_address():
 
 
 def send_with_tcp(message, recv_address, port):
+    # logging.info('sending to {} on port {}'.format(recv_address,port))
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((recv_address, port))
 
@@ -61,7 +66,6 @@ def blocking_receive_from_tcp(port, tcpsock=None):
         try:
             data = client.recv(512)
             if data:
-                # Set the response to echo back the recieved data
                 message += data.decode('utf-8')
             else:
                 logging.info('Client at {} closed'.format(address))

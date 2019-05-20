@@ -9,7 +9,9 @@ import threading
 from .state import ClientState
 from .. import utilities
 
-server_ip_address = 0
+# if we are going fixed server and skipping udp, then the
+# ip address in berry/utilities.py will get used.
+server_ip_address =  0
 
 LIGHT_CHANGE_RATE_THRESHOLD = 4
 MAG_CHANGE_RATE_THRESHOLD = 2
@@ -24,6 +26,8 @@ MAGNET_SENSOR_DELAY = 0.1
 # How long to wait (in cycles) after a selection before the user can make
 # another selection of this widget
 SELECTION_DELAY_COUNT = 25
+
+
 
 
 class BerryClient():
@@ -47,6 +51,42 @@ class BerryClient():
         # Maps attribute calls to response values, for use in RemoteBerries
         self._responses = {}
 
+    def package_self_in_json(self):
+        output = self._berry._as_json()
+        # this is where the port gets set for the server.  mdj 5/20/2019
+        # ... it's at github\berrypi\berry\client_for_testing\client.py in
+        output['port'] = self._port
+        return json.dumps(output)
+
+    def after_found_server (self):
+        # Wait for a TCP connection from the server.
+        response, _socket = utilities.blocking_receive_from_tcp(self._port)
+        server_response = json.loads(response)
+        global server_ip_address
+        server_ip_address = server_response['ip']
+        logging.info('Server IP is {}'.format(server_ip_address))
+        # Set up the berry (runs the setup() function)
+        self._berry.setup_client()
+        # Start the loop() handler loop
+        threading.Thread(target=self.main_loop).start()
+        return server_response, _socket
+
+    def use_this_server (self, preset_server_IP_address):
+        global server_ip_address
+        server_ip_address = preset_server_IP_address
+        logging.info('Server IP is, hard-coded to be, {}'.format(server_ip_address))
+        logging.info('my port is set to {}'.format(self._port))
+        # say hello to our hard coded server...
+        # might as well send our identity in a json file
+        output = self.package_self_in_json()
+        output = '{"command":"newberry-via-fixedip", ' \
+                 + '"source":"' + utilities.get_my_ip_address() + '",' \
+                 + '"berry-body":'+output+'}'
+        utilities.send_with_tcp(output,server_ip_address,utilities.SERVER_PORT)
+        # listen for the server to respond and then store that socket for
+        # future communication.
+        return self.after_found_server()
+
     def find_a_server(self):
         """
         Finds server and initiates handshake.
@@ -55,9 +95,7 @@ class BerryClient():
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
-        output = self._berry._as_json()
-        output['port'] = self._port
-        output = json.dumps(output)
+        output = self.package_self_in_json()
 
         logging.info('Sending via udp broadcast...\n' + output)
 
@@ -66,24 +104,7 @@ class BerryClient():
             ('255.255.255.255', utilities.REGISTRATION_PORT),
         )
         sock.close()
-
-        # Wait for a TCP connection from the server.
-        response, _socket = utilities.blocking_receive_from_tcp(self._port)
-
-        server_response = json.loads(response)
-
-        global server_ip_address
-        server_ip_address = server_response['ip']
-
-        logging.info('Server IP is {}'.format(server_ip_address))
-
-        # Set up the berry (runs the setup() function)
-        self._berry.setup_client()
-
-        # Start the loop() handler loop
-        threading.Thread(target=self.main_loop).start()
-
-        return server_response, _socket
+        return self.after_found_server ()
 
     def wait_for_message(self, tcpsock):
         """

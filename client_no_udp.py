@@ -35,11 +35,13 @@ if __name__ == '__main__':
         live=False,
         guid=guid,
         path='berry/client_for_testing',
-        import_path='berry.client_for_testing._handlers',
+        import_path='berry.client_for_testing._handlers_sample',
     )
 
     # Initialize the client
     client = BerryClient(berry=berry, port=port)
+
+
 
     # Start debug input mode thread
     threading.Thread(target=client.input_loop).start()
@@ -51,6 +53,7 @@ if __name__ == '__main__':
     # Listen for a reply on the same port. TCP for replies.
     # response, tcpsock = client.find_a_server()
     response, tcpsock = client.use_this_server(FIXED_SERVER_IP_ADDRESS)
+    client.send_code()
     # Client loop (waiting for events or incoming messages)
     while True:
         # Blocking wait for incoming TCP messages

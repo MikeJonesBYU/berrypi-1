@@ -4,7 +4,6 @@ Utility functions.
 import logging
 import socket
 
-
 # The port to listen on via UDP for registrations
 REGISTRATION_PORT = 5555
 
@@ -13,10 +12,10 @@ CLIENT_PORT = 24601
 
 # If the client sends a message to ther server via tcp it will
 # be on this port. todo: check if that's true.
-SERVER_PORT = 4444
+SERVER_PORT = 8080
 
 # if we are going hardcoded server, use this ip address.
-FIXED_SERVER_IP_ADDRESS = "127.0.0.1"
+FIXED_SERVER_IP_ADDRESS = "10.37.50.105"
 
 # How much to log
 LOG_LEVEL = logging.DEBUG
@@ -65,8 +64,10 @@ def blocking_receive_from_tcp(port, tcpsock=None):
     while True:
         try:
             data = client.recv(512)
+
             if data:
                 message += data.decode('utf-8')
+                break
             else:
                 logging.info('Client at {} closed'.format(address))
                 client.close()

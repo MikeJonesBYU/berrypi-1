@@ -56,8 +56,8 @@ class BerryBase():
             path = WIDGET_BASE_PATH
 
         # And configure paths
-        self._widget_name_path = '{}/_widget_name.txt'.format(path)
-        self._widget_handlers_path = '{}/_handlers.py'.format(path)
+        self._widget_name_path = '{}/_widget_name_sample.txt'.format(path)
+        self._widget_handlers_path = '{}/_handlers_sample.py'.format(path)
         self._widget_handlers_tmp_path = '{}/_handlers_tmp.py'.format(path)
 
         # Set up default import path
@@ -96,7 +96,6 @@ class BerryBase():
         logging.info('Berry as an object: {}'.format(json.dumps(berry)))
 
         return berry
-
     def methods(self):
         """
         Returns a list of the class's public methods. TODO: should this be
@@ -252,7 +251,7 @@ class BerryBase():
         with open(temp_path, 'w') as f:
             f.write(code)
 
-        # Make sure it worked
+        # Make sure it work
         with open(temp_path, 'r') as f:
             disk_code = f.read()
 

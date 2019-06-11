@@ -5,9 +5,10 @@ import json
 import logging
 import socket
 import threading
-
+import inspect
 from .state import ClientState
 from .. import utilities
+from . import _handlers_sample
 
 # if we are going fixed server and skipping udp, then the
 # ip address in berry/utilities.py will get used.
@@ -37,6 +38,7 @@ class BerryClient():
     _responses = None
     _state = None
     _looping = True
+    _handlers = None
 
     def __init__(self, berry, port):
         self._berry = berry
@@ -70,6 +72,11 @@ class BerryClient():
         # Start the loop() handler loop
         threading.Thread(target=self.main_loop).start()
         return server_response, _socket
+    def send_code(self):
+        logging.info("sending current handlers code")
+        lines = inspect.getsource(_handlers_sample)
+        utilities.send_with_tcp(lines, server_ip_address, utilities.SERVER_PORT)
+        return
 
     def use_this_server (self, preset_server_IP_address):
         global server_ip_address
@@ -79,9 +86,11 @@ class BerryClient():
         # say hello to our hard coded server...
         # might as well send our identity in a json file
         output = self.package_self_in_json()
+        lines = inspect.getsource(_handlers_sample)
+        output = self.package_self_in_json()
         output = '{"command":"newberry-via-fixedip", ' \
                  + '"source":"' + utilities.get_my_ip_address() + '",' \
-                 + '"berry-body":'+output+'}'
+                 + '"berry-body":' + output + '}'
         utilities.send_with_tcp(output,server_ip_address,utilities.SERVER_PORT)
         # listen for the server to respond and then store that socket for
         # future communication.
@@ -118,22 +127,23 @@ class BerryClient():
         """
         Processes an incoming message.
         """
-        message = json.loads(message)
+       # message = json.loads(message)
 
-        if 'command' not in message:
-            logging.error('\n   *** ERROR, message missing command')
-            return
+       # if 'command' not in message:
+       #     logging.error('\n   *** ERROR, message missing command')
+        #    return
 
-        command = message['command']
+        command = 'code-save'
 
         if command == 'code-save':
             # Update the code
-            if 'code' in message:
-                self._berry.update_handler_code(message['code'])
+            #if 'code' in message:
+                code = message
+                self._berry.update_handler_code(code)
 
             # And update the name
-            if 'name' in message:
-                self._berry.save_berry_name(message['name'])
+           # if 'name' in message:
+              #  self._berry.save_berry_name(message['name'])
 
         elif command == 'remote-command':
             # Run the remote command on this client

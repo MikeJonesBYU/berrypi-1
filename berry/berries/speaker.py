@@ -20,8 +20,8 @@ class BerrySpeaker(BerryBase):
         """
         Initializes the widget hardware.
         """
-        # Nothing to do
-        return
+        # Initialize the ID LED
+        self._initialize_id_led()
 
     def beep(self, freq=1400, duration=0.2):
         """

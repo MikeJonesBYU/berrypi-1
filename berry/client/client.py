@@ -193,6 +193,11 @@ class BerryClient():
             # And call the on_global_state_change handler
             self._berry.on_global_state_change()
 
+        elif command == 'flash':
+            # Flash the ID LED so the user knows which one we are
+            # TODO
+            pass
+
         else:
             # Unrecognized message
             pass

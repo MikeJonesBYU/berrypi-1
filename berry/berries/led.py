@@ -35,6 +35,8 @@ class BerryLED(BerryBase):
         except Exception as ex:
             logging.error('\n   *** ERROR initializing LED: {}'.format(ex))
 
+        self._initialize_id_led()
+
     def is_lit(self):
         """
         Part of LED API. Returns True or False depending on whether the LED

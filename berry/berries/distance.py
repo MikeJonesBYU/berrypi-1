@@ -48,6 +48,8 @@ class BerryDistance(BerryBase):
                 '\n   *** ERROR initializing I2C/LSM303: {}'.format(ex),
             )
 
+        self._initialize_id_led()
+
     def range(self):
         """
         Part of distance sensor API. Returns range in mm.

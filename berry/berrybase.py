@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import shutil
+import time
 import types
 
 from . import remote
@@ -314,3 +315,36 @@ class BerryBase():
         """
         # Run the client's on_test() function if it exists
         self.call_handler('on_test')
+
+    def _initialize_id_led(self):
+        """
+        Initializes the ID LED.
+        """
+        # Import gpiozero
+        try:
+            from gpiozero import LED
+        except Exception as ex:
+            logging.error('\n   *** ERROR importing gpiozero: {}'.format(ex))
+
+            # Things failed, must be running locally, not on a widget, so don't
+            # bother initializing GPIO
+            return
+
+        # Hook the ID LED up to gpiozero, using pin GP13
+        try:
+            self._id_led = LED(13)
+        except Exception as ex:
+            logging.error('\n   *** ERROR initializing ID LED: {}'.format(ex))
+
+    def flash_id_led(self):
+        """
+        Wrapper for flashing the ID LED.
+        """
+        logging.info('Flashing ID LED')
+
+        if self.live:
+            for i in range(5):
+                self._led.on()
+                time.sleep(0.1)
+                self._led.off()
+                time.sleep(0.1)

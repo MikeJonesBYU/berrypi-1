@@ -81,7 +81,7 @@ class BerryClient():
         self._berry.setup_client()
 
         # Start the loop() handler loop
-        threading.Thread(target=self.main_loop).start()
+        threading.Thread(target=self.main_loop, daemon=True).start()
 
         return server_response, _socket
 

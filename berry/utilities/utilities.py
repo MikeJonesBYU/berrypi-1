@@ -63,7 +63,7 @@ def blocking_receive_from_tcp(port, tcpsock=None):
     message = ''
     while True:
         try:
-            data = client.recv(512)
+            data = client.recv(500000)
 
             if data:
                 message += data.decode('utf-8')

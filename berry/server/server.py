@@ -388,7 +388,7 @@ class ThreadedServer(QObject):
         try:
             s = pygame.mixer.Sound('berry/server/sounds/sfx_coin_double4.wav')
             s.play()
-        except Exception as ex:
+        except Exception:
             logging.error('\n   *** ERROR playing insert name beep')
 
     def _play_save_changes_beep(self):
@@ -400,8 +400,20 @@ class ThreadedServer(QObject):
                 'berry/server/sounds/sfx_sound_neutral2.wav',
             )
             s.play()
-        except Exception as ex:
+        except Exception:
             logging.error('\n   *** ERROR playing save changes beep')
+
+    def flash_client(self, payload):
+        """
+        Sends a flash message to the client.
+        """
+        berry = self.get_berry(name=payload['name'])
+
+        message = {
+            'command': 'flash',
+        }
+
+        self.send_message_to_berry(berry.guid, message)
 
     def _send_email(self, to, subject, body):
         """

@@ -4,6 +4,8 @@ Berry window class. Used for editing code
 import logging
 
 from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore.Qt import ActionsContextMenu
+from PyQt5.QtGui import QAction
 from PyQt5.QtWidgets import (
     QLabel,
     QLineEdit,
@@ -12,6 +14,36 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+
+class CodeEditor(QTextEdit):
+    """
+    QTextEdit for editing code.
+    """
+    def __init__(self, parent=None):
+        QTextEdit.__init__(self, parent)
+
+        self.setContextMenuPolicy(ActionsContextMenu)
+
+        flash_action = QAction("Flash", self)
+        flash_action.triggered.connect(self.flash)
+        self.addAction(flash_action)
+
+    def set_server(self, server):
+        self._server = server
+
+    def flash(self):
+        """
+        Sends the flash message.
+        """
+        # TODO: get selected text and put in name
+
+        payload = {
+            'name': name,
+        }
+
+        # Flashes the client
+        self._server.flash_client(payload)
 
 
 class EditWindow(QWidget):
@@ -28,7 +60,7 @@ class EditWindow(QWidget):
         font.setPointSize(21)
 
         self._name_textbox = QLineEdit()
-        self._code_textbox = QTextEdit()
+        self._code_textbox = CodeEditor()
 
         self._name_textbox.setFont(font)
         self._code_textbox.setFont(font)

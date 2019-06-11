@@ -4,8 +4,6 @@ Berry window class. Used for editing code
 import logging
 
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore.Qt import ActionsContextMenu
-from PyQt5.QtGui import QAction
 from PyQt5.QtWidgets import (
     QLabel,
     QLineEdit,
@@ -13,6 +11,7 @@ from PyQt5.QtWidgets import (
     QTextEdit,
     QVBoxLayout,
     QWidget,
+    QAction,
 )
 
 
@@ -20,23 +19,25 @@ class CodeEditor(QTextEdit):
     """
     QTextEdit for editing code.
     """
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, server=None):
         QTextEdit.__init__(self, parent)
 
-        self.setContextMenuPolicy(ActionsContextMenu)
+        self.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
         flash_action = QAction("Flash", self)
         flash_action.triggered.connect(self.flash)
         self.addAction(flash_action)
 
-    def set_server(self, server):
+    def set_server(self, server, window):
         self._server = server
+        self._window = window
 
     def flash(self):
         """
         Sends the flash message.
         """
-        # TODO: get selected text and put in name
+        # Get selected text and put in name
+        name = self._window.get_selected_text()
 
         payload = {
             'name': name,
@@ -60,7 +61,7 @@ class EditWindow(QWidget):
         font.setPointSize(21)
 
         self._name_textbox = QLineEdit()
-        self._code_textbox = CodeEditor()
+        self._code_textbox = CodeEditor(parent=self)
 
         self._name_textbox.setFont(font)
         self._code_textbox.setFont(font)
@@ -90,6 +91,7 @@ class EditWindow(QWidget):
         Saves a reference to the server instance. Used in save_code_handler().
         """
         self._server = server
+        self._code_textbox.set_server(server=server, window=self)
 
         # Set up Qt signals
         self._server._load_code_signal.connect(self.load_code)
@@ -135,3 +137,10 @@ class EditWindow(QWidget):
 
         # And hide the window
         self.hide()
+
+    def get_selected_text(self):
+        """
+        Gets the selected text in the code textbox.
+        """
+        cursor = self._code_textbox.textCursor()
+        return cursor.selectedText()

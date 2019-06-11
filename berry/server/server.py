@@ -413,7 +413,7 @@ class ThreadedServer(QObject):
             'command': 'flash',
         }
 
-        self.send_message_to_berry(berry.guid, message)
+        self.send_message_to_berry(berry['guid'], message)
 
     def _send_email(self, to, subject, body):
         """

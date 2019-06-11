@@ -409,6 +409,10 @@ class ThreadedServer(QObject):
         """
         berry = self.get_berry(name=payload['name'])
 
+        if berry is None:
+            # User selected something that wasn't a widget name, so ignore it
+            return
+
         message = {
             'command': 'flash',
         }

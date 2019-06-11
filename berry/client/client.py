@@ -195,8 +195,7 @@ class BerryClient():
 
         elif command == 'flash':
             # Flash the ID LED so the user knows which one we are
-            # TODO
-            pass
+            self._berry.flash_id_led()
 
         else:
             # Unrecognized message

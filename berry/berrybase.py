@@ -344,7 +344,7 @@ class BerryBase():
 
         if self.live:
             for i in range(5):
-                self._led.on()
+                self._id_led.on()
                 time.sleep(0.1)
-                self._led.off()
+                self._id_led.off()
                 time.sleep(0.1)

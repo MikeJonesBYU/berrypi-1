@@ -109,6 +109,11 @@ class EditWindow(QMainWindow):
         self.resize(800, 800)
         self.setWindowTitle('Edit Code')
 
+        # If we're in sidebar mode, show the window from the beginning
+        if self._server._sidebar:
+            self.show()
+            self.raise_()
+
     def set_server(self, server):
         """
         Saves a reference to the server instance. Used in save_code_handler().
@@ -130,9 +135,13 @@ class EditWindow(QMainWindow):
         self._name_textbox.setText(payload['name'])
         self._code_textbox.setText(payload['code'])
 
-        self.show()
+        if not self._server._sidebar:
+            self.show()
+
         self._code_textbox.setFocus()
-        self.raise_()
+
+        if not self._server._sidebar:
+            self.raise_()
 
     @QtCore.pyqtSlot(str)
     def insert_name(self, name):
@@ -143,8 +152,9 @@ class EditWindow(QMainWindow):
         cursor.insertText(name)
 
         # Make sure the window is on top
-        self.show()
-        self.raise_()
+        if not self._server._sidebar:
+            self.show()
+            self.raise_()
 
     @QtCore.pyqtSlot(dict)
     def add_widget_to_dock(self, payload):
@@ -184,7 +194,8 @@ class EditWindow(QMainWindow):
         self._server.send_edited_code(payload)
 
         # And hide the window
-        self.hide()
+        if not self._server._sidebar:
+            self.hide()
 
     def get_selected_text(self):
         """

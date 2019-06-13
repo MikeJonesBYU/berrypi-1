@@ -77,6 +77,14 @@ class BerryClient():
 
         logging.info('Server IP is {}'.format(server_ip_address))
 
+        # Send the server our code
+        message = {
+            'command': 'widget-code',
+            'guid': self._berry.guid,
+            'code': self._berry.load_handler_code(),
+        }
+        send_message_to_server(message=message)
+
         # Set up the berry (runs the setup() function)
         self._berry.setup_client()
 

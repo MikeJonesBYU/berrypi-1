@@ -21,7 +21,8 @@ class ThreadedServer(QObject):
 
     # Qt signals for sending messages from worker thread to main (GUI) thread
     _load_code_signal = QtCore.pyqtSignal(dict, name='load_code')
-    _insert_name_signal = QtCore.pyqtSignal(str, name='insert-name')
+    _insert_name_signal = QtCore.pyqtSignal(str, name='insert_name')
+    _dock_widget_signal = QtCore.pyqtSignal(dict, name='dock_widget')
 
     # Modes
     NORMAL_MODE = 0
@@ -38,6 +39,9 @@ class ThreadedServer(QObject):
 
         # Maps berry names to berry instances
         self._berry_names = {}
+
+        # Stashes code, used in sidebar mode
+        self._code = {}
 
         # Reference to Qt window for editing code
         self._edit_window = edit_window
@@ -122,6 +126,14 @@ class ThreadedServer(QObject):
         }
 
         self.send_message_to_berry(guid=berry['guid'], message=response)
+
+        # Add to dock
+        if self._sidebar:
+            logging.info('Adding widget to dock')
+            self._dock_widget_signal.emit({
+                'name': berry['name'],
+                'guid': berry['guid'],
+            })
 
         # Debug:
         logging.info('\nBerries: {}'.format(self._berries))
@@ -303,6 +315,13 @@ class ThreadedServer(QObject):
 
             self._send_email(to, subject, body)
 
+        elif command == 'widget-code':
+            # Stash the widget's code
+            guid = message['guid']
+            code = message['code']
+
+            self._code[guid] = code
+
         else:
             # Anything else
             pass
@@ -376,6 +395,9 @@ class ThreadedServer(QObject):
         }
 
         self.send_message_to_berry(payload['guid'], message)
+
+        # Save the code (for sidebar mode)
+        self._code[payload['guid']] = payload['code']
 
         # Reset to normal mode now that we're no longer editing code
         self._mode = self.NORMAL_MODE

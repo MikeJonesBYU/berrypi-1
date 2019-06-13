@@ -119,6 +119,7 @@ class EditWindow(QMainWindow):
         # Set up Qt signals
         self._server._load_code_signal.connect(self.load_code)
         self._server._insert_name_signal.connect(self.insert_name)
+        self._server._dock_widget_signal.connect(self.add_widget_to_dock)
 
     @QtCore.pyqtSlot(dict)
     def load_code(self, payload):
@@ -145,6 +146,30 @@ class EditWindow(QMainWindow):
         self.show()
         self.raise_()
 
+    @QtCore.pyqtSlot(dict)
+    def add_widget_to_dock(self, payload):
+        """
+        Adds a button for the given widget.
+        """
+        def click():
+            """
+            Handler for clicking widget, using a closure to capture vars.
+            """
+            self.select_widget(
+                payload['guid'],
+                payload['name'],
+                code=self._server.get_berry(
+                    guid=payload['guid'],
+                )['code'],
+            )
+
+        button = QPushButton(payload['name'])
+        button.clicked.connect(click)
+
+        # Add to dock
+        logging.info('Adding to dock for real')
+        self._widget_dock.addWidget(button)
+
     def save_code_handler(self):
         """
         Handler for when the Save Code button is clicked.
@@ -167,22 +192,3 @@ class EditWindow(QMainWindow):
         """
         cursor = self._code_textbox.textCursor()
         return cursor.selectedText()
-
-    def add_widget_to_dock(self, name, guid):
-        """
-        Adds a button for the given widget.
-        """
-        def click():
-            """
-            Handler for clicking widget, using a closure to capture vars.
-            """
-            # Get code
-            code = self._server.get_berry(guid=guid)['code']
-
-            self.select_widget(guid, name, code)
-
-        button = QPushButton(name)
-        button.clicked.connect(self.click)
-
-        # Add to dock
-        self._widget_dock.addWidget(button)

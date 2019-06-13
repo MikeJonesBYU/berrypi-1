@@ -182,25 +182,11 @@ class ThreadedServer(QObject):
         command = message['command']
         logging.info(command)
         if command == 'berry-selected':
-            logging.info("berry selected!")
-            if self._mode == self.NORMAL_MODE:
-                # Set mode (so we don't keep opening the window)
-                self._mode = self.EDIT_MODE
-
-                # Open the code editing window
-                self.open_edit_code_window(
-                    message['guid'],
-                    message['name'],
-                    message['code'],
-                )
-
-                threading.Thread(target=self._play_open_beep).start()
-
-            elif self._mode == self.EDIT_MODE:
-                # Insert the berry's name into the code editing window
-                self._insert_name_signal.emit(message['name'])
-
-                threading.Thread(target=self._play_insert_name_beep).start()
+            self.select_widget(
+                message['guid'],
+                message['name'],
+                message['code'],
+            )
 
         elif command == 'remote-command':
             # Send remote command message to destination berry
@@ -320,6 +306,26 @@ class ThreadedServer(QObject):
         else:
             # Anything else
             pass
+
+    def select_widget(self, guid, name, code):
+        """
+        Select widget.
+        """
+        logging.info('Widget selected!')
+        if self._mode == self.NORMAL_MODE:
+            # Set mode (so we don't keep opening the window)
+            self._mode = self.EDIT_MODE
+
+            # Open the code editing window
+            self.open_edit_code_window(guid, name, code)
+
+            threading.Thread(target=self._play_open_beep).start()
+
+        elif self._mode == self.EDIT_MODE:
+            # Insert the widget's name into the code editing window
+            self._insert_name_signal.emit(name)
+
+            threading.Thread(target=self._play_insert_name_beep).start()
 
     def send_message_to_berry(self, guid, message):
         """

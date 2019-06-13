@@ -92,6 +92,7 @@ class BerryBase():
             'name': self.name,
             'type': self.berry_type,
             'ip': self.ip_address,
+            'code': self.load_handler_code(),
         }
 
         logging.info('Berry as an object: {}'.format(json.dumps(berry)))

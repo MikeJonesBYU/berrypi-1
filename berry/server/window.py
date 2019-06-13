@@ -87,23 +87,19 @@ class EditWindow(QMainWindow):
 
         if sidebar:
             # Use the sidebar wrapper
-            button_wrapper = QVBoxLayout()
+            self._widget_dock = QVBoxLayout()
             self.setStyleSheet("""
                 .QVBoxLayout {
                     background-color: rgb(255, 0, 0);
                 }
             """)
-            button_wrapper.addWidget(QPushButton("widget1"))
-            button_wrapper.addWidget(QPushButton("widget2"))
-            button_wrapper.addWidget(QPushButton("widget3"))
 
             # Dock
             self._dock = QDockWidget("Widgets", self)
             self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self._dock)
-
             self._dock_widget = QWidget(self)
             self._dock.setWidget(self._dock_widget)
-            self._dock_widget.setLayout(button_wrapper)
+            self._dock_widget.setLayout(self._widget_dock)
 
         frame_widget = QWidget(self)
         frame_widget.setLayout(vbox)
@@ -171,3 +167,22 @@ class EditWindow(QMainWindow):
         """
         cursor = self._code_textbox.textCursor()
         return cursor.selectedText()
+
+    def add_widget_to_dock(self, name, guid):
+        """
+        Adds a button for the given widget.
+        """
+        def click():
+            """
+            Handler for clicking widget, using a closure to capture vars.
+            """
+            # Get code
+            code = self._server.get_berry(guid=guid)['code']
+
+            self.select_widget(guid, name, code)
+
+        button = QPushButton(name)
+        button.clicked.connect(self.click)
+
+        # Add to dock
+        self._widget_dock.addWidget(button)

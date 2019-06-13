@@ -27,7 +27,7 @@ class ThreadedServer(QObject):
     NORMAL_MODE = 0
     EDIT_MODE = 1
 
-    def __init__(self, host, port, edit_window):
+    def __init__(self, host, port, edit_window, sidebar=False):
         super().__init__()
 
         self._host = host
@@ -45,6 +45,9 @@ class ThreadedServer(QObject):
 
         # Which mode we're in
         self._mode = self.NORMAL_MODE
+
+        # Whether to show the sidebar
+        self._sidebar = sidebar
 
         # Shared state
         self._state = {}

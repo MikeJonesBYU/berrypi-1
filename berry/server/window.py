@@ -5,13 +5,18 @@ import logging
 
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import (
+    QAction,
+    QDockWidget,
+    QFrame,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMainWindow,
     QPushButton,
+    QSizePolicy,
     QTextEdit,
     QVBoxLayout,
     QWidget,
-    QAction,
 )
 
 
@@ -47,16 +52,16 @@ class CodeEditor(QTextEdit):
         self._server.flash_client(payload)
 
 
-class EditWindow(QWidget):
+class EditWindow(QMainWindow):
     """
     Window for editing code.
     """
 
-    def __init__(self):
+    def __init__(self, sidebar=False):
         super().__init__()
-        self.init_ui()
+        self.init_ui(sidebar=sidebar)
 
-    def init_ui(self):
+    def init_ui(self, sidebar=False):
         font = QtGui.QFont('Monaco')
         font.setPointSize(21)
 
@@ -80,7 +85,29 @@ class EditWindow(QWidget):
 
         vbox.addWidget(self._save_button)
 
-        self.setLayout(vbox)
+        if sidebar:
+            # Use the sidebar wrapper
+            button_wrapper = QVBoxLayout()
+            self.setStyleSheet("""
+                .QVBoxLayout {
+                    background-color: rgb(255, 0, 0);
+                }
+            """)
+            button_wrapper.addWidget(QPushButton("widget1"))
+            button_wrapper.addWidget(QPushButton("widget2"))
+            button_wrapper.addWidget(QPushButton("widget3"))
+
+            # Dock
+            self._dock = QDockWidget("Widgets", self)
+            self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self._dock)
+
+            self._dock_widget = QWidget(self)
+            self._dock.setWidget(self._dock_widget)
+            self._dock_widget.setLayout(button_wrapper)
+
+        frame_widget = QWidget(self)
+        frame_widget.setLayout(vbox)
+        self.setCentralWidget(frame_widget)
 
         # Window settings
         self.resize(800, 800)

@@ -109,11 +109,6 @@ class EditWindow(QMainWindow):
         self.resize(800, 800)
         self.setWindowTitle('Edit Code')
 
-        # If we're in sidebar mode, show the window from the beginning
-        if self._server._sidebar:
-            self.show()
-            self.raise_()
-
     def set_server(self, server):
         """
         Saves a reference to the server instance. Used in save_code_handler().
@@ -125,6 +120,7 @@ class EditWindow(QMainWindow):
         self._server._load_code_signal.connect(self.load_code)
         self._server._insert_name_signal.connect(self.insert_name)
         self._server._dock_widget_signal.connect(self.add_widget_to_dock)
+        self._server._show_window_signal.connect(self.show_window)
 
     @QtCore.pyqtSlot(dict)
     def load_code(self, payload):
@@ -165,12 +161,12 @@ class EditWindow(QMainWindow):
             """
             Handler for clicking widget, using a closure to capture vars.
             """
-            self.select_widget(
+            code = self._server._code[payload['guid']]
+
+            self._server.select_widget(
                 payload['guid'],
                 payload['name'],
-                code=self._server.get_berry(
-                    guid=payload['guid'],
-                )['code'],
+                code=code,
             )
 
         button = QPushButton(payload['name'])
@@ -179,6 +175,14 @@ class EditWindow(QMainWindow):
         # Add to dock
         logging.info('Adding to dock for real')
         self._widget_dock.addWidget(button)
+
+    @QtCore.pyqtSlot(dict)
+    def show_window(self, payload):
+        """
+        Shows the code window.
+        """
+        self.show()
+        self.raise_()
 
     def save_code_handler(self):
         """
@@ -193,8 +197,13 @@ class EditWindow(QMainWindow):
         # Send code back to client
         self._server.send_edited_code(payload)
 
-        # And hide the window
-        if not self._server._sidebar:
+        # Sidebar
+        if self._server._sidebar:
+            # Clear out the code
+            self._name_textbox.setText('')
+            self._code_textbox.setText('')
+        else:
+            # hide the window
             self.hide()
 
     def get_selected_text(self):

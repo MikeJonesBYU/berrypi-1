@@ -23,6 +23,7 @@ class ThreadedServer(QObject):
     _load_code_signal = QtCore.pyqtSignal(dict, name='load_code')
     _insert_name_signal = QtCore.pyqtSignal(str, name='insert_name')
     _dock_widget_signal = QtCore.pyqtSignal(dict, name='dock_widget')
+    _show_window_signal = QtCore.pyqtSignal(dict, name='show_window')
 
     # Modes
     NORMAL_MODE = 0
@@ -43,15 +44,15 @@ class ThreadedServer(QObject):
         # Stashes code, used in sidebar mode
         self._code = {}
 
+        # Whether to show the sidebar
+        self._sidebar = sidebar
+
         # Reference to Qt window for editing code
         self._edit_window = edit_window
         self._edit_window.set_server(self)
 
         # Which mode we're in
         self._mode = self.NORMAL_MODE
-
-        # Whether to show the sidebar
-        self._sidebar = sidebar
 
         # Shared state
         self._state = {}
@@ -71,6 +72,10 @@ class ThreadedServer(QObject):
 
         # Import pygame mixer for sounds
         pygame.mixer.init()
+
+        # Show window if we're in sidebar mode
+        if sidebar:
+            self._show_window_signal.emit({})
 
     def listen_for_new_berries(self):
         while True:

@@ -101,6 +101,9 @@ class EditWindow(QMainWindow):
             self._dock.setWidget(self._dock_widget)
             self._dock_widget.setLayout(self._widget_dock)
 
+            # Button references
+            self._widget_buttons = {}
+
         frame_widget = QWidget(self)
         frame_widget.setLayout(vbox)
         self.setCentralWidget(frame_widget)
@@ -162,15 +165,17 @@ class EditWindow(QMainWindow):
             Handler for clicking widget, using a closure to capture vars.
             """
             code = self._server._code[payload['guid']]
+            widget = self._server.get_berry(guid=payload['guid'])
 
             self._server.select_widget(
                 payload['guid'],
-                payload['name'],
+                widget['name'],
                 code=code,
             )
 
         button = QPushButton(payload['name'])
         button.clicked.connect(click)
+        self._widget_buttons[payload['guid']] = button
 
         # Add to dock
         logging.info('Adding to dock for real')
@@ -188,9 +193,11 @@ class EditWindow(QMainWindow):
         """
         Handler for when the Save Code button is clicked.
         """
+        name = self._name_textbox.text()
+
         payload = {
             'guid': self._guid,
-            'name': self._name_textbox.text(),
+            'name': name,
             'code': self._code_textbox.toPlainText(),
         }
 
@@ -202,9 +209,22 @@ class EditWindow(QMainWindow):
             # Clear out the code
             self._name_textbox.setText('')
             self._code_textbox.setText('')
+
+            # And update the widget name (if necessary)
+            widget = self._server.get_berry(guid=self._guid)
+            widget['name'] = name
+            self.update_widget_button(self._guid, name)
         else:
-            # hide the window
+            # Hide the window
             self.hide()
+
+    def update_widget_button(self, guid, name):
+        """
+        Updates the widget specified by guid to have the name specified by
+        name, in the sidebar list.
+        """
+        button = self._widget_buttons[guid]
+        button.setText(name)
 
     def get_selected_text(self):
         """

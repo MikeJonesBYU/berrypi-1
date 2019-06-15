@@ -32,7 +32,6 @@ class BerrySpeaker(BerryBase):
                 subprocess.run(
                     ['play', '-b', '16', '-q', '-n', 'synth', str(duration), 'sin', str(freq)],  # noqa
                     stderr=None,
-                    env={'AUDIODEV': 'hw:1'},
                 )
             except Exception as ex:
                 logging.error('\n   *** ERROR beeping: {}'.format(ex))

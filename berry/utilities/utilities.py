@@ -15,7 +15,7 @@ CLIENT_PORT = 24601
 SERVER_PORT = 8080
 
 # if we are going hardcoded server, use this ip address.
-FIXED_SERVER_IP_ADDRESS = "10.37.50.105"
+FIXED_SERVER_IP_ADDRESS = "192.168.1.11"
 
 # How much to log
 LOG_LEVEL = logging.DEBUG

@@ -1,9 +1,8 @@
 """
-Client handlers.
+Client handlers
 """
 import logging
 import time
-
 
 def on_press(self, global_state, widgets):
     """
@@ -12,7 +11,7 @@ def on_press(self, global_state, widgets):
     """
     logging.info('Button pressed, now turning on LED')
 
-    widgets.led_berry.off()
+   # widgets.led_berry.off()
 
 
 def on_release(self, global_state, widgets):

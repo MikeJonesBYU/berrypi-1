@@ -86,8 +86,6 @@ class BerryClient():
         # say hello to our hard coded server...
         # might as well send our identity in a json file
         output = self.package_self_in_json()
-        lines = inspect.getsource(_handlers_sample)
-        output = self.package_self_in_json()
         output = '{"command":"newberry-via-fixedip", ' \
                  + '"source":"' + utilities.get_my_ip_address() + '",' \
                  + '"berry-body":' + output + '}'
@@ -127,23 +125,18 @@ class BerryClient():
         """
         Processes an incoming message.
         """
-       # message = json.loads(message)
 
-       # if 'command' not in message:
-       #     logging.error('\n   *** ERROR, message missing command')
-        #    return
-
-        command = 'code-save'
+        message = message.split(" ", 1)
+        command = message[0]
+        message.remove(message[0])
+        message = ''.join(message)
 
         if command == 'code-save':
             # Update the code
-            #if 'code' in message:
                 code = message
                 self._berry.update_handler_code(code)
 
             # And update the name
-           # if 'name' in message:
-              #  self._berry.save_berry_name(message['name'])
 
         elif command == 'remote-command':
             # Run the remote command on this client

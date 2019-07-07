@@ -273,6 +273,7 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
         }
 
         send_message_to_server(message=message)
+        send_message_to_server(message={ 'command': 'status'})
 
     def send_email(self, to, subject, body):
         """

@@ -325,6 +325,10 @@ class ThreadedServer(QObject):
 
             self._send_email(to, subject, body)
 
+        elif command == 'status':
+            utilities.send_with_tcp(message = message, recv_address=utilities.FIXED_SERVER_IP_ADDRESS, port= 8080)
+
+
         else:
             # Anything else
             pass

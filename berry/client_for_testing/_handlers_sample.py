@@ -9,9 +9,7 @@ def on_press(self, global_state, widgets):
     Handler called when the button is pressed. The remote parameter gives
     access to other berries' functionality.
     """
-    logging.info('Button pressed, now turning on LED')
-
-   # widgets.led_berry.off()
+    logging.info('On Press Running')
 
 
 def on_release(self, global_state, widgets):
@@ -19,15 +17,15 @@ def on_release(self, global_state, widgets):
     Handler called when the button is released. The remote parameter gives
     access to other berries' functionality.
     """
-    logging.info('Button released, now turning off LED')
-
-    widgets.led_berry.on()
+    logging.info('On Release Running')
 
 
 def setup(self, global_state, widgets):
     """
     Run whenever the client code is loaded. Optional.
     """
+    widgets.test.pi
+    widgets.hi.pos
     logging.info('setup')
 
 

@@ -148,6 +148,9 @@ class BerryBase():
         try:
             new_handlers = importlib.reload(self._handlers)
             self._handlers = new_handlers
+            logging.info("Hit this file")
+
+
 
         except SyntaxError as ex:
             self._handlers = {}
@@ -163,6 +166,7 @@ class BerryBase():
             self.import_handlers()
 
         # Now that we've got the handlers, set up the client
+        utilities.send_with_tcp(message=("{status : done}"),recv_address=utilities.FIXED_SERVER_IP_ADDRESS,port=utilities.SERVER_PORT)
         self.setup_client()
 
     def setup_client(self):

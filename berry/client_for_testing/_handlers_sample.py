@@ -17,6 +17,7 @@ def on_release(self, global_state, widgets):
     Handler called when the button is released. The remote parameter gives
     access to other berries' functionality.
     """
+    widgets.my_berry.on_release
     logging.info('On Release Running')
 
 
@@ -24,8 +25,6 @@ def setup(self, global_state, widgets):
     """
     Run whenever the client code is loaded. Optional.
     """
-    widgets.test.pi
-    widgets.hi.pos
     logging.info('setup')
 
 

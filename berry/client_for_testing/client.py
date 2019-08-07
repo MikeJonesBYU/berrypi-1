@@ -127,9 +127,14 @@ class BerryClient():
         """
         origMessage = message
         message = message.split(" ", 1)
-        command = message[0]
-        message.remove(message[0])
-        message = ''.join(message)
+        if len(message) > 1 :
+            command = message[0]
+            message.remove(message[0])
+            message = ''.join(message)
+        else :
+            message = json.loads(str(origMessage))
+            command = message['command']
+
 
         if command == 'code-save':
             # Update the code
@@ -139,7 +144,6 @@ class BerryClient():
             # And update the name
 
         elif command == 'remote-command':
-            message = origMessage
             # Run the remote command on this client
             attribute = message['attribute']
             source = message['source']
@@ -181,7 +185,6 @@ class BerryClient():
             send_message_to_server(message=message)
 
         elif command == 'event':
-            message = origMessage
             # Look up the code and execute it
             key = message['key']
             code = self.get_code(key)
@@ -190,7 +193,6 @@ class BerryClient():
                 code()
 
         elif command == 'remote-response':
-            message = origMessage
             # Parse the response from the remote
             response = message['response']
 

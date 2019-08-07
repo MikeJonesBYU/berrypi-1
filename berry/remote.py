@@ -87,6 +87,7 @@ class RemoteBerries(object):
             return response_wrapper
 
         def __setattr__(self, attr, value):
+            logging.info("Hit setattr")
             """
             Sends a message to the server with the referenced values.
 

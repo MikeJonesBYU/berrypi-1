@@ -9,6 +9,7 @@ def on_press(self, global_state, widgets):
     Handler called when the button is pressed. The remote parameter gives
     access to other berries' functionality.
     """
+    widgets.tommy_lee_jones.on_press
     logging.info('On Press Running')
 
 
@@ -17,7 +18,7 @@ def on_release(self, global_state, widgets):
     Handler called when the button is released. The remote parameter gives
     access to other berries' functionality.
     """
-    widgets.my_berry.on_release
+    widgets.tommy_lee_jones.on_release
     logging.info('On Release Running')
 
 

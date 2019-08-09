@@ -24,7 +24,7 @@ if __name__ == '__main__':
         port = int(sys.argv[1])
     except:
         # Default port
-        port = 6666
+        port = 8080
 
     # Create GUID
     guid = getnode().__str__() + str(port)

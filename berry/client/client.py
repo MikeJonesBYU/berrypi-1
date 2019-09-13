@@ -175,7 +175,7 @@ class BerryClient():
             # Parse the response from the remote
             response = message['response']
 
-            if 'error' in response:
+            if response and 'error' in response:
                 if response['error'] == 'widget-not-found':
                     raise Exception(
                         'Widget {} not found'.format(response['name']),

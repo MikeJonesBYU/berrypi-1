@@ -128,6 +128,7 @@ class ThreadedServer(QObject):
         # Open a TCP connection and send server address to client
         response = {
             'ip': utilities.get_my_ip_address(),
+            'command': 'register',
         }
 
         self.send_message_to_berry(guid=berry['guid'], message=response)

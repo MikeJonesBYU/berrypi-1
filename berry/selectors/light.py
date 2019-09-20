@@ -49,6 +49,8 @@ class LightSelect(SelectBase):
 
             average_lux = sum([l for l in lux_readings if l is not None]) / float(LIGHT_NUMBER_VALUES)
 
+            logging.info("You may now use the light")
+
             while True:
                 lux = sensor.lux
 

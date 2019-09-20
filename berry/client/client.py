@@ -68,6 +68,7 @@ class BerryClient():
         sock.close()
 
         # Wait for a TCP connection from the server.
+	logging.info('Waiting for server response')
         response, _socket = utilities.blocking_receive_from_tcp(self._port)
 
         server_response = json.loads(response)
@@ -399,6 +400,7 @@ z -- set state, takes JSON (example: `z { "key": 3290 }`)
 
 def send_message_to_server(message):
     # logging.info("Sending message to server: {}".format(message))
+    global server_ip_address
 
     utilities.send_with_tcp(
         json.dumps(message),

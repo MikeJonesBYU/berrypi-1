@@ -47,7 +47,7 @@ class LightSelect(SelectBase):
                 lux_readings.insert(0, sensor.lux)
                 time.sleep(INITIAL_LIGHT_SENSOR_DELAY)
 
-            average_lux = sum(lux_readings) / float(LIGHT_NUMBER_VALUES)
+            average_lux = sum([l for l in lux_readings if l is not None]) / float(LIGHT_NUMBER_VALUES)
 
             while True:
                 lux = sensor.lux
@@ -71,7 +71,7 @@ class LightSelect(SelectBase):
                     # TODO: make this more elegant
                     lux_readings.insert(0, lux)
                     lux_readings.pop()
-                    average_lux = sum(lux_readings) / float(LIGHT_NUMBER_VALUES)
+                    average_lux = sum([l for l in lux_readings if l is not None]) / float(LIGHT_NUMBER_VALUES)
 
                 # Wait
                 time.sleep(LIGHT_SENSOR_DELAY)

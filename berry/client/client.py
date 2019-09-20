@@ -68,7 +68,7 @@ class BerryClient():
         sock.close()
 
         # Wait for a TCP connection from the server.
-	logging.info('Waiting for server response')
+        logging.info('Waiting for server response')
         response, _socket = utilities.blocking_receive_from_tcp(self._port)
 
         server_response = json.loads(response)

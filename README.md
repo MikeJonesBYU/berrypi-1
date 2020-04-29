@@ -1,5 +1,7 @@
 # Ansible
 
+Installation: `pip install -r requirements.txt`
+
 To start the server: `python3 server.py`
 
 To start the client: `python3 client.py` or, if it's on a Pi, `./startclient`

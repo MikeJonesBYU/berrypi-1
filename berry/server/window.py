@@ -52,6 +52,38 @@ class CodeEditor(QTextEdit):
         self._server.flash_client(payload)
 
 
+class WidgetNameEditor(QLineEdit):
+    """
+    QLineEdit for editing the widget name.
+    """
+    def __init__(self, parent=None, server=None):
+        QTextEdit.__init__(self, parent)
+
+        self.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
+        flash_action = QAction("Flash", self)
+        flash_action.triggered.connect(self.flash)
+        self.addAction(flash_action)
+
+    def set_server(self, server, window):
+        self._server = server
+        self._window = window
+
+    def flash(self):
+        """
+        Sends the flash message.
+        """
+        # Get selected text and put in name
+        name = self._window.get_selected_text()
+
+        payload = {
+            'name': name,
+        }
+
+        # Flashes the client
+        self._server.flash_client(payload)
+
+
 class EditWindow(QMainWindow):
     """
     Window for editing code.
@@ -65,7 +97,7 @@ class EditWindow(QMainWindow):
         font = QtGui.QFont('Monaco')
         font.setPointSize(21)
 
-        self._name_textbox = QLineEdit()
+        self._name_textbox = WidgetNameEditor(parent=self)
         self._code_textbox = CodeEditor(parent=self)
 
         self._name_textbox.setFont(font)
@@ -117,6 +149,7 @@ class EditWindow(QMainWindow):
         Saves a reference to the server instance. Used in save_code_handler().
         """
         self._server = server
+        self._name_textbox.set_server(server=server, window=self)
         self._code_textbox.set_server(server=server, window=self)
 
         # Set up Qt signals

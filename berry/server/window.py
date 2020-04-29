@@ -73,8 +73,8 @@ class WidgetNameEditor(QLineEdit):
         """
         Sends the flash message.
         """
-        # Get selected text and put in name
-        name = self._window.get_selected_text()
+        # Get the widget name
+        name = self.text()
 
         payload = {
             'name': name,

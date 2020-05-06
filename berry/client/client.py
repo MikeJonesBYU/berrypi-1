@@ -205,6 +205,9 @@ class BerryClient():
             # Flash the ID LED so the user knows which one we are
             self._berry.flash_id_led()
 
+            # Play a buzzer sound too
+            self._berry.play_buzzer()
+
         else:
             # Unrecognized message
             pass

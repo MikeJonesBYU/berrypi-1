@@ -348,3 +348,20 @@ class BerryBase():
                 time.sleep(0.1)
                 self._id_led.off()
                 time.sleep(0.1)
+
+    def play_buzzer(self):
+        """
+        Wrapper for playing the buzzer, if the speaker is attached.
+        """
+        logging.info('Buzzing for ID')
+
+        # If there's any error (like if the speaker is unattached), just fail
+        # silently
+        try:
+            # Play a 2200hz tone for 1 second
+            subprocess.run(
+                ['play', '-b', '16', '-q', '-n', 'synth', '1', 'sin', '2200'],
+                stderr=None,
+            )
+        except Exception as ex:
+            pass

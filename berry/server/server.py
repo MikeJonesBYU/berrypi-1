@@ -21,13 +21,15 @@ class ThreadedServer(QObject):
 
     # Qt signals for sending messages from worker thread to main (GUI) thread
     _load_code_signal = QtCore.pyqtSignal(dict, name='load_code')
-    _insert_name_signal = QtCore.pyqtSignal(str, name='insert-name')
+    _insert_name_signal = QtCore.pyqtSignal(str, name='insert_name')
+    _dock_widget_signal = QtCore.pyqtSignal(dict, name='dock_widget')
+    _show_window_signal = QtCore.pyqtSignal(dict, name='show_window')
 
     # Modes
     NORMAL_MODE = 0
     EDIT_MODE = 1
 
-    def __init__(self, host, port, edit_window):
+    def __init__(self, host, port, edit_window, sidebar=False):
         super().__init__()
 
         self._host = host
@@ -38,6 +40,12 @@ class ThreadedServer(QObject):
 
         # Maps berry names to berry instances
         self._berry_names = {}
+
+        # Stashes code, used in sidebar mode
+        self._code = {}
+
+        # Whether to show the sidebar
+        self._sidebar = sidebar
 
         # Reference to Qt window for editing code
         self._edit_window = edit_window
@@ -64,6 +72,10 @@ class ThreadedServer(QObject):
 
         # Import pygame mixer for sounds
         pygame.mixer.init()
+
+        # Show window if we're in sidebar mode
+        if sidebar:
+            self._show_window_signal.emit({})
 
     def listen_for_new_berries(self):
         while True:
@@ -119,9 +131,18 @@ class ThreadedServer(QObject):
         # Open a TCP connection and send server address to client
         response = {
             'ip': utilities.get_my_ip_address(),
+            'command': 'register',
         }
 
         self.send_message_to_berry(guid=berry['guid'], message=response)
+
+        # Add to dock
+        if self._sidebar:
+            logging.info('Adding widget to dock')
+            self._dock_widget_signal.emit({
+                'name': berry['name'],
+                'guid': berry['guid'],
+            })
 
         # Debug:
         logging.info('\nBerries: {}'.format(self._berries))
@@ -190,25 +211,11 @@ class ThreadedServer(QObject):
             guid = message['berry-body']['guid']
             self.send_message_to_berry(guid, response)
         if command == 'berry-selected':
-            logging.info("berry selected!")
-            if self._mode == self.NORMAL_MODE:
-                # Set mode (so we don't keep opening the window)
-                self._mode = self.EDIT_MODE
-
-                # Open the code editing window
-                self.open_edit_code_window(
-                    message['guid'],
-                    message['name'],
-                    message['code'],
-                )
-
-                threading.Thread(target=self._play_open_beep).start()
-
-            elif self._mode == self.EDIT_MODE:
-                # Insert the berry's name into the code editing window
-                self._insert_name_signal.emit(message['name'])
-
-                threading.Thread(target=self._play_insert_name_beep).start()
+            self.select_widget(
+                message['guid'],
+                message['name'],
+                message['code'],
+            )
 
         elif command == 'remote-command':
             # Send remote command message to destination berry
@@ -325,9 +332,36 @@ class ThreadedServer(QObject):
 
             self._send_email(to, subject, body)
 
+        elif command == 'widget-code':
+            # Stash the widget's code
+            guid = message['guid']
+            code = message['code']
+
+            self._code[guid] = code
+
         else:
             # Anything else
             pass
+
+    def select_widget(self, guid, name, code):
+        """
+        Select widget.
+        """
+        logging.info('Widget selected!')
+        if self._mode == self.NORMAL_MODE:
+            # Set mode (so we don't keep opening the window)
+            self._mode = self.EDIT_MODE
+
+            # Open the code editing window
+            self.open_edit_code_window(guid, name, code)
+
+            threading.Thread(target=self._play_open_beep).start()
+
+        elif self._mode == self.EDIT_MODE:
+            # Insert the widget's name into the code editing window
+            self._insert_name_signal.emit(name)
+
+            threading.Thread(target=self._play_insert_name_beep).start()
 
     def send_message_to_berry(self, guid, message):
         """
@@ -382,6 +416,9 @@ class ThreadedServer(QObject):
 
         self.send_message_to_berry(payload['guid'], message)
 
+        # Save the code (for sidebar mode)
+        self._code[payload['guid']] = payload['code']
+
         # Reset to normal mode now that we're no longer editing code
         self._mode = self.NORMAL_MODE
 
@@ -402,7 +439,7 @@ class ThreadedServer(QObject):
         try:
             s = pygame.mixer.Sound('berry/server/sounds/sfx_coin_double4.wav')
             s.play()
-        except Exception as ex:
+        except Exception:
             logging.error('\n   *** ERROR playing insert name beep')
 
     def _play_save_changes_beep(self):
@@ -414,8 +451,24 @@ class ThreadedServer(QObject):
                 'berry/server/sounds/sfx_sound_neutral2.wav',
             )
             s.play()
-        except Exception as ex:
+        except Exception:
             logging.error('\n   *** ERROR playing save changes beep')
+
+    def flash_client(self, payload):
+        """
+        Sends a flash message to the client.
+        """
+        berry = self.get_berry(name=payload['name'])
+
+        if berry is None:
+            # User selected something that wasn't a widget name, so ignore it
+            return
+
+        message = {
+            'command': 'flash',
+        }
+
+        self.send_message_to_berry(berry['guid'], message)
 
     def _send_email(self, to, subject, body):
         """

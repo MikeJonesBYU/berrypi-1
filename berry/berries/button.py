@@ -40,6 +40,8 @@ class BerryButton(BerryBase):
         except Exception as ex:
             logging.error('\n   *** ERROR initializing button: {}'.format(ex))
 
+        self._initialize_id_led()
+
     def is_pressed(self):
         """
         Part of button API. Returns True or False depending on whether the

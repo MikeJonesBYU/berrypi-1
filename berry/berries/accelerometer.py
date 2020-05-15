@@ -49,6 +49,22 @@ class BerryAccelerometer(BerryBase):
                 '\n   *** ERROR initializing I2C/LSM303: {}'.format(ex),
             )
 
+        # Import
+        try:
+            from gpiozero import LED
+        except Exception as ex:
+            logging.error('\n   *** ERROR importing gpiozero: {}'.format(ex))
+
+            # Things failed, must be running locally, not on a widget, so don't
+            # bother initializing GPIO
+            return
+
+        # Hook the ID LED up to gpiozero, using pin GP13
+        try:
+            self._id_led = LED(13)
+        except Exception as ex:
+            logging.error('\n   *** ERROR initializing ID LED: {}'.format(ex))
+
     def _mag(self, tup):
         """
         Calculates magnitude of a three-part tuple.

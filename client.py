@@ -33,7 +33,7 @@ if __name__ == '__main__':
     client = BerryClient(berry=berry, port=port)
 
     # Start debug input mode thread
-    threading.Thread(target=client.input_loop).start()
+    threading.Thread(target=client.input_loop, daemon=True).start()
 
     # Start thread for selector, if needed
     if berry.live:
@@ -53,4 +53,5 @@ if __name__ == '__main__':
         threading.Thread(
             target=client.process_message,
             kwargs={ 'message': message },
+            daemon=True,
         ).start()

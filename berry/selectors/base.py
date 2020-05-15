@@ -18,7 +18,7 @@ class SelectBase():
         """
         Starts the loop thread. Can be overridden to not do this (for buttons).
         """
-        threading.Thread(target=self.loop).start()
+        threading.Thread(target=self.loop, daemon=True).start()
 
     def loop(self):
         """

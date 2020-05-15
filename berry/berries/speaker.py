@@ -20,8 +20,8 @@ class BerrySpeaker(BerryBase):
         """
         Initializes the widget hardware.
         """
-        # Nothing to do
-        return
+        # Initialize the ID LED
+        self._initialize_id_led()
 
     def beep(self, freq=1400, duration=0.2):
         """
@@ -32,7 +32,6 @@ class BerrySpeaker(BerryBase):
                 subprocess.run(
                     ['play', '-b', '16', '-q', '-n', 'synth', str(duration), 'sin', str(freq)],  # noqa
                     stderr=None,
-                    env={'AUDIODEV': 'hw:1'},
                 )
             except Exception as ex:
                 logging.error('\n   *** ERROR beeping: {}'.format(ex))

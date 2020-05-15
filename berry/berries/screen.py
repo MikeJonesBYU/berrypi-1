@@ -46,6 +46,8 @@ class BerryScreen(BerryBase):
 
         self._canvas = canvas(self._device)
 
+        self._initialize_id_led()
+
     def clear(self):
         """
         Clears the screen.

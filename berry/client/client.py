@@ -77,11 +77,19 @@ class BerryClient():
 
         logging.info('Server IP is {}'.format(server_ip_address))
 
+        # Send the server our code
+        message = {
+            'command': 'widget-code',
+            'guid': self._berry.guid,
+            'code': self._berry.load_handler_code(),
+        }
+        send_message_to_server(message=message)
+
         # Set up the berry (runs the setup() function)
         self._berry.setup_client()
 
         # Start the loop() handler loop
-        threading.Thread(target=self.main_loop).start()
+        threading.Thread(target=self.main_loop, daemon=True).start()
 
         return server_response, _socket
 
@@ -167,7 +175,7 @@ class BerryClient():
             # Parse the response from the remote
             response = message['response']
 
-            if 'error' in response:
+            if response and 'error' in response:
                 if response['error'] == 'widget-not-found':
                     raise Exception(
                         'Widget {} not found'.format(response['name']),
@@ -192,6 +200,13 @@ class BerryClient():
 
             # And call the on_global_state_change handler
             self._berry.on_global_state_change()
+
+        elif command == 'flash':
+            # Flash the ID LED so the user knows which one we are
+            self._berry.flash_id_led()
+
+            # Play a buzzer sound too
+            self._berry.play_buzzer()
 
         else:
             # Unrecognized message
